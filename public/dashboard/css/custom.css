@@ -1,0 +1,20 @@
+
+.white-bg{
+    background-color: #FFF !important;
+}
+
+.affiliate-quote li{
+    font-size: 16px !important;
+    line-height: 30px;
+    padding-top: 10px;
+}
+
+.prop_status{
+    font-weight: 700;
+    font-size: 20px;
+}
+
+.prop_status th{
+    font-weight: 700;
+    font-size: 20px;
+}

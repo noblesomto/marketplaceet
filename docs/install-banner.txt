@@ -1,0 +1,169 @@
+1. Add Apple Smart App Banner
+
+In:
+
+resources/views/layouts/app.blade.php
+
+inside the <head> section:
+
+<meta name="apple-itunes-app" content="app-id=6753354778">
+
+This automatically shows Apple's native install/open banner in Safari on iPhone and iPad.
+
+2. Create Banner Partial
+
+Create:
+
+resources/views/partials/app-install-banner.blade.php
+<div id="appInstallBanner" class="app-banner" style="display:none;">
+    <button class="app-banner-close" onclick="closeAppBanner()">×</button>
+
+    <img src="{{ asset('images/app-icon.png') }}" alt="Marketplace Naija">
+
+    <div class="app-banner-text">
+        <strong>Marketplace Naija</strong>
+        <span>Buy & Sell Faster With Our App</span>
+    </div>
+
+    <a id="appInstallLink" href="#" class="app-banner-button">
+        Install
+    </a>
+</div>
+
+<style>
+.app-banner{
+    position:sticky;
+    top:0;
+    z-index:99999;
+    display:flex;
+    align-items:center;
+    gap:12px;
+    padding:10px 14px;
+    background:#ffffff;
+    border-bottom:1px solid #e5e5e5;
+    box-shadow:0 2px 10px rgba(0,0,0,.05);
+}
+
+.app-banner img{
+    width:46px;
+    height:46px;
+    border-radius:12px;
+    object-fit:cover;
+}
+
+.app-banner-text{
+    display:flex;
+    flex-direction:column;
+    line-height:1.3;
+}
+
+.app-banner-text strong{
+    font-size:14px;
+    color:#111;
+}
+
+.app-banner-text span{
+    font-size:12px;
+    color:#666;
+}
+
+.app-banner-button{
+    margin-left:auto;
+    background:#0A84FF;
+    color:#fff;
+    text-decoration:none;
+    padding:8px 16px;
+    border-radius:20px;
+    font-size:13px;
+    font-weight:600;
+}
+
+.app-banner-close{
+    border:none;
+    background:none;
+    font-size:22px;
+    color:#888;
+    cursor:pointer;
+    padding:0;
+}
+
+@media(min-width:768px){
+    .app-banner{
+        display:none !important;
+    }
+}
+</style>
+
+<script>
+(function(){
+
+    const iosUrl =
+        "https://apps.apple.com/us/app/marketplace-naija-buy-sell/id6753354778";
+
+    const androidUrl =
+        "https://play.google.com/store/apps/details?id=com.app.marketplacenaija";
+
+    const ua = navigator.userAgent || navigator.vendor || window.opera;
+
+    const isAndroid = /android/i.test(ua);
+
+    const isIOS = /iPhone|iPad|iPod/i.test(ua);
+
+    const isSafari =
+        /^((?!chrome|android).)*safari/i.test(ua);
+
+    const banner =
+        document.getElementById('appInstallBanner');
+
+    const link =
+        document.getElementById('appInstallLink');
+
+    if(localStorage.getItem('appBannerClosed')){
+        return;
+    }
+
+    if(isAndroid){
+        link.href = androidUrl;
+        banner.style.display = 'flex';
+    }
+
+    if(isIOS && !isSafari){
+        link.href = iosUrl;
+        banner.style.display = 'flex';
+    }
+
+})();
+
+function closeAppBanner(){
+    document.getElementById('appInstallBanner').style.display='none';
+
+    localStorage.setItem(
+        'appBannerClosed',
+        'true'
+    );
+}
+</script>
+3. Include The Banner
+
+Inside your main layout immediately after <body>:
+
+@include('partials.app-install-banner')
+
+Example:
+
+<body>
+
+@include('partials.app-install-banner')
+
+@yield('content')
+
+</body>
+4. Add Your App Icon
+
+Place your app icon here:
+
+public/images/app-icon.png
+
+Recommended size:
+
+512x512 PNGPlease find below the estimate and required plumbing fittings for the Anatomy Block, which must be addressed promptly to meet upcoming accreditation standards. These items are essential for ensuring regulatory compliance and maintaining proper facility functionality.

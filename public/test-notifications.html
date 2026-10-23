@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Push Notification Tester - Marketplace Nigeria</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 30px;
+            margin-bottom: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            font-size: 28px;
+        }
+
+        h2 {
+            color: #667eea;
+            margin-bottom: 15px;
+            font-size: 20px;
+            border-bottom: 2px solid #f0f0f0;
+            padding-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .status {
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .status.info {
+            background: #e3f2fd;
+            color: #1976d2;
+            border-left: 4px solid #1976d2;
+        }
+
+        .status.success {
+            background: #e8f5e9;
+            color: #388e3c;
+            border-left: 4px solid #388e3c;
+        }
+
+        .status.error {
+            background: #ffebee;
+            color: #c62828;
+            border-left: 4px solid #c62828;
+        }
+
+        .status.warning {
+            background: #fff3e0;
+            color: #f57c00;
+            border-left: 4px solid #f57c00;
+        }
+
+        button {
+            background: #667eea;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: 500;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background: #5568d3;
+        }
+
+        button:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #333;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        input:focus, textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea {
+            resize: vertical;
+            min-height: 60px;
+            font-family: monospace;
+        }
+
+        .token-display {
+            background: #f5f5f5;
+            padding: 12px;
+            border-radius: 6px;
+            word-break: break-all;
+            font-family: monospace;
+            font-size: 12px;
+            margin-top: 10px;
+        }
+
+        .notification {
+            background: white;
+            border: 2px solid #667eea;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .notification-title {
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .notification-body {
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .notification-time {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .notification-data {
+            background: #f9f9f9;
+            padding: 8px;
+            border-radius: 4px;
+            font-family: monospace;
+            font-size: 11px;
+            margin-top: 8px;
+            color: #555;
+        }
+
+        .instructions {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .instructions ol {
+            margin-left: 20px;
+        }
+
+        .instructions li {
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+        .code {
+            background: #263238;
+            color: #aed581;
+            padding: 12px;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            overflow-x: auto;
+            margin: 10px 0;
+        }
+
+        #notifications-list {
+            max-height: 400px;
+            overflow-y: auto;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px;
+            color: #999;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+            margin-left: 10px;
+        }
+
+        .badge.android {
+            background: #a4c639;
+            color: white;
+        }
+
+        .badge.ios {
+            background: #000;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="card">
+            <h1>🔔 Push Notification Tester</h1>
+            <p class="subtitle">Test push notifications locally without a mobile app</p>
+
+            <div id="status" class="status info">
+                ⏳ Initializing... Please wait.
+            </div>
+
+            <div id="token-section" style="display: none;">
+                <h2>📱 Your Device Token</h2>
+                <p>Use this token to register with the API:</p>
+                <div class="token-display" id="token-display">Generating...</div>
+                <button onclick="copyToken()" style="margin-top: 10px;">📋 Copy Token</button>
+            </div>
+        </div>
+
+        <div class="card" id="registration-section" style="display: none;">
+            <h2>🔐 Register Token with API</h2>
+            <div class="form-group">
+                <label for="api-token">Your API Bearer Token:</label>
+                <input type="text" id="api-token" placeholder="Enter your auth token from /api/login">
+            </div>
+            <div class="form-group">
+                <label for="platform">Platform:</label>
+                <select id="platform" style="width: 100%; padding: 12px; border: 2px solid #e0e0e0; border-radius: 6px;">
+                    <option value="android">Android</option>
+                    <option value="ios">iOS</option>
+                </select>
+            </div>
+            <button onclick="registerToken()">Register Token</button>
+            <div id="registration-status" style="margin-top: 15px;"></div>
+        </div>
+
+        <div class="card" id="send-section" style="display: none;">
+            <h2>📤 Send Test Notification</h2>
+            <div class="form-group">
+                <label for="notif-title">Title:</label>
+                <input type="text" id="notif-title" value="Test Notification">
+            </div>
+            <div class="form-group">
+                <label for="notif-message">Message:</label>
+                <textarea id="notif-message">This is a test notification from Marketplace Nigeria!</textarea>
+            </div>
+            <button onclick="sendTestNotification()">Send Notification</button>
+            <div id="send-status" style="margin-top: 15px;"></div>
+        </div>
+
+        <div class="card">
+            <h2>📬 Received Notifications</h2>
+            <div id="notifications-list">
+                <div class="empty-state">
+                    No notifications received yet. Send a test notification to see it here!
+                </div>
+            </div>
+        </div>
+
+        <div class="card instructions">
+            <h2>📝 How to Test</h2>
+            <ol>
+                <li><strong>Get an API Token:</strong> Login to your account via <code>/api/login</code> and copy the bearer token</li>
+                <li><strong>Register Device Token:</strong> Paste your API token above and click "Register Token"</li>
+                <li><strong>Send Test Notification:</strong> Use the form above or the API endpoint:
+                    <div class="code">POST /api/test/notification<br>Authorization: Bearer {your-token}<br>Content-Type: application/json<br><br>{"message": "Hello from API!"}</div>
+                </li>
+                <li><strong>Or use Artisan Command:</strong>
+                    <div class="code">php artisan notification:test --user=YOUR_USER_ID</div>
+                </li>
+                <li>Keep this page open to receive notifications in real-time!</li>
+            </ol>
+        </div>
+    </div>
+
+    <script>
+        const API_BASE_URL = window.location.origin;
+        let deviceToken = null;
+        let notificationCount = 0;
+
+        // Simulate Firebase token generation (for testing purposes)
+        // In a real app, this would use Firebase Web SDK
+        function generateTestToken() {
+            // Generate a realistic-looking FCM token
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789-_';
+            let token = '';
+            for (let i = 0; i < 152; i++) {
+                token += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return token;
+        }
+
+        // Initialize
+        function initialize() {
+            deviceToken = generateTestToken();
+            document.getElementById('token-display').textContent = deviceToken;
+            document.getElementById('token-section').style.display = 'block';
+            document.getElementById('registration-section').style.display = 'block';
+            document.getElementById('send-section').style.display = 'block';
+            updateStatus('success', '✅ Ready! Copy the token above and register it with the API.');
+        }
+
+        function updateStatus(type, message) {
+            const statusDiv = document.getElementById('status');
+            statusDiv.className = `status ${type}`;
+            statusDiv.textContent = message;
+        }
+
+        function copyToken() {
+            navigator.clipboard.writeText(deviceToken);
+            alert('Token copied to clipboard!');
+        }
+
+        async function registerToken() {
+            const apiToken = document.getElementById('api-token').value;
+            const platform = document.getElementById('platform').value;
+            const statusDiv = document.getElementById('registration-status');
+
+            if (!apiToken) {
+                statusDiv.innerHTML = '<div class="status error">⚠️ Please enter your API token</div>';
+                return;
+            }
+
+            statusDiv.innerHTML = '<div class="status info">⏳ Registering token...</div>';
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/device-tokens`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${apiToken}`,
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        token: deviceToken,
+                        platform: platform
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    statusDiv.innerHTML = `<div class="status success">✅ Token registered successfully! ID: ${data.data.id}</div>`;
+                    updateStatus('success', '🎉 Token registered! You can now receive notifications.');
+                } else {
+                    statusDiv.innerHTML = `<div class="status error">❌ Error: ${data.message || 'Registration failed'}</div>`;
+                }
+            } catch (error) {
+                statusDiv.innerHTML = `<div class="status error">❌ Network error: ${error.message}</div>`;
+            }
+        }
+
+        async function sendTestNotification() {
+            const apiToken = document.getElementById('api-token').value;
+            const title = document.getElementById('notif-title').value;
+            const message = document.getElementById('notif-message').value;
+            const statusDiv = document.getElementById('send-status');
+
+            if (!apiToken) {
+                statusDiv.innerHTML = '<div class="status error">⚠️ Please enter your API token first</div>';
+                return;
+            }
+
+            statusDiv.innerHTML = '<div class="status info">⏳ Sending notification...</div>';
+
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/test/notification`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${apiToken}`,
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        title: title,
+                        message: message,
+                        device_token: deviceToken
+                    })
+                });
+
+                const data = await response.json();
+
+                if (response.ok) {
+                    statusDiv.innerHTML = `<div class="status success">✅ Notification sent! Tokens: ${data.data.tokens_count}</div>`;
+                    // Simulate receiving the notification
+                    simulateReceivedNotification(title, message);
+                } else {
+                    statusDiv.innerHTML = `<div class="status error">❌ Error: ${data.message || 'Send failed'}</div>`;
+                }
+            } catch (error) {
+                statusDiv.innerHTML = `<div class="status error">❌ Network error: ${error.message}</div>`;
+            }
+        }
+
+        function simulateReceivedNotification(title, body) {
+            addNotification({
+                title: title,
+                body: body,
+                data: {
+                    type: 'test_notification',
+                    timestamp: new Date().toISOString()
+                }
+            });
+        }
+
+        function addNotification(notification) {
+            notificationCount++;
+            const listDiv = document.getElementById('notifications-list');
+
+            if (notificationCount === 1) {
+                listDiv.innerHTML = '';
+            }
+
+            const notifDiv = document.createElement('div');
+            notifDiv.className = 'notification';
+            notifDiv.innerHTML = `
+                <div class="notification-title">${notification.title || 'Notification'}</div>
+                <div class="notification-body">${notification.body || ''}</div>
+                <div class="notification-time">Received: ${new Date().toLocaleTimeString()}</div>
+                ${notification.data ? `<div class="notification-data">${JSON.stringify(notification.data, null, 2)}</div>` : ''}
+            `;
+
+            listDiv.insertBefore(notifDiv, listDiv.firstChild);
+
+            // Browser notification
+            if (Notification.permission === 'granted') {
+                new Notification(notification.title, {
+                    body: notification.body,
+                    icon: '/favicon.ico'
+                });
+            }
+        }
+
+        // Request notification permission
+        if ('Notification' in window && Notification.permission === 'default') {
+            Notification.requestPermission();
+        }
+
+        // Initialize on page load
+        window.onload = initialize;
+    </script>
+</body>
+</html>

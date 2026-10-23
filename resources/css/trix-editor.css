@@ -1,0 +1,40 @@
+   /* Hide file attachment button */
+trix-toolbar [data-trix-button-group="file-tools"] {
+    display: none !important;
+}
+
+/* Hide the entire toolbar */
+trix-toolbar {
+    display: none !important;
+}
+
+/* Hide specific formatting buttons
+trix-toolbar [data-trix-button-group="text-tools"] [data-trix-attribute="bold"] {
+    display: none !important;
+}
+*/
+/* Hide specific formatting buttons */
+trix-toolbar [data-trix-button-group="text-tools"] [data-trix-attribute="italic"] {
+    display: none !important;
+}
+
+/* Hide link button */
+trix-toolbar [data-trix-button-group="text-tools"] [data-trix-attribute="href"] {
+    display: none !important;
+}
+
+/* Hide code button */
+trix-toolbar [data-trix-button-group="text-tools"] [data-trix-attribute="code"] {
+    display: none !important;
+}
+
+/* Hide entire groups */
+trix-toolbar [data-trix-button-group="history-tools"] {
+    display: none !important;
+}
+
+@media (min-width: 1024px) {
+    trix-editor {
+        min-height: 144px !important;
+    }
+}

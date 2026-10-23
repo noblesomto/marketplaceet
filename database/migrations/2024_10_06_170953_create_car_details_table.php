@@ -1,0 +1,44 @@
+<?php
+
+use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
+
+return new class extends Migration
+{
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
+    {
+        Schema::create('car_details', function (Blueprint $table) {
+            $table->id();
+            $table->string('cat_id');
+            $table->foreignId('advert_id')->constrained()->onDelete('cascade');
+            $table->string('car_id');
+            $table->string('brand_id');
+            $table->string('model');
+            $table->string('mileage');
+            $table->string('condition');
+            $table->string('registration');
+            $table->string('fuel');
+            $table->string('transmission');
+            $table->string('vehicle_type');
+            $table->string('doors');
+            $table->string('exterior_color');
+            $table->string('material_interior');
+            $table->string('exterior_equipment');
+            $table->text('interior');
+            $table->string('security');
+            $table->timestamps();
+        });
+    }
+
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
+    {
+        Schema::dropIfExists('car_details');
+    }
+};

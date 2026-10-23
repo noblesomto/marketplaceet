@@ -1,0 +1,20 @@
+/* In a custom CSS file */
+.btn {
+  @apply font-bold py-2 px-6 rounded text-dark_green;
+}
+
+.btn-primary {
+  @apply bg-transparent hover:bg-primary text-dark_green font-semibold hover:text-dark_green  border-2 border-dark_green hover:border-dark_green rounded-full;
+}
+
+.btn-secondary {
+  @apply bg-secondary-100 hover:bg-secondary-100 text-dark_green font-bold rounded-full;
+}
+
+.btn-danger {
+  @apply bg-red-500 text-white hover:bg-red-600;
+}
+
+.btn-disabled {
+  @apply opacity-50 cursor-not-allowed;
+}
