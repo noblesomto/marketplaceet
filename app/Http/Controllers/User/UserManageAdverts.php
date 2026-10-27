@@ -9,6 +9,8 @@ use Illuminate\Support\Facades\DB;
 use Mail;
 use Illuminate\Support\Facades\Log;
 use App\Mail\NewAdMail;
+use App\Support\ComputerSpecs;
+use App\Support\DeviceModels;
 use App\Models\User;
 use App\Models\Category;
 use App\Models\Message;
@@ -24,6 +26,7 @@ use App\Models\Followers;
 use App\Models\AdvertImage;
 use App\Models\CarDetail;
 use App\Models\PhoneDetail;
+use App\Models\ComputerDetail;
 use App\Models\Shipping;
 use App\Models\Notification;
 use App\Helpers\ContentHelper;
@@ -49,7 +52,7 @@ class UserManageAdverts extends Controller
 
     public function fetch_brand($cat_id)
     {
-        $brand = Brands::where('subcat_id', $cat_id)->get();
+        $brand = Brands::where('subcat_id', $cat_id)->orderedForPicker()->get();
         return response()->json($brand);
     }
 
@@ -188,7 +191,7 @@ class UserManageAdverts extends Controller
 
             // Use dynamic validation service based on Category UI Config
             $validationService = new AdvertValidationService();
-            $rules = $validationService->getRules($category, $subcat, false, $hasTempImages, $user->acc_type);
+            $rules = $validationService->getRules($category, $subcat, false, $hasTempImages, $user->acc_type, (int) $request->input('brand'));
             $imageRequirements = \App\Services\AdvertImageRequirements::get();
 
             // Custom validation messages
@@ -210,7 +213,8 @@ class UserManageAdverts extends Controller
                 'transmission.required'       => 'Please select the transmission type.',
                 'vehicle_type.required'       => 'Please select the body/vehicle type.',
                 'exterior_color.required'     => 'Please select the exterior color.',
-                'model.required'              => 'Please select the vehicle model.',
+                'model.required'              => DeviceModels::isDeviceSubcategory($subcat) ? 'Please select the model, or "Other / not listed".' : 'Please select the vehicle model.',
+                'model.in'                    => 'The selected model is invalid. Please select a valid model.',
                 'model.exists'                => 'The selected model is invalid. Please select a valid model.',
                 'model.min'                   => 'Please select a valid vehicle model.',
                 // Phone-specific messages
@@ -332,7 +336,7 @@ class UserManageAdverts extends Controller
                 'source'           => 'web',
             ]);
 
-            $advert->update(['ad_id' => (string) $advert->id]);
+            $advert->assignAdId();
 
             ActivityLog::record('advert', 'Posted advert "' . $advert->ad_title . '"', $user, $advert, [
                 'source' => 'web',
@@ -435,13 +439,18 @@ class UserManageAdverts extends Controller
                     'phone_id'  => rand(10000, 99999),
                     'cat_id'    => $request->input('category'),
                     'brand_id'  => $request->input('brand'),
-                    'model'     => $request->input('model'),
+                    'model'     => DeviceModels::resolve($request->input('brand'), $request->input('model')),
                     'color'     => $request->input('phone_color'),
                     'device'    => $request->input('device'),
                     'condition' => $request->input('phone_condition'),
-                ]);
+                ] + PhoneDetail::specsFrom($request->all(), $request->input('ad_title'), $request->input('description')));
                 $phone->advert()->associate($advert);
                 $phone->save();
+            }
+
+            // Store laptop/computer model
+            if ($subcat === DeviceModels::COMPUTERS_SUBCATEGORY_ID) {
+                ComputerDetail::syncFor($advert, $request->input('brand'), $request->input('model'), null, $request->only(ComputerSpecs::FIELDS));
             }
 
             DB::commit();
@@ -495,14 +504,14 @@ class UserManageAdverts extends Controller
         $categories = Category::orderBy('category','asc')->get();
         $states = State::all();
         $shippings = Shipping::where('status', 'Active')->orderBy('company', 'asc')->get();
-        $advert = Advert::with(['images', 'car', 'phone'])
+        $advert = Advert::with(['images', 'car', 'phone', 'computer'])
             ->where('id', $ad_id)
             ->where('user_id', $user_id)
             ->firstOrFail();
 
         // Load dependent data
         $subcategories = SubCategory::where('cat_id', $advert->category)->get();
-        $brands = Brands::where('subcat_id', $advert->sub_category)->get();
+        $brands = Brands::where('subcat_id', $advert->sub_category)->orderedForPicker()->get();
 
         $models = collect();
         if ($advert->brand) {
@@ -558,12 +567,14 @@ class UserManageAdverts extends Controller
 
         // Use dynamic validation service based on Category UI Config
         $validationService = new AdvertValidationService();
-        $rules = $validationService->getRules($category, $subcat, true, false, $user->acc_type); // true = isUpdate
+        $rules = $validationService->getRules($category, $subcat, true, false, $user->acc_type, (int) $request->input('brand')); // true = isUpdate
 
         $validatedData = $request->validate($rules, [
             'phone_color.required'       => 'Please select the phone color.',
             'phone_condition.required'   => 'Please select the phone condition.',
             'device.required'            => 'Please select the device type.',
+            'model.required'             => DeviceModels::isDeviceSubcategory($subcat) ? 'Please select the model, or "Other / not listed".' : 'Please select the vehicle model.',
+            'model.in'                   => 'The selected model is invalid. Please select a valid model.',
             'price.required_unless'      => 'Please enter a price, or select "Contact for Price".',
             'price.gt'                   => 'Please enter a price greater than Br 0, or select "Contact for Price".',
             'price_type.required_unless' => 'Please select a price type.',
@@ -790,11 +801,11 @@ class UserManageAdverts extends Controller
             $phoneData = [
                 'cat_id'    => $request->input('category'),
                 'brand_id'  => $request->input('brand'),
-                'model'     => $request->input('model'),
+                'model'     => DeviceModels::resolve($request->input('brand'), $request->input('model')),
                 'color'     => $request->input('phone_color'),
                 'device'    => $request->input('device'),
                 'condition' => $request->input('phone_condition'),
-            ];
+            ] + PhoneDetail::specsFrom($request->all(), $request->input('ad_title'), $request->input('description'));
             if ($advert->phone) {
                 $advert->phone->update($phoneData);
             } else {
@@ -802,6 +813,11 @@ class UserManageAdverts extends Controller
                 $phone->advert()->associate($advert);
                 $phone->save();
             }
+        }
+
+        // Update laptop/computer model
+        if ($subcat === DeviceModels::COMPUTERS_SUBCATEGORY_ID) {
+            ComputerDetail::syncFor($advert, $request->input('brand'), $request->input('model'), null, $request->only(ComputerSpecs::FIELDS));
         }
 
         $user_id = $request->session()->get('user_id');

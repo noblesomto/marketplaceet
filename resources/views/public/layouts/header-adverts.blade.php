@@ -2,6 +2,7 @@
 <html lang="en">
 
     @php
+    // Guarded: a second render in one process (tests, queued renders) would otherwise redeclare it
     if (!function_exists('cleanMetaText')) {
     function cleanMetaText($text) {
         if (empty($text)) return '';

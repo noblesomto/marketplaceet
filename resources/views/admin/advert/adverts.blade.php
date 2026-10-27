@@ -66,7 +66,7 @@
                     <th scope="col">Owner</th>
                     <th scope="col">Price</th>
                     <th scope="col">Location</th>
-                    <th scope="col">Published</th>
+                    <th scope="col">{{ ($date_column ?? null) === 'disabled' ? 'Disabled' : 'Published' }}</th>
                     <th scope="col">Status</th>
                     <th scope="col">Sold</th>
                     <th scope="col">Actions</th>
@@ -102,7 +102,7 @@
                     @endif
 
                     <td>{{ $row->state }}</td>
-                    <td>{{ date('j M Y', strtotime($row->created_at)) }}</td>
+                    <td>{{ date('j M Y', strtotime(($date_column ?? null) === 'disabled' ? $row->updated_at : $row->created_at)) }}</td>
                     <td>
                       @if($row->ad_status == 'active')
                         <span class="badge bg-success">Active</span>

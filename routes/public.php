@@ -55,6 +55,7 @@ Route::get('/category/all-{slug}', [AdvertController::class, 'all_category'])->n
 Route::get('/category/{category_slug}/{subcat_slug}', [AdvertController::class, 'sub_category'])->name('subcategory');
 Route::get('/category/{category_slug}/{subcat_slug}/all-{slug}', [AdvertController::class, 'all_subcat'])->name('subcategory.all');
 Route::get('/category/{category_slug}/{subcat_slug}/{brand_slug}', [AdvertController::class, 'brand'])->name('brand');
+Route::get('/category/{category_slug}/{subcat_slug}/{brand_slug}/{model_slug}', [AdvertController::class, 'brandModel'])->name('brand.model');
 Route::get('/related/{ad_id}', [AdvertController::class, 'related'])->name('related.ads');
 Route::get('/related/{ad_id}/load-more', [AdvertController::class, 'relatedLoadMore'])->name('related.ads.loadMore');
 Route::get('/buy-direct/success', [FlutterwaveController::class, 'buyDirectSuccess'])->name('buy.direct.success');
@@ -75,6 +76,7 @@ Route::match(['GET', 'POST'], '/filter/sellers', [SearchFilter::class, 'filterBy
 Route::match(['GET', 'POST'], '/filter/buydirect', [SearchFilter::class, 'filterByBuydirect'])->name('filter.buydirect');
 Route::post('/filter/car-details', [SearchFilter::class, 'filterByCarDetails'])->name('filter.car.details');
 Route::post('/filter/phone-details', [SearchFilter::class, 'filterByPhoneDetails'])->name('filter.phone.details');
+Route::post('/filter/computer-details', [SearchFilter::class, 'filterByComputerDetails'])->name('filter.computer.details');
 
 // Location & shipping cost lookup
 Route::get('/states', [LocationController::class, 'index']);

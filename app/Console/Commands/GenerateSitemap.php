@@ -296,11 +296,11 @@ class GenerateSitemap extends Command
                 }
             });
 
-        // ── State + Category + Model (Vehicles & Phones only) ─────────────────
-        // Mirrors SearchFilter::MODEL_CATEGORY_DETAIL_RELATIONS — these are the
-        // only two categories with model-level pages, backed by their own
-        // detail table (car_details.model / phone_details.model → models.id).
-        foreach (['car_details', 'phone_details'] as $detailTable) {
+        // ── State + Category + Model (categories with models only) ────────────
+        // Mirrors SearchFilter::MODEL_CATEGORY_DETAIL_RELATIONS — the only
+        // categories with model-level pages, each backed by its own detail
+        // table (see Advert::MODEL_DETAIL_TABLES).
+        foreach (array_unique(Advert::MODEL_DETAIL_TABLES) as $detailTable) {
             DB::table('adverts')
                 ->join($detailTable, "{$detailTable}.advert_id", '=', 'adverts.id')
                 ->join('models', 'models.id', '=', "{$detailTable}.model")
@@ -488,8 +488,8 @@ class GenerateSitemap extends Command
                 }
             });
 
-        // ── State + Category + Model (Vehicles & Phones only) ────────────────
-        foreach (['car_details', 'phone_details'] as $detailTable) {
+        // ── State + Category + Model (categories with models only) ───────────
+        foreach (array_unique(Advert::MODEL_DETAIL_TABLES) as $detailTable) {
             DB::table('adverts')
                 ->join('states', DB::raw('LOWER(states.name)'), '=', DB::raw('LOWER(adverts.state)'))
                 ->join($detailTable, "{$detailTable}.advert_id", '=', 'adverts.id')
@@ -561,6 +561,43 @@ class GenerateSitemap extends Command
                     $count++;
                 }
             });
+
+        // Brand model pages — /category/{category_slug}/{subcat_slug}/{brand_slug}/{model_slug}
+        // (see AdvertController::brandModel), e.g. Apple → iPhone 12 Pro Max.
+        // Models hang off the detail tables (see Advert::MODEL_DETAIL_TABLES).
+        foreach (array_unique(Advert::MODEL_DETAIL_TABLES) as $detailTable) {
+            DB::table('adverts')
+                ->join($detailTable, "{$detailTable}.advert_id", '=', 'adverts.id')
+                ->join('models', 'models.id', '=', "{$detailTable}.model")
+                ->join('brands', 'brands.id', '=', 'models.brand_id')
+                ->join('sub_categories', 'brands.subcat_id', '=', 'sub_categories.id')
+                ->join('categories', 'sub_categories.cat_id', '=', 'categories.id')
+                ->select(
+                    'categories.category_slug',
+                    'sub_categories.sub_cat_slug',
+                    'brands.brand_slug',
+                    'models.model_slug',
+                    DB::raw('MAX(adverts.updated_at) as last_updated'),
+                    DB::raw('COUNT(*) as ad_count')
+                )
+                ->where('adverts.ad_status', 1)
+                ->whereColumn('adverts.brand', 'brands.id')
+                ->whereNotIn('brands.brand_slug', self::EXCLUDED_CATCHALL_SLUGS)
+                ->groupBy('models.id', 'categories.category_slug', 'sub_categories.sub_cat_slug', 'brands.brand_slug', 'models.model_slug')
+                ->having('ad_count', '>=', 5)
+                ->orderBy('last_updated', 'desc')
+                ->chunk(500, function ($rows) use ($sitemap, &$count) {
+                    foreach ($rows as $row) {
+                        $sitemap->add(
+                            Url::create("{$this->baseUrl}/category/{$row->category_slug}/{$row->sub_cat_slug}/{$row->brand_slug}/{$row->model_slug}")
+                                ->setLastModificationDate($this->toDate($row->last_updated))
+                                ->setChangeFrequency(Url::CHANGE_FREQUENCY_WEEKLY)
+                                ->setPriority(0.6)
+                        );
+                        $count++;
+                    }
+                });
+        }
 
         $this->write($sitemap, 'sitemap-brands.xml', $index);
         $this->info("  → sitemap-brands.xml ({$count} URLs)");

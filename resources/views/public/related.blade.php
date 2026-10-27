@@ -138,7 +138,7 @@
             @include('public.components.mobile.filter-category')
           </div>
 
-          <div id="ads-container" class="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-2 px-1">
+          <div id="listings-grid" class="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-2 px-1">
             @foreach ($ads as $row)
               @if($isMobile)
                 @include('public.components.advert.advert-card-mobile', ['row' => $row])
@@ -199,7 +199,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const loadMoreBtn     = document.getElementById('load-more-btn');
     const loadMoreText    = document.getElementById('load-more-text');
     const loadMoreSpinner = document.getElementById('load-more-spinner');
-    const adsContainer    = document.getElementById('ads-container');
+    const adsContainer    = document.getElementById('listings-grid');
 
     if (loadMoreBtn) {
         loadMoreBtn.addEventListener('click', function () {
@@ -238,6 +238,6 @@ document.addEventListener('DOMContentLoaded', function () {
     const currentBrand       = null;
     const currentLocation    = null;
 </script>
-<script src="{{ asset('frontend/js/filter-manager.js') }}"></script>
+<script src="{{ asset('frontend/js/filter-manager.js') }}?v=5"></script>
 
 @include('public.layouts.footer')

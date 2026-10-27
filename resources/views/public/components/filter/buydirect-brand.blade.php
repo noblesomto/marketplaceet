@@ -39,6 +39,9 @@ document.addEventListener('DOMContentLoaded', function () {
         const formData = new FormData();
         formData.append('buy_direct', 'Yes');
         formData.append('brand', '{{ $brand->id }}');
+        @if(isset($model))
+        formData.append('model', '{{ $model->id }}');
+        @endif
 
         fetch(url, {
             method: 'POST',

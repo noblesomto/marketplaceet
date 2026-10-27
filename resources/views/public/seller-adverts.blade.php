@@ -185,7 +185,7 @@
             </div>
 
             {{-- Ads grid --}}
-            <div id="ads-container">
+            <div id="listings-grid">
                 @if($ads->isEmpty())
                     <div class="flex flex-col items-center justify-center bg-white rounded-xl border border-gray-100 p-16 text-center">
                         <img src="https://img.icons8.com/external-outline-andi-nur-abdillah/100/external-Empty-empty-state-(outline)-outline-andi-nur-abdillah.png"
@@ -291,7 +291,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
     const loadMoreBtn = document.getElementById('load-more-btn');
     if (loadMoreBtn) {
-        const adsContainer    = document.getElementById('ads-container');
+        const adsContainer    = document.getElementById('listings-grid');
         const loadMoreText    = document.getElementById('load-more-text');
         const loadMoreSpinner = document.getElementById('load-more-spinner');
         const sellerSlug      = @json($sellerSlug);

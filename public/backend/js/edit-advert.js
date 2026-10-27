@@ -50,6 +50,8 @@ document.addEventListener('DOMContentLoaded', async function () {
 
         if (catId)    window.categoryUIManager.applyCategoryRules(catId);
         if (subcatId) window.categoryUIManager.applySubcategoryRules(subcatId);
+        // The rules hide Model for phones — show it again if this brand has models
+        if (subcatId) window.DeviceModelField?.applyToRenderedOptions(subcatId, { select: modelSelect, selected: originalValues.model, required: false });
 
         if (catId)    categorySelect.dispatchEvent(new Event('change'));
         if (subcatId) subcategorySelect.dispatchEvent(new Event('change'));
@@ -113,7 +115,7 @@ document.addEventListener('DOMContentLoaded', async function () {
                     }
                     brandSelect.appendChild(opt);
                 });
-                if (brandSelect.value && [2, 21, 23].includes(parseInt(subcategoryId))) {
+                if (brandSelect.value && ([2, 21, 23].includes(parseInt(subcategoryId)) || window.DeviceModelField?.isDeviceSubcategory(subcategoryId))) {
                     brandSelect.dispatchEvent(new Event('change'));
                 }
             })
@@ -125,7 +127,9 @@ document.addEventListener('DOMContentLoaded', async function () {
         const brandId       = this.value;
         const subcategoryId = subcategorySelect.value;
 
-        if (!brandId || ![2, 21, 23].includes(parseInt(subcategoryId))) {
+        const isDevice = window.DeviceModelField?.isDeviceSubcategory(subcategoryId);
+
+        if (!brandId || !([2, 21, 23].includes(parseInt(subcategoryId)) || isDevice)) {
             if (modelSelect) modelSelect.innerHTML = '<option value="">Select Model</option>';
             return;
         }
@@ -147,6 +151,15 @@ document.addEventListener('DOMContentLoaded', async function () {
                     }
                     modelSelect.appendChild(opt);
                 });
+
+                // Phones: show Model when this brand has models (optional for admins)
+                const isOriginalBrand = brandId == originalValues.brand && subcategoryId == originalValues.subcategory;
+                window.DeviceModelField?.apply(subcategoryId, data, {
+                    select: modelSelect,
+                    selected: isOriginalBrand && modelSelect.dataset.selected ? originalValues.model : null,
+                    required: false,
+                });
+
                 modelSelect.dataset.selected = '';
             })
             .catch(e => console.error('Error fetching models:', e));

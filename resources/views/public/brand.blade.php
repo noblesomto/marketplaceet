@@ -27,6 +27,8 @@
                 <h4 class="font-bold text-gray-800 text-lg tracking-tight">Filter Results</h4>
             </div>
 
+            @include('public.components.filter.shop-by-model')
+
             <!-- Locations Card -->
             <div class="bg-white p-4 rounded-xl shadow-md border border-gray-100">
                 <h4 class="font-semibold text-gray-900 text-sm mb-3 uppercase tracking-wider text-[11px]">Locations</h4>
@@ -52,28 +54,6 @@
                 </div>
             </div>
 
-            @if(isset($models) && $models->isNotEmpty())
-            <!-- Shop by Model (location-based brand pages, vehicles/mobile-phones only) -->
-            <div class="bg-white p-4 rounded-xl shadow-md border border-gray-100">
-                <h4 class="font-bold text-gray-900 text-sm mb-3 uppercase tracking-wider text-[11px]">Shop by Model</h4>
-                @php $modelLimit = 15; @endphp
-                <ul class="space-y-0.5">
-                    @foreach($models->take($modelLimit) as $catModel)
-                    <li>
-                        <a href="{{ url('/' . $location . '/' . $cat->category_slug . '/' . $catModel->model_slug) }}"
-                           class="group flex items-center justify-between p-2 rounded-md hover:bg-gray-50 transition-all duration-200">
-                            <span class="text-gray-600 group-hover:text-secondary_dark text-[14px] leading-tight transition-colors font-bold">
-                                {{ $catModel->model }}
-                            </span>
-                            <span class="text-[11px] text-gray-500 font-medium group-hover:text-secondary_dark transition-colors">
-                                 ({{ $catModel->advert_count }})
-                            </span>
-                        </a>
-                    </li>
-                    @endforeach
-                </ul>
-            </div>
-            @endif
 
             @if(!isset($location))
             <!-- Buy Directly Card (Only show when NOT location-based) -->
@@ -129,10 +109,32 @@
                 @include('public.components.filter.condition-phone')
             </div>
 
+            <!-- Storage / RAM (only when ads here have them) -->
+            @include('public.components.filter.phone-spec', ['field' => 'storage', 'headingClass' => 'font-bold text-gray-900 text-sm mb-3 uppercase tracking-wider text-[11px]'])
+            @include('public.components.filter.phone-spec', ['field' => 'ram', 'headingClass' => 'font-bold text-gray-900 text-sm mb-3 uppercase tracking-wider text-[11px]'])
+
             <!-- Device Type -->
             <div class="bg-white p-4 rounded-xl shadow-md border border-gray-100">
                 <h4 class="font-bold text-gray-900 text-sm mb-3 uppercase tracking-wider text-[11px]">Device Type</h4>
                 @include('public.components.filter.device-type')
+            </div>
+            @elseif(isset($subcat) && $subcat->id == \App\Support\DeviceModels::COMPUTERS_SUBCATEGORY_ID)
+            <!-- Processor -->
+            <div class="bg-white p-4 rounded-xl shadow-md border border-gray-100">
+                <h4 class="font-bold text-gray-900 text-sm mb-3 uppercase tracking-wider text-[11px]">Processor</h4>
+                @include('public.components.filter.computer-spec', ['field' => 'processor'])
+            </div>
+
+            <!-- RAM -->
+            <div class="bg-white p-4 rounded-xl shadow-md border border-gray-100">
+                <h4 class="font-bold text-gray-900 text-sm mb-3 uppercase tracking-wider text-[11px]">RAM</h4>
+                @include('public.components.filter.computer-spec', ['field' => 'ram'])
+            </div>
+
+            <!-- Storage -->
+            <div class="bg-white p-4 rounded-xl shadow-md border border-gray-100">
+                <h4 class="font-bold text-gray-900 text-sm mb-3 uppercase tracking-wider text-[11px]">Storage</h4>
+                @include('public.components.filter.computer-spec', ['field' => 'storage'])
             </div>
             @endif
         </div>
@@ -143,7 +145,8 @@
               <div class="block lg:hidden">
                     @include('public.components.mobile.filter-brand')
               </div>
-                <div id="ads-container" class="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-2">
+              @include('public.components.mobile.model-chips')
+                <div id="listings-grid" class="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-2">
                     @foreach ($ads as $row)
                         @if($isMobile)
                             @include('public.components.advert.advert-card-mobile', ['row' => $row])
@@ -199,7 +202,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const loadMoreBtn = document.getElementById('load-more-btn');
     const loadMoreText = document.getElementById('load-more-text');
     const loadMoreSpinner = document.getElementById('load-more-spinner');
-    const adsContainer = document.getElementById('ads-container');
+    const adsContainer = document.getElementById('listings-grid');
 
     // Get current filters from URL or other source
     const filters = {
@@ -211,6 +214,9 @@ document.addEventListener('DOMContentLoaded', function() {
         @endif
         @if(isset($brand))
         brand: {{ $brand->id }},
+        @endif
+        @if(isset($model))
+        model: {{ $model->id }},
         @endif
         @if(isset($location))
         location: '{{ $location }}',
@@ -266,11 +272,12 @@ document.addEventListener('DOMContentLoaded', function() {
 <!-- Filter Manager Context -->
 <script>
     // Set context variables for filter manager
-    const currentCategory = {{ $brand->category_id }};
-    const currentSubCategory = {{ $brand->sub_cat_id ?? 'null' }};
+    const currentCategory = {{ $cat->id ?? 'null' }};
+    const currentSubCategory = {{ $subcat->id ?? 'null' }};
     const currentBrand = {{ $brand->id }};
+    const currentModel = {{ isset($model) ? $model->id : 'null' }};
     const currentLocation = {{ isset($location) ? "'".$location."'" : 'null' }};
 </script>
-<script src="{{ asset('frontend/js/filter-manager.js') }}"></script>
+<script src="{{ asset('frontend/js/filter-manager.js') }}?v=5"></script>
 
 @include('public.layouts.footer')

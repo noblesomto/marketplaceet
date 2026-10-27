@@ -463,9 +463,15 @@
                         @if ($errors->has('phone_condition')) <p class="text-xs text-red-500 mt-1">{{ $errors->first('phone_condition') }}</p> @endif
                     </div>
 
+                    <!-- RAM / Storage -->
+                    @include('user.components.phone-specs')
+
                 </div>
             </div>
         </div>
+
+        <!-- CARD 3b: Computer Specs (Laptops & Computers) -->
+        @include('user.components.computer-specs')
 
         <!-- CARD 4: Pricing & Salary -->
         <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
@@ -833,7 +839,8 @@
 
 {{-- Database-Driven Category UI Configuration (2026-01-31) --}}
 <script src="{{ asset('dashboard/js/category-ui-manager.js') }}"></script>
-<script src="{{ asset('dashboard/js/post-ad-v2.js') }}"></script>
+<script src="{{ asset('dashboard/js/device-model-field.js') }}?v=2"></script>
+<script src="{{ asset('dashboard/js/post-ad-v2.js') }}?v=3"></script>
 {{-- Old hardcoded version (kept for rollback): <script src="{{ asset('dashboard/js/post-ad.js') }}"></script> --}}
 
 <script src="{{ asset('dashboard/js/image-quality-validator.js') }}"></script>

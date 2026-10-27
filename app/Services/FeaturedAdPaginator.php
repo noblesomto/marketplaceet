@@ -186,7 +186,9 @@ class FeaturedAdPaginator
                         $q->orWhere('state', $stateName);
                     }
                 });
-            } elseif (in_array($key, ['category', 'sub_category', 'brand', 'model', 'state', 'city'])) {
+            } elseif ($key === 'model') {
+                $query->ofModel($value);
+            } elseif (in_array($key, ['category', 'sub_category', 'brand', 'state', 'city'])) {
                 $query->where($key, $value);
             }
         }

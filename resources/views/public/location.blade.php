@@ -21,7 +21,7 @@
               </div>
 
               <!-- Loading the Ads from Components -->
-            <div id="ads-container" class="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-2">
+            <div id="listings-grid" class="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-2">
                     @foreach ($ads as $row)
                         @if($isMobile)
                             @include('public.components.advert.advert-location-mobile', ['row' => $row])
@@ -77,7 +77,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const loadMoreBtn = document.getElementById('load-more-btn');
     const loadMoreText = document.getElementById('load-more-text');
     const loadMoreSpinner = document.getElementById('load-more-spinner');
-    const adsContainer = document.getElementById('ads-container');
+    const adsContainer = document.getElementById('listings-grid');
 
     // Build filters properly
     const filters = {};

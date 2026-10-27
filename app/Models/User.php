@@ -69,7 +69,53 @@ class User extends Authenticatable implements HasMedia
     protected $hidden = [
         'password',
         'remember_token',
+        'otp',
+        'otp_expires_at',
+        'token',
+        'last_login_ip',
+        'google_id',
+        'facebook_id',
+        'apple_id',
     ];
+
+    /**
+     * Account details only the user themselves (or an admin) may see. Users
+     * appear in other people's responses — an ad's seller, a message's sender
+     * — and there they get the public profile without these.
+     *
+     * @var array<int, string>
+     */
+    public const PRIVATE_FIELDS = [
+        'email',
+        'address',
+        'bank_name',
+        'bank_code',
+        'account_name',
+        'account_number',
+        'notification',
+        'push_notifications_enabled',
+        'notifications_seen_at',
+        'disable_account_date',
+        'disabled_by',
+        'disable_reason',
+    ];
+
+    public function toArray()
+    {
+        $data = parent::toArray();
+
+        return $this->viewerCanSeePrivateFields() ? $data : array_diff_key($data, array_flip(self::PRIVATE_FIELDS));
+    }
+
+    private function viewerCanSeePrivateFields(): bool
+    {
+        if (auth('admin')->check()) {
+            return true;
+        }
+
+        // The sanctum guard covers API tokens and the web session.
+        return auth('sanctum')->id() === $this->getKey();
+    }
 
     /**
      * Get the attributes that should be cast.

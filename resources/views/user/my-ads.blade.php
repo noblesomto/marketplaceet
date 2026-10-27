@@ -345,7 +345,7 @@
 
     @include('public.components.flash-message')
 
-    <div id="ads-container">
+    <div id="listings-grid">
         @include('user.components.my-ads', ['ads' => $ads])
     </div>
 
@@ -370,7 +370,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const loadMoreBtn = document.getElementById('load-more-btn');
     const loadMoreText = document.getElementById('load-more-text');
     const loadMoreSpinner = document.getElementById('load-more-spinner');
-    const adsContainer = document.getElementById('ads-container');
+    const adsContainer = document.getElementById('listings-grid');
 
     if (loadMoreBtn) {
         loadMoreBtn.addEventListener('click', function () {

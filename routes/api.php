@@ -99,6 +99,7 @@ Route::get('/categories/{category_slug}', [AdvertController::class, 'categoryAdv
 Route::get('/categories/{category_slug}/subcategories', [AdvertController::class, 'categorySubcategories']);
 Route::get('/categories/{category_slug}/{subcat_slug}', [AdvertController::class, 'subcategoryAdverts']);
 Route::get('/brands/{category_slug}/{subcat_slug}/{brand_slug}', [AdvertController::class, 'brandAdverts']);
+Route::get('/brands/{category_slug}/{subcat_slug}/{brand_slug}/{model_slug}', [AdvertController::class, 'brandModelAdverts']);
 Route::get('/location/{state_slug}', [AdvertController::class, 'locationAdverts']);
 
 /*

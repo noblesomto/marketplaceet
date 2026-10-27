@@ -309,7 +309,7 @@ class ManageCategories extends Controller
 
     public function fetch_brand($cat_id)
     {
-        $brand = Brands::where('subcat_id', $cat_id)->get();
+        $brand = Brands::where('subcat_id', $cat_id)->orderedForPicker()->get();
         return response()->json($brand);
     }
 

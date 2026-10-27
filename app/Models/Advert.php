@@ -105,6 +105,11 @@ class Advert extends Model implements HasMedia
         return $this->hasOne(PhoneDetail::class, 'advert_id');
     }
 
+    public function computer()
+    {
+        return $this->hasOne(ComputerDetail::class, 'advert_id');
+    }
+
     public function car()
     {
         return $this->hasOne(CarDetail::class, 'advert_id');
@@ -180,6 +185,67 @@ class Advert extends Model implements HasMedia
                         ->where('sold_date', '>=', now()->subDays(30));
                   });
             });
+    }
+
+    /**
+     * Categories whose listings have models, and the detail table holding
+     * each listing's model (models.id): Vehicles → car_details, Mobile Phones
+     * & Tablets → phone_details, Electronics (Laptops & Computers) →
+     * computer_details.
+     */
+    public const MODEL_DETAIL_TABLES = [
+        1 => 'car_details',
+        4 => 'phone_details',
+        2 => 'computer_details',
+    ];
+
+    /** Same as MODEL_DETAIL_TABLES, as relation names. */
+    public const MODEL_DETAIL_RELATIONS = [
+        1 => 'car',
+        4 => 'phone',
+        2 => 'computer',
+    ];
+
+    /**
+     * Adverts for a given model id, or any of a list of ids (models.id).
+     * Models hang off the detail tables — see MODEL_DETAIL_TABLES.
+     */
+    public function scopeOfModel($query, $modelIds)
+    {
+        $modelIds = (array) $modelIds;
+
+        return $query->where(function ($q) use ($modelIds) {
+            $q->whereHas('phone', fn ($d) => $d->whereIn('model', $modelIds))
+              ->orWhereHas('car', fn ($d) => $d->whereIn('model', $modelIds))
+              ->orWhereHas('computer', fn ($d) => $d->whereIn('model', $modelIds));
+        });
+    }
+
+    /**
+     * Give a newly created advert its public ad_id (used in its URL): its own
+     * id, or — if an older advert already holds that number — the next free
+     * one after the highest ad_id. (New ids start past old ad_ids; see the
+     * 2026_10_26 auto-increment migration.)
+     */
+    public function assignAdId(): void
+    {
+        $adId = (string) $this->id;
+
+        if (self::where('ad_id', $adId)->where('id', '!=', $this->id)->exists()) {
+            $adId = (string) (max($this->id, (int) self::query()->selectRaw('MAX(CAST(ad_id AS UNSIGNED)) AS mx')->value('mx')) + 1);
+        }
+
+        $this->update(['ad_id' => $adId]);
+    }
+
+    /**
+     * This listing's model id (models.id) from whichever detail table holds it.
+     */
+    public function detailModelId(): ?int
+    {
+        $model = optional($this->car)->model ?? optional($this->phone)->model ?? optional($this->computer)->model;
+
+        return is_numeric($model) && (int) $model > 0 ? (int) $model : null;
     }
 
     public function scopeFeaturedBoosted($query)

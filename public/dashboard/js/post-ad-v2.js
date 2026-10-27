@@ -290,12 +290,15 @@ class FormController {
             DropdownManager.resetDropdown(this.modelSelect, placeholder);
 
             // Fetch and populate models
-            await DropdownManager.fetchAndPopulate(
+            const models = await DropdownManager.fetchAndPopulate(
                 `/fetch-model/${brandId}`,
                 this.modelSelect,
                 'id',
                 'model'
             );
+
+            // Phones/laptops: show + require Model only when this brand has models
+            window.DeviceModelField?.apply(currentSubcategory, models, { select: this.modelSelect });
         });
     }
 

@@ -40,7 +40,7 @@
         })
         .then(response => response.json())
         .then(data => {
-            const adsContainer = document.getElementById('ads-container');
+            const adsContainer = document.getElementById('listings-grid');
             if (adsContainer) {
                 adsContainer.innerHTML = data.html;
                 attachPaginationEvents(); // re-bind pagination events
@@ -63,7 +63,7 @@
 
     // 🟢 Handle Pagination
     function attachPaginationEvents() {
-        const adsContainer = document.getElementById('ads-container');
+        const adsContainer = document.getElementById('listings-grid');
         if (adsContainer) {
             adsContainer.querySelectorAll('.pagination a').forEach(link => {
                 link.addEventListener('click', function (e) {

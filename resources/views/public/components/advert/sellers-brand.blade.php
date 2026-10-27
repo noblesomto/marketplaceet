@@ -29,6 +29,9 @@
         const formData = new FormData();
         formData.append('sellers', selectedSeller);
         formData.append('brand', '{{ $brand->id }}'); // Pass category if needed
+        @if(isset($model))
+        formData.append('model', '{{ $model->id }}');
+        @endif
 
         fetch(url, {
             method: 'POST',
@@ -40,7 +43,7 @@
         })
         .then(response => response.json())
         .then(data => {
-            const adsContainer = document.getElementById('ads-container');
+            const adsContainer = document.getElementById('listings-grid');
             if (adsContainer) {
                 adsContainer.innerHTML = data.html;
                 attachPaginationEvents(); // re-bind pagination events
@@ -63,7 +66,7 @@
 
     // 🟢 Handle Pagination
     function attachPaginationEvents() {
-        const adsContainer = document.getElementById('ads-container');
+        const adsContainer = document.getElementById('listings-grid');
         if (adsContainer) {
             adsContainer.querySelectorAll('.pagination a').forEach(link => {
                 link.addEventListener('click', function (e) {

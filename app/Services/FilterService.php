@@ -36,6 +36,10 @@ class FilterService
             $query->where('brand', $request->brand);
         }
 
+        if ($request->filled('model')) {
+            $query->ofModel($request->model);
+        }
+
         if ($request->filled('location')) {
             $query->where('state', $request->location);
         }
@@ -324,6 +328,9 @@ class FilterService
         if ($request->filled('brand')) {
             $query->where('adverts.brand', $request->brand);
         }
+        if ($request->filled('model')) {
+            $query->whereIn($detailTable . '.model', (array) $request->model);
+        }
         if ($request->filled('location')) {
             $query->where('adverts.state', $request->location);
         }
@@ -376,7 +383,7 @@ class FilterService
     }
 
     /**
-     * Build a phone-detail filter query (condition, device type).
+     * Build a phone-detail filter query (condition, device type, RAM, storage).
      */
     public function buildPhoneDetailQuery(Request $request): Builder
     {
@@ -386,6 +393,25 @@ class FilterService
             }
             if ($request->filled('device_type') && !empty($request->device_type)) {
                 $query->whereIn('phone_details.device', (array) $request->device_type);
+            }
+            foreach (['ram', 'storage'] as $spec) {
+                if ($request->filled($spec)) {
+                    $query->whereIn('phone_details.' . $spec, (array) $request->input($spec));
+                }
+            }
+        });
+    }
+
+    /**
+     * Build a laptop/computer-spec filter query (processor, RAM, storage).
+     */
+    public function buildComputerDetailQuery(Request $request): Builder
+    {
+        return $this->buildDetailQuery($request, 'computer_details', function (Builder $query, Request $request) {
+            foreach (['processor', 'ram', 'storage'] as $spec) {
+                if ($request->filled($spec)) {
+                    $query->whereIn('computer_details.' . $spec, (array) $request->input($spec));
+                }
             }
         });
     }

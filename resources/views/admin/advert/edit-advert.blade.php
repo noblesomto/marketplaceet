@@ -127,11 +127,11 @@
                       </select>
                     </div>
                     <div id="divModel" class="col-md-4 {{ in_array($advert->sub_category, [2, 21, 23]) ? '' : 'hidden' }}">
-                      <select id="model" name="model" class="form-select" data-selected="{{ in_array($advert->sub_category, [2, 21, 23]) ? optional($advert->car)->model : '' }}">
+                      <select id="model" name="model" class="form-select" data-selected="{{ $advert->detailModelId() }}">
                         <option value="">Select Model</option>
                         @foreach($models as $model)
                           <option value="{{ $model->id }}"
-                            {{ in_array($advert->sub_category, [2, 21, 23]) && optional($advert->car)->model == $model->id ? 'selected' : '' }}
+                            {{ $advert->detailModelId() === $model->id ? 'selected' : '' }}
                           >
                             {{ $model->model }}
                           </option>
@@ -710,7 +710,53 @@
                                 </select>
                             </div>
                         </div>
+
+                        <!-- RAM / Storage — optional; blank ones are read from the title/description -->
+                        @foreach(\App\Models\PhoneDetail::SPEC_INPUTS as $specField => $specInput)
+                            @php $current = old($specInput, optional($advert->phone)->{$specField}); @endphp
+                            <div class="row py-3 border-bottom border-gray-200">
+                                <div class="col-12 col-md-4">
+                                    <div class="fw-semibold">{{ \App\Support\PhoneSpecs::LABELS[$specField] }}</div>
+                                </div>
+                                <div class="col-12 col-md-6">
+                                    @if ($errors->has($specInput))
+                                        <span class="text-danger">{{ $errors->first($specInput) }}</span>
+                                    @endif
+                                    <select name="{{ $specInput }}" class="form-select w-50">
+                                        <option value="">Not specified</option>
+                                        @foreach(\App\Support\PhoneSpecs::options($specField) as $option)
+                                            <option value="{{ $option }}" {{ $current === $option ? 'selected' : '' }}>{{ $option }}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        @endforeach
                     </div>
+              </div>
+
+              <!-- Computer Specs (Laptops & Computers) — optional; blank ones are read from the title/description -->
+              <div id="divComputer" class="mt-4 p-4 {{ old('subcategory', $advert->sub_category) == \App\Support\DeviceModels::COMPUTERS_SUBCATEGORY_ID ? '' : 'hidden' }}">
+                <div class="container-fluid">
+                    @foreach(\App\Support\ComputerSpecs::allOptions() as $field => $options)
+                        @php $current = old($field, optional($advert->computer)->{$field}); @endphp
+                        <div class="row py-3 border-bottom border-gray-200">
+                            <div class="col-12 col-md-4">
+                                <div class="fw-semibold">{{ \App\Support\ComputerSpecs::LABELS[$field] }}</div>
+                            </div>
+                            <div class="col-12 col-md-6">
+                                @if ($errors->has($field))
+                                    <span class="text-danger">{{ $errors->first($field) }}</span>
+                                @endif
+                                <select name="{{ $field }}" class="form-select w-50">
+                                    <option value="">Not specified</option>
+                                    @foreach($options as $option)
+                                        <option value="{{ $option }}" {{ $current === $option ? 'selected' : '' }}>{{ $option }}</option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    @endforeach
+                </div>
               </div>
 
               <!-- Shipment Section -->
@@ -1072,7 +1118,8 @@
 </script>
 <script src="{{ asset('frontend/js/lga.js') }}"></script>
 <script src="{{ asset('dashboard/js/category-ui-manager.js') }}"></script>
-<script src="{{ asset('backend/js/edit-advert.js') }}"></script>
+<script src="{{ asset('dashboard/js/device-model-field.js') }}?v=2"></script>
+<script src="{{ asset('backend/js/edit-advert.js') }}?v=4"></script>
 <script src="{{ asset('backend/js/edit-sortable.js') }}"></script>
 
 

@@ -16,7 +16,7 @@ class AdvertBannedMail extends Mailable implements ShouldQueue
     public $details;
 
     /**
-     * @param array{name:string,ad_title:string,reason_category:string,reason_note:?string,is_resubmission_reject:bool} $details
+     * @param array{name:string,ad_title:string,reason_category:string,reason_note:?string,is_resubmission_reject:bool,edit_images_url?:?string} $details
      */
     public function __construct($details)
     {

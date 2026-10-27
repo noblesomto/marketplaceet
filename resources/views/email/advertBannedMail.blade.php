@@ -120,7 +120,26 @@
                 @endif
             </div>
 
-            Once you've fixed the issue, you can resubmit it for review from your "My Ads" page — our team will take another look before it goes live again.
+            @if(!empty($details['edit_images_url']))
+                Update your photos, then resubmit the advert for review from your "My Ads" page — our team will take another look before it goes live again.
+
+                {{-- Inline-styled (no .button class) so the mobile full-width rule can't stretch it past the card --}}
+                <table width="100%" cellpadding="0" cellspacing="0" style="margin:25px 0 5px;">
+                    <tr>
+                        <td align="center">
+                            <table cellpadding="0" cellspacing="0" style="margin:0 auto;">
+                                <tr>
+                                    <td align="center" style="background-color:#4CAF50; border-radius:6px;">
+                                        <a href="{{ $details['edit_images_url'] }}" target="_blank" style="display:inline-block; padding:12px 24px; color:#ffffff; text-decoration:none; font-weight:bold; font-size:15px; font-family:Arial, sans-serif;">Update Ad Images</a>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                </table>
+            @else
+                Once you've fixed the issue, you can resubmit it for review from your "My Ads" page — our team will take another look before it goes live again.
+            @endif
 
             <br><br>
 

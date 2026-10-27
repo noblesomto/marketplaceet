@@ -80,7 +80,7 @@
 
             <!-- Content -->
             <div class="p-3 flex flex-col flex-grow space-y-2">
-                <h1 class="font-bold text-sm">{{ Str::limit($row->ad_title, 20) }}</h1>
+                <h3 class="font-bold text-sm">{{ Str::limit($row->ad_title, 20) }}</h3>
                 <div class="flex items-center justify-between text-xs mt-auto">
                     <div class="text-gray-500 truncate flex">
                         <span>

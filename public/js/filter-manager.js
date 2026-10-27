@@ -9,6 +9,7 @@ class FilterManager {
             category: null,
             subCategory: null,
             brand: null,
+            model: null,
             location: null,
             priceMin: null,
             priceMax: null,
@@ -58,6 +59,9 @@ class FilterManager {
         }
         if (typeof currentBrand !== 'undefined') {
             this.filters.brand = currentBrand;
+        }
+        if (typeof currentModel !== 'undefined') {
+            this.filters.model = currentModel;
         }
         if (typeof currentLocation !== 'undefined') {
             this.filters.location = currentLocation;
@@ -230,6 +234,7 @@ class FilterManager {
         if (this.filters.category) data.category = this.filters.category;
         if (this.filters.subCategory) data.sub_category = this.filters.subCategory;
         if (this.filters.brand) data.brand = this.filters.brand;
+        if (this.filters.model) data.model = this.filters.model;
         if (this.filters.location) data.location = this.filters.location;
 
         // Price filters
@@ -273,7 +278,7 @@ class FilterManager {
      * Update the results container with new HTML
      */
     updateResults(data) {
-        const container = document.getElementById('ads-container');
+        const container = document.getElementById('listings-grid');
         if (container) {
             container.innerHTML = data.html;
         }
@@ -289,7 +294,7 @@ class FilterManager {
      * Show loading state
      */
     showLoadingState() {
-        const container = document.getElementById('ads-container');
+        const container = document.getElementById('listings-grid');
         if (container) {
             container.style.opacity = '0.5';
             container.style.pointerEvents = 'none';
@@ -306,7 +311,7 @@ class FilterManager {
      * Hide loading state
      */
     hideLoadingState() {
-        const container = document.getElementById('ads-container');
+        const container = document.getElementById('listings-grid');
         if (container) {
             container.style.opacity = '1';
             container.style.pointerEvents = 'auto';
@@ -322,7 +327,7 @@ class FilterManager {
      * Show error message
      */
     showError(message) {
-        const container = document.getElementById('ads-container');
+        const container = document.getElementById('listings-grid');
         if (container) {
             container.innerHTML = `
                 <div class="col-span-full flex flex-col items-center justify-center p-10 bg-red-50 rounded-lg">

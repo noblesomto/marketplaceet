@@ -49,6 +49,8 @@ document.addEventListener('DOMContentLoaded', async function() {
 
         if (subcatId) {
             window.categoryUIManager.applySubcategoryRules(subcatId);
+            // The rules hide Model for phones — show it again if this brand has models
+            window.DeviceModelField?.applyToRenderedOptions(subcatId, { select: modelSelect, selected: originalValues.model });
         }
 
         // If a category was pre-selected, trigger the dependent changes
@@ -118,7 +120,7 @@ document.addEventListener('DOMContentLoaded', async function() {
                     brandSelect.appendChild(option);
                 });
 
-                if (brandSelect.value && [2, 21, 23].includes(parseInt(subcategoryId))) {
+                if (brandSelect.value && ([2, 21, 23].includes(parseInt(subcategoryId)) || window.DeviceModelField?.isDeviceSubcategory(subcategoryId))) {
                     brandSelect.dispatchEvent(new Event('change'));
                 }
             })
@@ -129,7 +131,9 @@ document.addEventListener('DOMContentLoaded', async function() {
         const brandId = this.value;
         const subcategoryId = subcategorySelect.value;
 
-        if (!brandId || ![2, 21, 23].includes(parseInt(subcategoryId))) {
+        const isDevice = window.DeviceModelField?.isDeviceSubcategory(subcategoryId);
+
+        if (!brandId || !([2, 21, 23].includes(parseInt(subcategoryId)) || isDevice)) {
             if (modelSelect) modelSelect.innerHTML = '<option value="">Select Model</option>';
             return;
         }
@@ -153,6 +157,13 @@ document.addEventListener('DOMContentLoaded', async function() {
                     }
 
                     modelSelect.appendChild(option);
+                });
+
+                // Phones: show + require Model only when this brand has models
+                const isOriginalBrand = brandId == originalValues.brand && subcategoryId == originalValues.subcategory;
+                window.DeviceModelField?.apply(subcategoryId, data, {
+                    select: modelSelect,
+                    selected: isOriginalBrand && modelSelect.dataset.selected ? originalValues.model : null,
                 });
 
                 modelSelect.dataset.selected = '';

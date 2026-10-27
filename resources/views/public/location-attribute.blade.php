@@ -6,7 +6,7 @@
 @include('public.components.seo.intro-block')
 
 <section class="w-full max-w-[95rem] mx-auto mt-3">
-    <div id="ads-container" class="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-2 px-1">
+    <div id="listings-grid" class="grid grid-cols-2 lg:grid-cols-4 xl:grid-cols-4 gap-2 px-1">
         @foreach ($ads as $row)
             @if($isMobile)
                 @include('public.components.advert.advert-card-mobile', ['row' => $row])

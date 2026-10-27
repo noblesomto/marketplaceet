@@ -148,18 +148,14 @@ class AdvertQueryService
     /**
      * Get models with active advert counts for a given brand, scoped to a
      * category and optionally a single location. Only categories with a
-     * model-bearing detail table (vehicles → car_details, mobile phones →
-     * phone_details) are supported; any other category returns empty.
+     * model-bearing detail table (see Advert::MODEL_DETAIL_TABLES) are
+     * supported; any other category returns empty.
      *
      * Used in: brand.blade.php "Shop by Model" sidebar.
      */
     public function getModelsForBrand(int $brandId, int $categoryId, ?string $stateSlug = null): Collection
     {
-        $detailTable = match ($categoryId) {
-            1 => 'car_details',
-            4 => 'phone_details',
-            default => null,
-        };
+        $detailTable = Advert::MODEL_DETAIL_TABLES[$categoryId] ?? null;
 
         if (!$detailTable) {
             return collect();

@@ -12,6 +12,7 @@ use App\Models\CarDetail;
 use App\Models\Category;
 use App\Models\VehicleModel;
 use App\Models\PhoneDetail;
+use App\Models\ComputerDetail;
 use App\Models\SubCategory;
 use App\Models\User;
 use App\Models\Reports;
@@ -25,6 +26,7 @@ use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Mail;
 use App\Mail\ReportMail;
+use App\Services\AdvertQueryService;
 use App\Services\FeaturedAdPaginator;
 use App\Support\AdvertVisibility;
 
@@ -286,6 +288,12 @@ class AdvertController extends Controller
             $data['model'] = VehicleModel::find($data['phone']->model);
         }
 
+        // Laptop/computer details
+        $data['computer'] = ComputerDetail::where('advert_id', $id)->first();
+        if ($data['computer']) {
+            $data['model'] = VehicleModel::find($data['computer']->model);
+        }
+
 
         // Related adverts with images
         $relatedAdverts = Advert::inRandomOrder()
@@ -345,7 +353,8 @@ class AdvertController extends Controller
         });
 
         // Increment views
-        Advert::where('id', $id)->increment('views', 1);
+        // Query builder increment, so a view doesn't bump updated_at (the admin disabled list sorts on it)
+        DB::table('adverts')->where('id', $id)->increment('views', 1);
 
         return response()->json([
             'success' => true,
@@ -821,8 +830,27 @@ class AdvertController extends Controller
     /**
      * Get adverts by brand
      * GET /api/brands/{category_slug}/{subcat_slug}/{brand_slug}
+     *
+     * Optional ?model={id|slug} narrows to one model (same as the model
+     * endpoint below). data.models is the "Shop by Model" list for the brand
+     * (models with active listings, most listings first) — empty for brands
+     * without models.
      */
     public function brandAdverts($category_slug, $subcat_slug, $brand_slug, Request $request)
+    {
+        return $this->brandListing($request, $category_slug, $subcat_slug, $brand_slug, $request->input('model'));
+    }
+
+    /**
+     * Get adverts for one model of a brand, e.g. Apple → iPhone 12 Pro Max
+     * GET /api/brands/{category_slug}/{subcat_slug}/{brand_slug}/{model_slug}
+     */
+    public function brandModelAdverts($category_slug, $subcat_slug, $brand_slug, $model_slug, Request $request)
+    {
+        return $this->brandListing($request, $category_slug, $subcat_slug, $brand_slug, $model_slug);
+    }
+
+    private function brandListing(Request $request, $category_slug, $subcat_slug, $brand_slug, $modelKey = null)
     {
         $cat = Category::where('category_slug', $category_slug)->first();
 
@@ -855,9 +883,29 @@ class AdvertController extends Controller
             ], 404);
         }
 
+        $model = null;
+        if ($modelKey !== null && $modelKey !== '') {
+            $model = VehicleModel::where('brand_id', $brand->id)
+                ->where(fn ($q) => $q->where('model_slug', $modelKey)
+                    ->when(ctype_digit((string) $modelKey), fn ($q) => $q->orWhere('id', $modelKey)))
+                ->first();
+
+            if (!$model) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Model not found'
+                ], 404);
+            }
+        }
+
+        $filters = ['brand' => $brand->id];
+        if ($model) {
+            $filters['model'] = $model->id;
+        }
+
         $page = $request->get('page', 1);
         $result = (new FeaturedAdPaginator($page))
-            ->filters(['brand' => $brand->id])
+            ->filters($filters)
             ->get();
 
         $count_subcat = Advert::activeNotRecentlySold()
@@ -869,6 +917,8 @@ class AdvertController extends Controller
             'data' => [
                 'ads'          => $result['ads'],
                 'brand'        => $brand,
+                'model'        => $model,
+                'models'       => (new AdvertQueryService())->getModelsForBrand($brand->id, $cat->id),
                 'subcat'       => $subcat,
                 'count_subcat' => $count_subcat,
             ],

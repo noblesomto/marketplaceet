@@ -9,7 +9,7 @@
     {{-- MOBILE VERSION --}}
     <div class="bg-white pt-3 ml-2">
       <div>
-        <span class="text-base"><strong>Marketplace Ethiopia</strong> - Buy. Sell. Discover Deals.</span>
+        <h1 class="text-base font-normal"><strong>Marketplace Ethiopia</strong> - Buy. Sell. Discover Deals.</h1>
       </div>
     </div>
 
@@ -115,6 +115,7 @@
 
   @else
     {{-- DESKTOP VERSION --}}
+    <h1 class="sr-only">Marketplace Ethiopia - Buy. Sell. Discover Deals.</h1>
     <div class="my-5">
       @include('public.components.advert.banner-advert')
     </div>

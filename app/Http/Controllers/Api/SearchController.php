@@ -9,9 +9,13 @@ use App\Models\Advert;
 use App\Models\SubCategory;
 use App\Models\Category;
 use App\Models\Brands;
+use App\Models\VehicleModel;
+use App\Services\AdvertQueryService;
 use App\Models\State;
 use Jenssegers\Agent\Agent;
 use App\Services\FilterService;
+use App\Support\ComputerSpecs;
+use App\Support\PhoneSpecs;
 
 /**
  * @group Search
@@ -132,7 +136,7 @@ class SearchController extends Controller
      * @OA\Post(
      *     path="/api/search/filter",
      *     summary="Unified advert filter — replaces all previous filter-by-* endpoints",
-     *     description="All parameters are optional. Pass only the ones you need. Car-specific params (car_condition, fuel_type, transmission, registration) are applied via a JOIN on car_details. Phone-specific params (phone_condition, device_type) are applied via a JOIN on phone_details.",
+     *     description="All parameters are optional. Pass only the ones you need. Car-specific params (car_condition, fuel_type, transmission, registration) are applied via a JOIN on car_details. Phone-specific params (phone_condition, device_type, phone_ram, phone_storage) are applied via a JOIN on phone_details. Laptop params (processor, ram, storage) are applied via computer_details — values as in GET /api/adverts/create/data → computer_options.",
      *     tags={"Search"},
      *     @OA\RequestBody(
      *         required=false,
@@ -154,6 +158,11 @@ class SearchController extends Controller
      *             @OA\Property(property="registration",   type="string",  description="Vehicle registration status — single value or array", example="Registered"),
      *             @OA\Property(property="phone_condition",type="string",  description="Phone condition — single value or array", example="New - Unboxed"),
      *             @OA\Property(property="device_type",    type="string",  description="Phone device type — single value or array", example="Smartphone"),
+     *             @OA\Property(property="phone_ram",      type="string",  description="Phone RAM — single value or array (values from create/data → phone_spec_options.ram)", example="8GB"),
+     *             @OA\Property(property="phone_storage",  type="string",  description="Phone storage — single value or array (values from create/data → phone_spec_options.storage)", example="128GB"),
+     *             @OA\Property(property="processor",      type="string",  description="Laptop processor — single value or array", example="Intel Core i5"),
+     *             @OA\Property(property="ram",            type="string",  description="Laptop RAM — single value or array", example="8GB"),
+     *             @OA\Property(property="storage",        type="string",  description="Laptop storage size — single value or array", example="256GB"),
      *             @OA\Property(property="per_page",       type="integer", description="Results per page (default 20)", example=20),
      *             @OA\Property(property="page",           type="integer", description="Page number", example=1)
      *         )
@@ -166,11 +175,13 @@ class SearchController extends Controller
         $filterService = new FilterService();
 
         $hasCarFilters   = $request->hasAny(['car_condition', 'fuel_type', 'transmission', 'registration']);
-        $hasPhoneFilters = $request->hasAny(['phone_condition', 'device_type']);
+        $hasPhoneFilters = $request->hasAny(['phone_condition', 'device_type', 'phone_ram', 'phone_storage']);
+        $hasComputerFilters = $request->hasAny(['processor', 'ram', 'storage']);
 
         $with = ['firstImage'];
         if ($hasCarFilters)   $with[] = 'car';
         if ($hasPhoneFilters) $with[] = 'phone';
+        if ($hasComputerFilters) $with[] = 'computer';
 
         $query = Advert::with($with)->activeNotRecentlySold();
 
@@ -218,6 +229,22 @@ class SearchController extends Controller
                 if ($request->filled('device_type')) {
                     $q->whereIn('device', (array) $request->device_type);
                 }
+                foreach (['ram' => 'phone_ram', 'storage' => 'phone_storage'] as $spec => $param) {
+                    if ($request->filled($param)) {
+                        $q->whereIn($spec, (array) $request->input($param));
+                    }
+                }
+            });
+        }
+
+        // Laptop/computer spec filters — only run when at least one spec param is present
+        if ($hasComputerFilters) {
+            $query->whereHas('computer', function ($q) use ($request) {
+                foreach (['processor', 'ram', 'storage'] as $spec) {
+                    if ($request->filled($spec)) {
+                        $q->whereIn($spec, (array) $request->input($spec));
+                    }
+                }
             });
         }
 
@@ -239,6 +266,7 @@ class SearchController extends Controller
                 'category'       => $request->input('category'),
                 'sub_category'   => $request->input('sub_category'),
                 'brand'          => $request->input('brand'),
+                'model'          => $request->input('model'),
                 'location'       => $request->input('location'),
                 'min'            => $request->input('min'),
                 'max'            => $request->input('max'),
@@ -252,6 +280,11 @@ class SearchController extends Controller
                 'registration'   => $request->input('registration'),
                 'phone_condition'=> $request->input('phone_condition'),
                 'device_type'    => $request->input('device_type'),
+                'phone_ram'      => $request->input('phone_ram'),
+                'phone_storage'  => $request->input('phone_storage'),
+                'processor'      => $request->input('processor'),
+                'ram'            => $request->input('ram'),
+                'storage'        => $request->input('storage'),
             ], fn($v) => $v !== null && $v !== ''),
         ]);
     }
@@ -392,6 +425,8 @@ class SearchController extends Controller
             return $this->locationSubcat($location, $slug);
         } elseif (Brands::where('brand_slug', $slug)->exists()) {
             return $this->locationBrand($location, $slug);
+        } elseif (VehicleModel::where('model_slug', $slug)->exists()) {
+            return $this->locationModel($location, $slug);
         }
 
         return response()->json([
@@ -536,6 +571,37 @@ class SearchController extends Controller
      *     @OA\Response(response=200, description="More results")
      * )
      */
+    private function locationModel($location, $slug)
+    {
+        $model = VehicleModel::with('brand')->where('model_slug', $slug)->first();
+
+        $ads = Advert::with('firstImage')
+                    ->activeNotRecentlySold()
+                    ->where('state', $location)
+                    ->ofModel($model->id)
+                    ->orderWithFeatured()
+                    ->paginate(request()->input('per_page', 10));
+
+        $count_model = Advert::activeNotRecentlySold()
+                        ->ofModel($model->id)
+                        ->count();
+
+        return response()->json([
+            'success' => true,
+            'data' => $ads->items(),
+            'model' => $model->only(['id', 'model', 'model_slug', 'brand_id']),
+            'brand' => $model->brand,
+            'total_count' => $count_model,
+            'pagination' => [
+                'current_page' => $ads->currentPage(),
+                'last_page' => $ads->lastPage(),
+                'per_page' => $ads->perPage(),
+                'total' => $ads->total(),
+                'has_more' => $ads->hasMorePages()
+            ]
+        ]);
+    }
+
     public function loadMore(Request $request)
     {
         $filterService = new FilterService();
@@ -558,6 +624,10 @@ class SearchController extends Controller
 
         if ($request->filled('brand')) {
             $query->where('brand', $request->brand);
+        }
+
+        if ($request->filled('model')) {
+            $query->ofModel($request->model);
         }
 
         if ($request->filled('location')) {
@@ -590,15 +660,23 @@ class SearchController extends Controller
      * @OA\Get(
      *     path="/api/search/filters",
      *     summary="Get available filter options",
+     *     description="Includes phone_specs (ram, storage → send as phone_ram / phone_storage to POST /api/search/filter) and computer_specs (processor, ram, storage, storage_type → send as processor / ram / storage). ?brand={id} adds that brand's models.",
      *     tags={"Search"},
      *     @OA\Response(response=200, description="Filter options")
      * )
      */
     public function getFilters(Request $request)
     {
+        // ?brand={id}: that brand's models with active listing counts (e.g. Apple → iPhones)
+        $brand = $request->filled('brand') ? Brands::with('subCategory')->find($request->brand) : null;
+        $models = $brand && $brand->subCategory
+            ? (new AdvertQueryService())->getModelsForBrand($brand->id, $brand->subCategory->cat_id)
+            : [];
+
         return response()->json([
             'success' => true,
             'data' => [
+                'models' => $models,
                 'categories' => Category::with('subCategories')->get(),
                 'states' => State::all(),
                 'price_ranges' => [
@@ -625,6 +703,10 @@ class SearchController extends Controller
                         'Foreign Used - No Packaging',
                     ],
                 ],
+                // Mobile Phones RAM / storage — filter with phone_ram / phone_storage
+                'phone_specs' => PhoneSpecs::allOptions(),
+                // Laptops & Computers specs — filter with processor / ram / storage
+                'computer_specs' => ComputerSpecs::allOptions(),
             ]
         ]);
     }

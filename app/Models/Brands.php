@@ -21,6 +21,15 @@ class Brands extends Model
         'meta_description'
     ];
 
+    /**
+     * Brand pickers: creation order, but the "Other" catch-all always last
+     * (Laptops & Computers' Other predates its makers).
+     */
+    public function scopeOrderedForPicker($query)
+    {
+        return $query->orderByRaw("brand = 'Other' OR brand LIKE 'Other %'")->orderBy('id');
+    }
+
     public function sluggable(): array
     {
         return [

@@ -16,6 +16,9 @@ use App\Models\VehicleModel;
 use App\Models\State;
 use App\Models\CarDetail;
 use App\Models\PhoneDetail;
+use App\Models\ComputerDetail;
+use App\Support\ComputerSpecs;
+use App\Support\DeviceModels;
 use App\Models\Shipping;
 use App\Helpers\ContentHelper;
 use Illuminate\Support\Str;
@@ -87,9 +90,11 @@ class ManageAdverts extends Controller
             $query = $this->applyAdvertSearch($query, $request->input('query'));
         }
 
-        $adverts = $query->orderBy('created_at', 'desc')->paginate(20);
+        // Every disable/ban path bumps updated_at, so this puts the most recently disabled first
+        $adverts = $query->orderBy('updated_at', 'desc')->paginate(20);
+        $date_column = 'disabled';
 
-        return view('admin.advert.adverts', compact('title', 'page_title', 'adverts'));
+        return view('admin.advert.adverts', compact('title', 'page_title', 'adverts', 'date_column'));
     }
 
     public function pending_review_adverts(Request $request)
@@ -153,11 +158,11 @@ class ManageAdverts extends Controller
         $categories = Category::orderBy('category','asc')->get();
         $states = State::all();
         $shippings = Shipping::where('status', 'Active')->orderBy('company', 'asc')->get();
-        $advert = Advert::with(['user','images', 'car', 'phone', 'shippings'])
+        $advert = Advert::with(['user','images', 'car', 'phone', 'computer', 'shippings'])
             ->where('id', $id)
             ->firstOrFail();
         $subcategories = SubCategory::where('cat_id', $advert->category)->get();
-        $brands = Brands::where('subcat_id', $advert->sub_category)->get();
+        $brands = Brands::where('subcat_id', $advert->sub_category)->orderedForPicker()->get();
 
         $models = collect();
         if ($advert->brand) {
@@ -443,11 +448,16 @@ class ManageAdverts extends Controller
                 'phone_id'  => rand(10000, 99999),
                 'cat_id'    => $request->input('category'),
                 'brand_id'  => $request->input('brand'),
-                'model'     => $request->input('model'),
+                'model'     => DeviceModels::resolve($request->input('brand'), $request->input('model')),
                 'color'     => $request->input('phone_color'),
                 'device'    => $request->input('device'),
                 'condition' => $request->input('phone_condition'),
-            ]);
+            ] + PhoneDetail::specsFrom($request->all(), $request->input('ad_title'), $request->input('description')));
+        }
+
+        // Update laptop/computer model
+        if ($subcat === DeviceModels::COMPUTERS_SUBCATEGORY_ID) {
+            ComputerDetail::syncFor($advert, $request->input('brand'), $request->input('model'), null, $request->only(ComputerSpecs::FIELDS));
         }
 
 
@@ -519,7 +529,7 @@ class ManageAdverts extends Controller
         ]);
 
         $this->notifySeller($advert, 'Advert Disabled', "Your advert \"{$advert->ad_title}\" was disabled: {$categoryLabel}.");
-        $this->emailBanned($advert, $categoryLabel, $request->reason_note, false);
+        $this->emailBanned($advert, $request->reason_category, $request->reason_note, false);
 
         return redirect()->back()->with('status', ['text' => 'Advert disabled and seller notified.', 'type' => 'success']);
     }
@@ -581,20 +591,24 @@ class ManageAdverts extends Controller
         ]);
 
         $this->notifySeller($advert, 'Advert Disabled', "Your resubmitted advert \"{$advert->ad_title}\" was not approved: {$categoryLabel}.");
-        $this->emailBanned($advert, $categoryLabel, $request->reason_note, true);
+        $this->emailBanned($advert, $request->reason_category, $request->reason_note, true);
 
         return redirect()->back()->with('status', ['text' => 'Resubmission rejected and seller notified.', 'type' => 'success']);
     }
 
-    private function emailBanned(Advert $advert, string $categoryLabel, ?string $note, bool $isResubmissionReject)
+    private function emailBanned(Advert $advert, string $reasonCategory, ?string $note, bool $isResubmissionReject)
     {
         try {
             Mail::to($advert->user->email)->queue(new AdvertBannedMail([
                 'name' => $advert->user->name,
                 'ad_title' => $advert->ad_title,
-                'reason_category' => $categoryLabel,
+                'reason_category' => AdvertModerationLog::REASON_CATEGORIES[$reasonCategory],
                 'reason_note' => $note,
                 'is_resubmission_reject' => $isResubmissionReject,
+                // Image rejections get a deep link straight to the photos section of the edit form
+                'edit_images_url' => $reasonCategory === 'poor_images'
+                    ? route('edit.ad', ['id' => $advert->id]) . '#product-photos'
+                    : null,
             ]));
         } catch (\Throwable $e) {
             Log::error('Advert ban email failed', ['advert_id' => $advert->id, 'error' => $e->getMessage()]);

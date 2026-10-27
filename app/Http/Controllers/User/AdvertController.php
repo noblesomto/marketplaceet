@@ -12,6 +12,7 @@ use App\Models\CarDetail;
 use App\Models\Category;
 use App\Models\VehicleModel;
 use App\Models\PhoneDetail;
+use App\Models\ComputerDetail;
 use App\Models\SubCategory;
 use App\Models\User;
 use App\Models\Reports;
@@ -80,7 +81,7 @@ class AdvertController extends Controller
         // Configuration
         $perPage = 30;
         $featuredLimit = $isMobile ? 8 : 10;
-        $currentPage = request()->get('page', 1);
+        $currentPage = max(1, (int) request()->get('page', 1));
 
         // Get featured ads (only on first page)
         if ($currentPage == 1) {
@@ -265,6 +266,11 @@ class AdvertController extends Controller
             $data['model'] = VehicleModel::where('id', $model_id)->first();
         }
 
+        $data['computer'] = ComputerDetail::where('advert_id', $ad_id)->first();
+        if ($data['computer']) {
+            $data['model'] = VehicleModel::where('id', $data['computer']->model)->first();
+        }
+
         $data['count_ads'] = Advert::where('user_id', $ad_owner)->activeNotRecentlySold()->count();
         $agent = new Agent();
         $isMobile = $agent->isMobile();
@@ -340,7 +346,7 @@ class AdvertController extends Controller
 
 
     $perPage = 20;
-    $currentPage = $request->get('page', 1);
+    $currentPage = max(1, (int) $request->get('page', 1));
 
     // If it's page 1, get featured posts
     if ($currentPage == 1) {
@@ -460,7 +466,7 @@ class AdvertController extends Controller
     {
 
         $perPage = 20;
-        $currentPage = $request->get('page', 1);
+        $currentPage = max(1, (int) $request->get('page', 1));
 
         // If it's page 1, get featured posts
         if ($currentPage == 1) {
@@ -598,7 +604,7 @@ class AdvertController extends Controller
             : ($agent->isMobile() || $agent->isTablet());
 
         $perPage   = 20;
-        $page      = $request->get('page', 1);
+        $page      = max(1, (int) $request->get('page', 1));
         $baseQuery = $this->advertQueryService->buildRelatedQuery($ad, $keyword);
 
         $total   = (clone $baseQuery)->count();
@@ -648,7 +654,7 @@ class AdvertController extends Controller
         $agent    = new Agent();
         $isMobile = $agent->isMobile() || $agent->isTablet();
         $perPage  = 20;
-        $page     = $request->get('page', 2);
+        $page     = max(1, (int) $request->get('page', 2));
 
         $baseQuery = $this->advertQueryService->buildRelatedQuery($ad, $keyword);
         $total     = (clone $baseQuery)->count();
@@ -671,7 +677,7 @@ class AdvertController extends Controller
     public function adverts(Request $request)
     {
         $title = config('global.site_name').' | '.config('global.site_title');
-        $page = request()->get('page', 1);
+        $page = max(1, (int) request()->get('page', 1));
         $perPage = 20;
         $featuredLimit = 6;
 
@@ -809,7 +815,7 @@ class AdvertController extends Controller
 
     public function loadMoreAdverts(Request $request)
     {
-        $page = $request->get('page', 1);
+        $page = max(1, (int) $request->get('page', 1));
         $filters = $request->only(['category', 'sub_category', 'brand', 'model', 'state', 'state_slug', 'city']);
 
         $result = (new FeaturedAdPaginator($page))
@@ -1026,17 +1032,68 @@ class AdvertController extends Controller
                 return redirect("/category/{$category_slug}/{$subcat_slug}/{$newBrandSlug}", 301);
             }
 
+            // A retired brand that stood for the whole subcategory (Laptops & Computers → "Laptop")
+            if ($newBrandSlug === $subcat->sub_cat_slug) {
+                return redirect("/category/{$category_slug}/{$subcat_slug}", 301);
+            }
+
             abort(404);
         }
 
+        return $this->renderBrandPage($request, $cat, $subcat, $brand);
+    }
+
+    /**
+     * /category/{cat}/{subcat}/{brand}/{model} — e.g. Apple → iPhone 12 Pro Max.
+     * Same page as the brand, narrowed to the model; the brand page's
+     * "Shop by Model" sidebar links here.
+     */
+    public function brandModel(Request $request, $category_slug, $subcat_slug, $brand_slug, $model_slug)
+    {
+        $cat = Category::where('category_slug', $category_slug)->firstOrFail();
+        $subcat = SubCategory::where('sub_cat_slug', $subcat_slug)->where('cat_id', $cat->id)->firstOrFail();
+        $brand = Brands::where('brand_slug', $brand_slug)->where('subcat_id', $subcat->id)->firstOrFail();
+
+        $model = VehicleModel::where('model_slug', $model_slug)->where('brand_id', $brand->id)->first();
+
+        if (!$model) {
+            $newModelSlug = $this->slugRedirects->resolve('model', $model_slug);
+            $redirectModel = $newModelSlug
+                ? VehicleModel::where('model_slug', $newModelSlug)->where('brand_id', $brand->id)->first()
+                : null;
+
+            if ($redirectModel) {
+                return redirect("/category/{$category_slug}/{$subcat_slug}/{$brand_slug}/{$newModelSlug}", 301);
+            }
+
+            abort(404);
+        }
+
+        return $this->renderBrandPage($request, $cat, $subcat, $brand, $model);
+    }
+
+    private function renderBrandPage(Request $request, Category $cat, SubCategory $subcat, Brands $brand, ?VehicleModel $model = null)
+    {
+        $filters = ['brand' => $brand->id];
+        if ($model) {
+            $filters['model'] = $model->id;
+        }
+
         $result = (new FeaturedAdPaginator(1))
-            ->filters(['brand' => $brand->id])
+            ->filters($filters)
             ->get();
 
         $ads = $result['ads'];
         $hasMore = $result['hasMore'];
 
-        $seo   = $this->buildSeoMeta($brand->brand . ' ' . $subcat->sub_category, $cat->seo_group ?? 'product', url("/category/{$cat->category_slug}/{$subcat->sub_cat_slug}/{$brand->brand_slug}"), $request->get('location', 'Ethiopia'), $result['total']);
+        $brandUrl = "/category/{$cat->category_slug}/{$subcat->sub_cat_slug}/{$brand->brand_slug}";
+        $seoName = $model
+            // "Xiaomi 13T Pro" already names the brand; "Galaxy S21" doesn't.
+            ? (stripos($model->model, $brand->brand) === 0 ? $model->model : $brand->brand . ' ' . $model->model)
+            : $brand->brand . ' ' . $subcat->sub_category;
+        $canonical = url($model ? "{$brandUrl}/{$model->model_slug}" : $brandUrl);
+
+        $seo   = $this->buildSeoMeta($seoName, $cat->seo_group ?? 'product', $canonical, $request->get('location', 'Ethiopia'), $result['total']);
         $title = $seo['seoTitle'];
 
         $user_id = $request->session()->get('user_id');
@@ -1047,6 +1104,7 @@ class AdvertController extends Controller
             ->count();
 
         $brands = $this->advertQueryService->getBrandsForSubcat($subcat->id);
+        $models = $this->advertQueryService->getModelsForBrand($brand->id, $cat->id);
 
             $filterType = 'brand';
             $filterId = $brand->id;
@@ -1055,7 +1113,7 @@ class AdvertController extends Controller
             $isMobile = $agent->isMobile();
             $metaRobots = $this->seoRobotsForCount($result['total']);
 
-        return view('public.brand', array_merge(compact('title', 'ads', 'user', 'brand', 'brands', 'cat', 'subcat', 'count_subcat', 'hasMore', 'filterType', 'filterId', 'isMobile', 'metaRobots'), $seo));
+        return view('public.brand', array_merge(compact('title', 'ads', 'user', 'brand', 'brands', 'cat', 'subcat', 'count_subcat', 'hasMore', 'filterType', 'filterId', 'isMobile', 'metaRobots', 'models', 'model', 'brandUrl'), $seo));
     }
 
         public function location($location)
@@ -1084,7 +1142,7 @@ class AdvertController extends Controller
 
     public function loadMoreLocation(Request $request)
     {
-        $page = $request->get('page', 1);
+        $page = max(1, (int) $request->get('page', 1));
         $filters = $request->only(['category', 'sub_category', 'brand', 'model', 'state', 'state_slug', 'city']);
 
         $result = (new FeaturedAdPaginator($page))

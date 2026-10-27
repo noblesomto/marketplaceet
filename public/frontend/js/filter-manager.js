@@ -1,6 +1,6 @@
 /**
  * Advanced Filter Manager
- * Handles filtering for Cars and Phones with multiple filter types
+ * Handles filtering for Cars, Phones (incl. RAM/storage) and Laptops & Computers with multiple filter types
  */
 
 class FilterManager {
@@ -9,6 +9,7 @@ class FilterManager {
             category: null,
             subCategory: null,
             brand: null,
+            model: null,
             location: null,
             priceMin: null,
             priceMax: null,
@@ -21,7 +22,10 @@ class FilterManager {
             carTransmission: [],
             // Phone filters
             phoneCondition: [],
-            phoneDeviceType: []
+            phoneDeviceType: [],
+            phoneSpecs: { ram: [], storage: [] },
+            // Laptop/computer filters (spec => values)
+            computer: { processor: [], ram: [], storage: [] }
         };
 
         this.isLoading = false;
@@ -39,6 +43,7 @@ class FilterManager {
         // Attach event listeners
         this.attachCarFilterListeners();
         this.attachPhoneFilterListeners();
+        this.attachComputerFilterListeners();
         this.attachGeneralFilterListeners();
 
         // Debug
@@ -58,6 +63,9 @@ class FilterManager {
         }
         if (typeof currentBrand !== 'undefined') {
             this.filters.brand = currentBrand;
+        }
+        if (typeof currentModel !== 'undefined') {
+            this.filters.model = currentModel;
         }
         if (typeof currentLocation !== 'undefined') {
             this.filters.location = currentLocation;
@@ -105,11 +113,40 @@ class FilterManager {
                     this.toggleArrayValue(this.filters.phoneCondition, value, e.target.checked);
                 } else if (name === 'phone_device_type[]') {
                     this.toggleArrayValue(this.filters.phoneDeviceType, value, e.target.checked);
+                } else if (name === 'phone_ram[]' || name === 'phone_storage[]') {
+                    const spec = name.replace(/^phone_|\[\]$/g, '');
+                    this.toggleArrayValue(this.filters.phoneSpecs[spec], value, e.target.checked);
+                    // The sidebar and the mobile modal both render each checkbox — keep them in step
+                    document.querySelectorAll(`.phone-filter-checkbox[name="${name}"][value="${CSS.escape(value)}"]`)
+                        .forEach(other => { other.checked = e.target.checked; });
                 }
 
                 this.debounceApplyFilters();
             });
         });
+    }
+
+    /**
+     * Attach event listeners for laptop/computer spec checkboxes (computer_ram[], …)
+     */
+    attachComputerFilterListeners() {
+        document.querySelectorAll('.computer-filter-checkbox').forEach(checkbox => {
+            checkbox.addEventListener('change', (e) => {
+                const spec = e.target.name.replace(/^computer_|\[\]$/g, '');
+                if (!this.filters.computer[spec]) return;
+
+                this.toggleArrayValue(this.filters.computer[spec], e.target.value, e.target.checked);
+                // The sidebar and the mobile modal both render each checkbox — keep them in step
+                document.querySelectorAll(`.computer-filter-checkbox[name="${e.target.name}"][value="${CSS.escape(e.target.value)}"]`)
+                    .forEach(other => { other.checked = e.target.checked; });
+
+                this.debounceApplyFilters();
+            });
+        });
+    }
+
+    hasComputerFilters() {
+        return Object.values(this.filters.computer).some(values => values.length > 0);
     }
 
     /**
@@ -178,7 +215,8 @@ class FilterManager {
                              this.filters.carTransmission.length > 0;
 
         const hasPhoneFilters = this.filters.phoneCondition.length > 0 ||
-                               this.filters.phoneDeviceType.length > 0;
+                               this.filters.phoneDeviceType.length > 0 ||
+                               Object.values(this.filters.phoneSpecs).some(values => values.length > 0);
 
         let endpoint = '/filter/adverts';
         let filterData = this.buildFilterData();
@@ -187,6 +225,8 @@ class FilterManager {
             endpoint = '/filter/car-details';
         } else if (hasPhoneFilters) {
             endpoint = '/filter/phone-details';
+        } else if (this.hasComputerFilters()) {
+            endpoint = '/filter/computer-details';
         }
 
         // Make AJAX request
@@ -230,6 +270,7 @@ class FilterManager {
         if (this.filters.category) data.category = this.filters.category;
         if (this.filters.subCategory) data.sub_category = this.filters.subCategory;
         if (this.filters.brand) data.brand = this.filters.brand;
+        if (this.filters.model) data.model = this.filters.model;
         if (this.filters.location) data.location = this.filters.location;
 
         // Price filters
@@ -265,6 +306,14 @@ class FilterManager {
         if (this.filters.phoneDeviceType.length > 0) {
             data.device_type = this.filters.phoneDeviceType;
         }
+        Object.entries(this.filters.phoneSpecs).forEach(([spec, values]) => {
+            if (values.length > 0) data[spec] = values;
+        });
+
+        // Laptop/computer filters
+        Object.entries(this.filters.computer).forEach(([spec, values]) => {
+            if (values.length > 0) data[spec] = values;
+        });
 
         return data;
     }
@@ -273,7 +322,7 @@ class FilterManager {
      * Update the results container with new HTML
      */
     updateResults(data) {
-        const container = document.getElementById('ads-container');
+        const container = document.getElementById('listings-grid');
         if (container) {
             container.innerHTML = data.html;
         }
@@ -289,7 +338,7 @@ class FilterManager {
      * Show loading state
      */
     showLoadingState() {
-        const container = document.getElementById('ads-container');
+        const container = document.getElementById('listings-grid');
         if (container) {
             container.style.opacity = '0.5';
             container.style.pointerEvents = 'none';
@@ -306,7 +355,7 @@ class FilterManager {
      * Hide loading state
      */
     hideLoadingState() {
-        const container = document.getElementById('ads-container');
+        const container = document.getElementById('listings-grid');
         if (container) {
             container.style.opacity = '1';
             container.style.pointerEvents = 'auto';
@@ -322,7 +371,7 @@ class FilterManager {
      * Show error message
      */
     showError(message) {
-        const container = document.getElementById('ads-container');
+        const container = document.getElementById('listings-grid');
         if (container) {
             container.innerHTML = `
                 <div class="col-span-full flex flex-col items-center justify-center p-10 bg-red-50 rounded-lg">
@@ -370,6 +419,8 @@ class FilterManager {
         count += this.filters.carTransmission.length;
         count += this.filters.phoneCondition.length;
         count += this.filters.phoneDeviceType.length;
+        Object.values(this.filters.phoneSpecs).forEach(values => { count += values.length; });
+        Object.values(this.filters.computer).forEach(values => { count += values.length; });
 
         if (this.filters.priceMin || this.filters.priceMax) count++;
         if (this.filters.buyDirect) count++;
@@ -389,13 +440,15 @@ class FilterManager {
         this.filters.carTransmission = [];
         this.filters.phoneCondition = [];
         this.filters.phoneDeviceType = [];
+        this.filters.phoneSpecs = { ram: [], storage: [] };
+        this.filters.computer = { processor: [], ram: [], storage: [] };
         this.filters.priceMin = null;
         this.filters.priceMax = null;
         this.filters.buyDirect = null;
         this.filters.verifiedSellers = 'all';
 
         // Uncheck all checkboxes
-        document.querySelectorAll('.car-filter-checkbox, .phone-filter-checkbox').forEach(checkbox => {
+        document.querySelectorAll('.car-filter-checkbox, .phone-filter-checkbox, .computer-filter-checkbox').forEach(checkbox => {
             checkbox.checked = false;
         });
 
@@ -432,6 +485,14 @@ class FilterManager {
                 this.filters.phoneDeviceType = [];
                 document.querySelectorAll('input[name="phone_device_type[]"]').forEach(cb => cb.checked = false);
                 break;
+            case 'phone-specs':
+                this.filters.phoneSpecs = { ram: [], storage: [] };
+                document.querySelectorAll('input[name="phone_ram[]"], input[name="phone_storage[]"]').forEach(cb => cb.checked = false);
+                break;
+            case 'computer':
+                this.filters.computer = { processor: [], ram: [], storage: [] };
+                document.querySelectorAll('.computer-filter-checkbox').forEach(cb => cb.checked = false);
+                break;
         }
 
         this.applyFilters();
@@ -443,7 +504,7 @@ let filterManager;
 
 document.addEventListener('DOMContentLoaded', function() {
     // Only initialize if we're on a category/subcategory/brand page
-    const hasFilters = document.querySelector('.car-filter-checkbox, .phone-filter-checkbox');
+    const hasFilters = document.querySelector('.car-filter-checkbox, .phone-filter-checkbox, .computer-filter-checkbox');
 
     if (hasFilters) {
         filterManager = new FilterManager();

@@ -318,10 +318,10 @@ class SearchFilter extends Controller
     }
 
     /**
-     * Only these categories have a model-bearing detail table (car_details /
-     * phone_details) — model landing pages only exist for them.
+     * Only these categories have a model-bearing detail table — model landing
+     * pages only exist for them.
      */
-    private const MODEL_CATEGORY_DETAIL_RELATIONS = [1 => 'car', 4 => 'phone'];
+    private const MODEL_CATEGORY_DETAIL_RELATIONS = Advert::MODEL_DETAIL_RELATIONS;
 
     /**
      * Fixed set of price-range slugs, reusing FilterService's existing
@@ -404,6 +404,11 @@ class SearchFilter extends Controller
 
             if ($redirectBrand) {
                 return redirect("/{$location}/{$category_slug}/{$newSlug}", 301);
+            }
+
+            // A retired brand that stood for a whole subcategory (Laptops & Computers → "Laptop")
+            if (SubCategory::where('sub_cat_slug', $newSlug)->where('cat_id', $cat->id)->exists()) {
+                return redirect("/{$location}/{$category_slug}", 301);
             }
         }
 
@@ -696,6 +701,16 @@ class SearchFilter extends Controller
     public function filterByPhoneDetails(Request $request)
     {
         $adverts = $this->filterService->buildPhoneDetailQuery($request)->paginate(20);
+
+        return response()->json([
+            'html'    => $this->filterService->renderAdvertCards($adverts),
+            'hasMore' => $adverts->hasMorePages(),
+        ]);
+    }
+
+    public function filterByComputerDetails(Request $request)
+    {
+        $adverts = $this->filterService->buildComputerDetailQuery($request)->paginate(20);
 
         return response()->json([
             'html'    => $this->filterService->renderAdvertCards($adverts),

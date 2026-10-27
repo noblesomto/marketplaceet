@@ -537,7 +537,7 @@ class UserController extends Controller
     {
         $user = auth()->user();
 
-        $wishlist = Advert::with(['firstImage', 'car', 'phone'])
+        $wishlist = Advert::with(['firstImage', 'car', 'phone', 'computer'])
             ->join('wishlists', function ($join) use ($user) {
                 $join->on('wishlists.advert_id', '=', 'adverts.id')
                      ->where('wishlists.user_id', $user->user_id);
@@ -575,8 +575,9 @@ class UserController extends Controller
                         ? $ad->firstImage->getUrl('large')
                         : $ad->firstImage->getUrl())
                     : null,
-                'car'   => $ad->car,
-                'phone' => $ad->phone,
+                'car'      => $ad->car,
+                'phone'    => $ad->phone,
+                'computer' => $ad->computer,
             ];
         });
 

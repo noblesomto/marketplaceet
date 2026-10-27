@@ -30,7 +30,10 @@ trait GeneratesSeoMeta
         switch ($group) {
             case 'property':
                 $title = "{$name} for Rent & Sale in {$location} | {$site}";
-                $desc  = "Find the best {$name} in {$location} on {$site}. Browse verified listings from agents and landlords. Schedule an inspection today.";
+                $desc  = $this->fitMetaDescription([
+                    "Find the best {$name} in {$location} on {$site}.",
+                    "Browse verified listings from agents and landlords and schedule an inspection today.",
+                ]);
                 $h1    = "{$name} for Rent & Sale in {$location}";
                 $intro = "Explore {$count} {$name} listings in {$location} on {$site}. Connect with agents and landlords, compare prices, and schedule inspections directly.";
                 $faqs  = [
@@ -48,7 +51,10 @@ trait GeneratesSeoMeta
 
             case 'service':
                 $title = "Find {$name} in {$location} | {$site}";
-                $desc  = "Need {$name}? Connect with trusted professionals in {$location} on {$site}. Compare profiles, read reviews, and hire the best.";
+                $desc  = $this->fitMetaDescription([
+                    "Need {$name} in {$location}? Hire trusted professionals on {$site}.",
+                    "Compare profiles, read reviews and hire the best.",
+                ]);
                 $h1    = "Find {$name} in {$location}";
                 $intro = "Connect with {$count} {$name} professionals in {$location} on {$site}. Compare profiles, read reviews and hire with confidence.";
                 $faqs  = [
@@ -66,7 +72,10 @@ trait GeneratesSeoMeta
 
             default: // product
                 $title = "Buy {$name} Online in {$location} | {$site}";
-                $desc  = "Looking for {$name}? Shop the widest selection of new and used {$name} on {$site}. Enjoy safe payments, verified sellers, and fast delivery to {$location}.";
+                $desc  = $this->fitMetaDescription([
+                    "Buy new and used {$name} in {$location} on {$site}.",
+                    "Compare prices, chat with verified sellers and pay safely with Buyer Protection.",
+                ]);
                 $h1    = "{$name} for Sale in {$location}";
                 $intro = "Browse {$count} {$name} listings in {$location} on {$site}. Compare prices, connect directly with verified sellers, and enjoy safe transactions with Buyer Protection on every purchase.";
                 $faqs  = [
@@ -107,7 +116,10 @@ trait GeneratesSeoMeta
         $displayLocation = $this->resolveLocationDisplayName($locationSlug);
 
         $title = "Buy and Sell in {$displayLocation} | {$site}";
-        $desc  = "Discover {$count} active ads for cars, phones, property, jobs and more in {$displayLocation} on {$site} — Ethiopia's trusted classifieds platform. Post free ads and connect with sellers near you.";
+        $desc  = $this->fitMetaDescription([
+            "Discover {$count} active ads for cars, phones, property, jobs and more in {$displayLocation} on {$site}.",
+            "Post free ads and connect with sellers near you.",
+        ]);
         $h1    = "Ads For Sale in {$displayLocation}";
         $intro = "Browse {$count} active listings from sellers in {$displayLocation} on {$site}. Find great deals on vehicles, phones, electronics, property, and more — all in one place.";
 
@@ -133,6 +145,30 @@ trait GeneratesSeoMeta
             'seoFaqs'      => $faqs,
             'seoTips'      => $tips,
         ];
+    }
+
+    /**
+     * Join sentences into a meta description of at most 160 characters (what
+     * Google shows), dropping trailing sentences that don't fit. A first
+     * sentence that is too long on its own is cut at a word.
+     */
+    private function fitMetaDescription(array $sentences, int $max = 160): string
+    {
+        $desc = '';
+        foreach ($sentences as $sentence) {
+            $next = trim("{$desc} {$sentence}");
+            if (mb_strlen($next) > $max) {
+                break;
+            }
+            $desc = $next;
+        }
+
+        if ($desc === '') {
+            $desc = rtrim(mb_substr($sentences[0], 0, $max - 1));
+            $desc = preg_replace('/\s+\S*$/u', '', $desc) . '…';
+        }
+
+        return $desc;
     }
 
     /**

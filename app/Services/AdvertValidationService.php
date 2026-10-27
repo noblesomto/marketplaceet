@@ -5,6 +5,10 @@ namespace App\Services;
 use App\Models\Category;
 use App\Models\SubCategory;
 use App\Services\AdvertImageRequirements;
+use App\Support\ComputerSpecs;
+use App\Models\PhoneDetail;
+use App\Support\PhoneSpecs;
+use App\Support\DeviceModels;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Validation\Rule;
 
@@ -27,9 +31,11 @@ class AdvertValidationService
      * @param bool $isUpdate - If true, images are optional
      * @param bool $hasTempImages - If true, images are optional (already uploaded)
      * @param string|null $accType - The submitting user's account type (e.g. "Commercial"), used to gate account-restricted fields like quantity
+     * @param int|null $brandId - Phones only: a brand with models (e.g. Apple) gets a model rule
+     * @param bool $requireDeviceModel - false where the client can't send a model yet (mobile app)
      * @return array
      */
-    public function getRules(int $categoryId, ?int $subcategoryId = null, bool $isUpdate = false, bool $hasTempImages = false, ?string $accType = null): array
+    public function getRules(int $categoryId, ?int $subcategoryId = null, bool $isUpdate = false, bool $hasTempImages = false, ?string $accType = null, ?int $brandId = null, bool $requireDeviceModel = true): array
     {
         // Get UI config
         $uiConfig = $this->getUIConfig($categoryId, $subcategoryId);
@@ -61,6 +67,25 @@ class AdvertValidationService
 
         // Add conditional rules based on UI config
         $rules = array_merge($rules, $this->buildConditionalRules($uiConfig, $categoryId, $subcategoryId, $accType));
+
+        // Phones/laptops: brands with models (e.g. Apple → iPhone 12, HP → EliteBook) need one — see DeviceModels
+        if (DeviceModels::isDeviceSubcategory($subcategoryId)) {
+            $rules['model'] = DeviceModels::rule($brandId, $requireDeviceModel);
+        }
+
+        // Laptop specs are optional (blank ones are read from the title/description) — see ComputerSpecs
+        if ((int) $subcategoryId === DeviceModels::COMPUTERS_SUBCATEGORY_ID) {
+            foreach (ComputerSpecs::FIELDS as $field) {
+                $rules[$field] = ['nullable', Rule::in(ComputerSpecs::options($field))];
+            }
+        }
+
+        // Phone RAM/storage are optional too — see PhoneSpecs
+        if ((int) $subcategoryId === 6) {
+            foreach (PhoneDetail::SPEC_INPUTS as $field => $input) {
+                $rules[$input] = ['nullable', Rule::in(PhoneSpecs::options($field))];
+            }
+        }
 
         return $rules;
     }
@@ -175,7 +200,7 @@ class AdvertValidationService
             $rules['phone_color']     = 'required';
             $rules['phone_condition'] = 'required';
             $rules['device']          = 'required';
-            // model dropdown is not shown for phones — no model required
+            // model rule is brand-dependent — added in getRules() via DeviceModels
         }
 
         // Generic model requirement (for other subcategories that declare model required)

@@ -91,14 +91,14 @@
 
         <!-- Content -->
         <div class="p-3 flex flex-col flex-grow space-y-2">
-            <h1 class="font-bold text-sm">
+            <h3 class="font-bold text-sm">
                 {{-- Stretched link: ::after covers the entire card via position:absolute inset-0,
                      making the whole card clickable without wrapping everything in <a>. --}}
                 <a href="{{ url($row->state_slug . '/' . $row->title_slug .'/'. $row->ad_id) }}"
                    class="after:absolute after:inset-0 after:content-[''] after:z-[1]">
                     {{ Str::limit($row->ad_title, 50) }}
                 </a>
-            </h1>
+            </h3>
             <div class="flex items-center justify-between text-xs mt-auto">
                 <div class="text-gray-500 truncate flex">
                     <span>

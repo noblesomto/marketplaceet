@@ -14,12 +14,16 @@ use App\Models\State;
 use App\Models\Shipping;
 use App\Models\CarDetail;
 use App\Models\PhoneDetail;
+use App\Models\ComputerDetail;
 use App\Models\AdvertBoost;
 use App\Helpers\ContentHelper;
 use App\Helpers\FileUploadHelper;
 use App\Services\AdvertImageRequirements;
 use App\Services\AdvertValidationService;
 use App\Services\ImageQualityService;
+use App\Support\ComputerSpecs;
+use App\Support\DeviceModels;
+use App\Support\PhoneSpecs;
 use App\Traits\ManagesImages;
 use App\Jobs\PostAdvertJob;
 use Illuminate\Http\Request;
@@ -94,7 +98,7 @@ class UserManageAdverts extends Controller
      */
     public function fetchBrands($subcategoryId)
     {
-        $brands = Brands::where('subcat_id', $subcategoryId)->get();
+        $brands = Brands::where('subcat_id', $subcategoryId)->orderedForPicker()->get();
 
         return response()->json([
             'success' => true,
@@ -126,11 +130,13 @@ class UserManageAdverts extends Controller
      */
     public function fetchModels($brandId)
     {
-        $models = VehicleModel::where('brand_id', $brandId)->get();
+        $models = VehicleModel::where('brand_id', $brandId)->orderBy('id')->get();
 
         return response()->json([
             'success' => true,
-            'data' => $models
+            'data' => $models,
+            // How to render the Model picker for this brand (see DeviceModels::fieldFor)
+            'model_field' => DeviceModels::fieldFor(Brands::find($brandId)),
         ]);
     }
 
@@ -213,6 +219,10 @@ class UserManageAdverts extends Controller
                     'conditions'   => ['New - Unboxed', 'New - No Packaging', 'Used - Very Good', 'Used - Good', 'Used - Defect', 'Foreign Used - No Packaging'],
                     'device_types' => ['Smartphone', 'Feature Phone', 'Tablet'],
                 ],
+                // Mobile Phones (sub_category 6): optional ram / storage
+                'phone_spec_options' => PhoneSpecs::allOptions(),
+                // Laptops & Computers (sub_category 27): optional processor / ram / storage / storage_type
+                'computer_options' => ComputerSpecs::allOptions(),
             ]
         ]);
     }
@@ -386,7 +396,15 @@ class UserManageAdverts extends Controller
      *                 // Phone specific fields
      *                 @OA\Property(property="phone_color", type="string"),
      *                 @OA\Property(property="phone_condition", type="string"),
-     *                 @OA\Property(property="device", type="string")
+     *                 @OA\Property(property="device", type="string"),
+     *                 // Phone specs (optional — values from phone_spec_options; missing ones are read from the title/description)
+     *                 @OA\Property(property="phone_ram", type="string", example="8GB"),
+     *                 @OA\Property(property="phone_storage", type="string", example="128GB"),
+     *                 // Laptop specific fields (optional — values from computer_options; missing ones are read from the title/description)
+     *                 @OA\Property(property="processor", type="string", example="Intel Core i5"),
+     *                 @OA\Property(property="ram", type="string", example="8GB"),
+     *                 @OA\Property(property="storage", type="string", example="256GB"),
+     *                 @OA\Property(property="storage_type", type="string", example="SSD")
      *             )
      *         )
      *     ),
@@ -435,7 +453,7 @@ class UserManageAdverts extends Controller
                 ->first();
 
             if ($existing) {
-                $existing->load(['media', 'car', 'phone', 'shippings']);
+                $existing->load(['media', 'car', 'phone', 'computer', 'shippings']);
                 return response()->json([
                     'success' => true,
                     'message' => 'Advert already created for this request.',
@@ -453,7 +471,7 @@ class UserManageAdverts extends Controller
         // Use dynamic validation service based on Category UI Config
         $validationService = new AdvertValidationService();
         $hasTempImages = !empty($request->input('temp_image_paths', []));
-        $rules = $validationService->getRules($category, $subcat, false, $hasTempImages, $user->acc_type);
+        $rules = $validationService->getRules($category, $subcat, false, $hasTempImages, $user->acc_type, (int) $request->input('brand'), false);
         $imageRequirements = AdvertImageRequirements::get();
 
         $messages = [
@@ -585,7 +603,7 @@ class UserManageAdverts extends Controller
                 'source' => 'api',
             ]);
 
-            $advert->update(['ad_id' => (string) $advert->id]);
+            $advert->assignAdId();
 
             ActivityLog::record('advert', 'Posted advert "' . $advert->ad_title . '"', $user, $advert, ['source' => 'app']);
 
@@ -746,13 +764,19 @@ class UserManageAdverts extends Controller
                     'phone_id' => rand(10000, 99999),
                     'cat_id' => $request->input('category'),
                     'brand_id' => $request->input('brand'),
-                    'model' => $request->input('model'),
+                    // App doesn't send a model yet — inferred from the title
+                    'model' => DeviceModels::resolve($request->input('brand'), $request->input('model'), (string) $request->input('ad_title')),
                     'color' => $request->input('phone_color'),
                     'device' => $request->input('device'),
                     'condition' => $request->input('phone_condition'),
-                ]);
+                ] + PhoneDetail::specsFrom($request->all(), $request->input('ad_title'), $request->input('description')));
                 $phone->advert()->associate($advert);
                 $phone->save();
+            }
+
+            // Store laptop/computer model — inferred from the title when the app sends none
+            if ($subcat === DeviceModels::COMPUTERS_SUBCATEGORY_ID) {
+                ComputerDetail::syncFor($advert, $request->input('brand'), $request->input('model'), (string) $request->input('ad_title'), $request->only(ComputerSpecs::FIELDS));
             }
 
             DB::commit();
@@ -774,7 +798,7 @@ class UserManageAdverts extends Controller
             }
 
             // Load relationships (media instead of old images)
-            $advert->load(['media', 'car', 'phone', 'shippings']);
+            $advert->load(['media', 'car', 'phone', 'computer', 'shippings']);
 
             return response()->json([
                 'success' => true,
@@ -794,7 +818,7 @@ class UserManageAdverts extends Controller
                     ->first();
 
                 if ($existing) {
-                    $existing->load(['media', 'car', 'phone', 'shippings']);
+                    $existing->load(['media', 'car', 'phone', 'computer', 'shippings']);
                     return response()->json([
                         'success' => true,
                         'message' => 'Advert already created for this request.',
@@ -858,7 +882,7 @@ class UserManageAdverts extends Controller
     {
         $user = auth()->user();
 
-        $advert = Advert::with(['media', 'car', 'phone', 'shippings'])
+        $advert = Advert::with(['media', 'car', 'phone', 'computer', 'shippings'])
             ->where('id', $advertId)
             ->where('user_id', $user->user_id)
             ->first();
@@ -871,8 +895,8 @@ class UserManageAdverts extends Controller
         }
 
         $subcategories = SubCategory::where('cat_id', $advert->category)->get();
-        $brands = Brands::where('subcat_id', $advert->sub_category)->get();
-        $models = VehicleModel::where('brand_id', $advert->brand)->get();
+        $brands = Brands::where('subcat_id', $advert->sub_category)->orderedForPicker()->get();
+        $models = VehicleModel::where('brand_id', $advert->brand)->orderBy('id')->get();
 
         // Return Spatie media items as 'images' for the edit screen.
         // Each item includes 'id' (use for deleted_images[] / existing_image_order),
@@ -892,6 +916,7 @@ class UserManageAdverts extends Controller
                 'subcategories' => $subcategories,
                 'brands'        => $brands,
                 'models'        => $models,
+                'model_field'   => DeviceModels::fieldFor(Brands::find($advert->brand)),
                 'user'          => $user,
             ]
         ]);
@@ -956,7 +981,15 @@ class UserManageAdverts extends Controller
      *                 // Phone specific fields
      *                 @OA\Property(property="phone_color", type="string"),
      *                 @OA\Property(property="phone_condition", type="string"),
-     *                 @OA\Property(property="device", type="string")
+     *                 @OA\Property(property="device", type="string"),
+     *                 // Phone specs (optional — values from phone_spec_options; missing ones are read from the title/description)
+     *                 @OA\Property(property="phone_ram", type="string", example="8GB"),
+     *                 @OA\Property(property="phone_storage", type="string", example="128GB"),
+     *                 // Laptop specific fields (optional — values from computer_options; missing ones are read from the title/description)
+     *                 @OA\Property(property="processor", type="string", example="Intel Core i5"),
+     *                 @OA\Property(property="ram", type="string", example="8GB"),
+     *                 @OA\Property(property="storage", type="string", example="256GB"),
+     *                 @OA\Property(property="storage_type", type="string", example="SSD")
      *             )
      *         )
      *     ),
@@ -996,7 +1029,7 @@ class UserManageAdverts extends Controller
 
         // Use dynamic validation service based on Category UI Config
         $validationService = new AdvertValidationService();
-        $rules = $validationService->getRules($category, $subcat, true, false, $user->acc_type); // true = isUpdate
+        $rules = $validationService->getRules($category, $subcat, true, false, $user->acc_type, (int) $request->input('brand'), false); // true = isUpdate
 
         $messages = [
             'state.exists'                => 'Please select a valid state.',
@@ -1201,11 +1234,16 @@ class UserManageAdverts extends Controller
                 $phoneData = [
                     'cat_id'    => $request->input('category'),
                     'brand_id'  => $request->input('brand'),
-                    'model'     => $request->input('model'),
+                    // No model sent (app) → keep the current one if it fits the brand, else infer from the title
+                    'model'     => DeviceModels::resolve(
+                        $request->input('brand'),
+                        $request->input('model', optional($advert->phone)->model),
+                        (string) $request->input('ad_title')
+                    ),
                     'color'     => $request->input('phone_color'),
                     'device'    => $request->input('device'),
                     'condition' => $request->input('phone_condition'),
-                ];
+                ] + PhoneDetail::specsFrom($request->all(), $request->input('ad_title'), $request->input('description'), $advert->phone);
                 if ($advert->phone) {
                     $advert->phone->update($phoneData);
                 } else {
@@ -1213,6 +1251,18 @@ class UserManageAdverts extends Controller
                     $phone->advert()->associate($advert);
                     $phone->save();
                 }
+            }
+
+            // Update laptop/computer model — no model sent (app) → keep the current one, else infer from the title
+            if ($subcat === DeviceModels::COMPUTERS_SUBCATEGORY_ID) {
+                ComputerDetail::syncFor(
+                    $advert,
+                    $request->input('brand'),
+                    $request->input('model', optional($advert->computer)->model),
+                    (string) $request->input('ad_title'),
+                    // specs not sent (older app) → keep the current ones, else read from the text
+                    $request->only(ComputerSpecs::FIELDS) + array_filter(optional($advert->computer)->only(ComputerSpecs::FIELDS) ?? [])
+                );
             }
 
             DB::commit();
@@ -1235,7 +1285,7 @@ class UserManageAdverts extends Controller
                 ]);
             }
 
-            $advert->load(['images', 'car', 'phone', 'shippings']);
+            $advert->load(['images', 'car', 'phone', 'computer', 'shippings']);
 
             return response()->json([
                 'success' => true,

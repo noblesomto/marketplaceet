@@ -146,11 +146,11 @@
                     <div id="divModel" class="{{ in_array($advert->sub_category, [2, 21, 23]) ? '' : 'hidden' }}">
                         <label for="model" class="block text-sm font-semibold text-gray-700 mb-2">Model</label>
                         <select id="model" name="model" class="custom-select block w-full px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-dark_green focus:border-transparent bg-white text-base"
-                            data-selected="{{ in_array($advert->sub_category, [2, 21, 23]) ? optional($advert->car)->model : '' }}">
+                            data-selected="{{ $advert->detailModelId() }}">
                             <option value="">Select Model</option>
                             @foreach($models as $model)
                                 <option value="{{ $model->id }}"
-                                    {{ in_array($advert->sub_category, [2, 21, 23]) && optional($advert->car)->model == $model->id ? 'selected' : '' }}>
+                                    {{ $advert->detailModelId() === $model->id ? 'selected' : '' }}>
                                     {{ $model->model }}
                                 </option>
                             @endforeach
@@ -380,9 +380,15 @@
                         </select>
                         @error('phone_condition') <p class="text-xs text-red-500 mt-1">{{ $message }}</p> @enderror
                     </div>
+
+                    <!-- RAM / Storage -->
+                    @include('user.components.phone-specs', ['specs' => optional($advert->phone)->only(\App\Support\PhoneSpecs::FIELDS) ?? []])
                 </div>
             </div>
         </div>
+
+        <!-- CARD 3b: Computer Specs (Laptops & Computers) -->
+        @include('user.components.computer-specs', ['subcategoryId' => old('subcategory', $advert->sub_category), 'specs' => optional($advert->computer)->only(\App\Support\ComputerSpecs::FIELDS) ?? []])
 
         <!-- CARD 4: Financials -->
         <div class="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
@@ -543,7 +549,7 @@
                 </div>
 
                 <!-- IMAGES (EDIT MODE) -->
-                <div>
+                <div id="product-photos" class="scroll-mt-24">
                      <label class="block text-sm font-semibold text-gray-700 mb-2">Product Photos</label>
 
                      <div class="mb-4 p-3 rounded-lg bg-blue-50 border border-blue-100 text-sm text-blue-800">
@@ -664,7 +670,8 @@
 
 {{-- Database-Driven Category UI Configuration (2026-01-31) --}}
 <script src="{{ asset('dashboard/js/category-ui-manager.js') }}"></script>
-<script src="{{ asset('dashboard/js/edit-ad-v2.js') }}"></script>
+<script src="{{ asset('dashboard/js/device-model-field.js') }}?v=2"></script>
+<script src="{{ asset('dashboard/js/edit-ad-v2.js') }}?v=4"></script>
 {{-- Old hardcoded version (kept for rollback): <script src="{{ asset('dashboard/js/edit-ad-Aa.js') }}"></script> --}}
 
 <script src="{{ asset('dashboard/js/edit-sortable.js') }}"></script>

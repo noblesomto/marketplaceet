@@ -149,6 +149,10 @@
             @include('public.components.filter.condition-phone')
         </div>
 
+        <!-- Storage / RAM (only when ads here have them) -->
+        @include('public.components.filter.phone-spec', ['field' => 'storage'])
+        @include('public.components.filter.phone-spec', ['field' => 'ram'])
+
         <!-- Device Type -->
         <div class="bg-white p-4 rounded-xl shadow-md border border-gray-100">
             <h4 class="font-bold text-gray-900 text-sm mb-3">Device Type</h4>
@@ -205,7 +209,7 @@
 
               {{-- ── DESKTOP: ads grid (unchanged) ────────────────── --}}
               <div class="hidden lg:block">
-                <div id="ads-container" class="grid grid-cols-4 xl:grid-cols-4 gap-2 px-1">
+                <div id="listings-grid" class="grid grid-cols-4 xl:grid-cols-4 gap-2 px-1">
                     @foreach ($ads as $row)
                         @include('public.components.advert.advert-card', ['row' => $row])
                     @endforeach
@@ -258,7 +262,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const loadMoreBtn = document.getElementById('load-more-btn');
     const loadMoreText = document.getElementById('load-more-text');
     const loadMoreSpinner = document.getElementById('load-more-spinner');
-    const adsContainer = document.getElementById('ads-container');
+    const adsContainer = document.getElementById('listings-grid');
 
     const filters = {
         @if(isset($cat))
@@ -313,6 +317,6 @@ document.addEventListener('DOMContentLoaded', function() {
     const currentBrand = null;
     const currentLocation = {{ isset($location) ? "'".$location."'" : 'null' }};
 </script>
-<script src="{{ asset('frontend/js/filter-manager.js') }}"></script>
+<script src="{{ asset('frontend/js/filter-manager.js') }}?v=5"></script>
 
 @include('public.layouts.footer')

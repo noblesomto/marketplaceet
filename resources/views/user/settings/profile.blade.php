@@ -218,7 +218,7 @@
     <div style="background:#fff;border-bottom:2px solid #e5e7eb;padding:14px 18px;font-weight:700;color:#326916;border-radius:8px;margin-bottom:8px;">
         My Recent Listings
     </div>
-    <div id="ads-container">
+    <div id="listings-grid">
         @include('user.components.my-ads', ['ads' => $ads])
     </div>
     @if(isset($hasMore) && $hasMore)
@@ -245,7 +245,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const loadMoreBtn = document.getElementById('load-more-btn');
     const loadMoreText = document.getElementById('load-more-text');
     const loadMoreSpinner = document.getElementById('load-more-spinner');
-    const adsContainer = document.getElementById('ads-container');
+    const adsContainer = document.getElementById('listings-grid');
 
     if (loadMoreBtn) {
         loadMoreBtn.addEventListener('click', function() {

@@ -83,6 +83,10 @@ input[type='number'] {
     <input type="hidden" name="brand" value="{{ $brand->id }}">
   @endif
 
+  @if(isset($model))
+    <input type="hidden" name="model" value="{{ $model->id }}">
+  @endif
+
   @if(isset($location))
     <input type="hidden" name="location" value="{{ $location }}">
   @endif

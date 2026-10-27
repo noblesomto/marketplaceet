@@ -24,6 +24,10 @@
                         @include('public.components.filter.condition-phone')
                     </div>
 
+                    <!-- Storage / RAM (only when ads here have them) -->
+                    @include('public.components.filter.phone-spec', ['field' => 'storage', 'layout' => 'modal'])
+                    @include('public.components.filter.phone-spec', ['field' => 'ram', 'layout' => 'modal'])
+
                     <!-- Device Type Section -->
                     <div class="pb-4">
                         <h4 class="font-bold text-gray-900 text-sm mb-3">Device Type</h4>
@@ -79,6 +83,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (typeof window.filterManager !== 'undefined') {
                 window.filterManager.filters.phoneCondition = [];
                 window.filterManager.filters.phoneDeviceType = [];
+                window.filterManager.filters.phoneSpecs = { ram: [], storage: [] };
                 window.filterManager.applyFilters();
             }
 

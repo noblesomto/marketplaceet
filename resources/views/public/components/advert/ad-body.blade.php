@@ -153,12 +153,29 @@
                 </div>
             @endif
 
-            <!-- Phone Specifics -->
-            @if($ad->sub_category=="6")
+            <!-- Phone / Laptop model — links to the model page (e.g. Apple → iPhone 12, HP → EliteBook) -->
+            @if(in_array($ad->sub_category, [6, 27]))
                 <div class="bg-gray-50 p-3 rounded-lg border border-gray-100">
                     <span class="block text-xs text-gray-500 uppercase tracking-wider mb-1">Brand</span>
                     <span class="font-semibold text-gray-800">{{ optional($brand)->brand }}</span>
                 </div>
+                @if(!empty($model) && $brand && $cat && $sub_cat)
+                <div class="bg-gray-50 p-3 rounded-lg border border-gray-100">
+                    <span class="block text-xs text-gray-500 uppercase tracking-wider mb-1">Model</span>
+                    <a href="{{ url("/category/{$cat->category_slug}/{$sub_cat->sub_cat_slug}/{$brand->brand_slug}/{$model->model_slug}") }}"
+                       class="font-semibold text-dark_green hover:underline">{{ $model->model }}</a>
+                </div>
+                @endif
+            @endif
+
+            <!-- Phone Specifics -->
+            @if($ad->sub_category=="6")
+                @foreach(optional($phone)->specLines() ?? [] as $label => $value)
+                <div class="bg-gray-50 p-3 rounded-lg border border-gray-100">
+                    <span class="block text-xs text-gray-500 uppercase tracking-wider mb-1">{{ $label }}</span>
+                    <span class="font-semibold text-gray-800">{{ $value }}</span>
+                </div>
+                @endforeach
                 <div class="bg-gray-50 p-3 rounded-lg border border-gray-100">
                     <span class="block text-xs text-gray-500 uppercase tracking-wider mb-1">Color</span>
                     <span class="font-semibold text-gray-800">{{ $phone->color ?? '-' }}</span>
@@ -167,6 +184,16 @@
                     <span class="block text-xs text-gray-500 uppercase tracking-wider mb-1">Accessories</span>
                     <span class="font-semibold text-gray-800">{{ $phone->device ?? '-' }}</span>
                 </div>
+            @endif
+
+            <!-- Laptop / Computer Specs -->
+            @if($ad->sub_category == 27 && !empty($computer))
+                @foreach($computer->specLines() as $label => $value)
+                <div class="bg-gray-50 p-3 rounded-lg border border-gray-100">
+                    <span class="block text-xs text-gray-500 uppercase tracking-wider mb-1">{{ $label }}</span>
+                    <span class="font-semibold text-gray-800">{{ $value }}</span>
+                </div>
+                @endforeach
             @endif
         </div>
 
