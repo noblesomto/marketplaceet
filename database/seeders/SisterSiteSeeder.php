@@ -14,9 +14,9 @@ class SisterSiteSeeder extends Seeder
     {
         $sisterSites = [
             [
-                'country_name' => 'Ethiopia',
-                'flag' => 'frontend/flags/ethiopia.png',
-                'url' => 'https://marketplace.com.et',
+                'country_name' => 'Nigeria',
+                'flag' => 'frontend/flags/nigeria.png',
+                'url' => 'https://www.marketplace.ng',
                 'display_order' => 1,
                 'is_active' => true,
                 'created_at' => now(),
