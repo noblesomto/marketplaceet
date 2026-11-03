@@ -550,49 +550,11 @@
 
                 <!-- IMAGES (EDIT MODE) -->
                 <div id="product-photos" class="scroll-mt-24">
-                     <label class="block text-sm font-semibold text-gray-700 mb-2">Product Photos</label>
-
-                     <div class="mb-4 p-3 rounded-lg bg-blue-50 border border-blue-100 text-sm text-blue-800">
-                         Must keep at least <strong>{{ $minImages }}</strong> image{{ $minImages === 1 ? '' : 's' }}. Maximum <strong>{{ $maxImages }}</strong> images allowed.
-                     </div>
-
-                     @error('images')
-                         <div class="mb-4 p-3 rounded-lg bg-red-100 text-red-800 text-sm font-medium">{{ $message }}</div>
-                     @enderror
-                     @error('deleted_images')
-                         <div class="mb-4 p-3 rounded-lg bg-red-100 text-red-800 text-sm font-medium">{{ $message }}</div>
-                     @enderror
-
-                     <!-- Dropzone -->
-                     <div class="border-2 border-dashed border border-gray-300 rounded-xl hover:bg-gray-50 hover:border-dark_green transition-colors relative group mb-6">
-                        <label for="imageUpload" class="cursor-pointer flex flex-col items-center justify-center py-8 w-full h-full z-10">
-                            <div class="p-4 rounded-full bg-blue-50 text-dark_green mb-3 group-hover:scale-110 transition-transform">
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-8 h-8">
-                                  <path stroke-linecap="round" stroke-linejoin="round" d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z" />
-                                  <path stroke-linecap="round" stroke-linejoin="round" d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z" />
-                                </svg>
-                            </div>
-                            <span class="text-sm font-medium text-gray-900">Add more photos</span>
-                            <span class="text-xs text-gray-500 mt-1">PNG, JPG, WebP up to 20MB (Max {{ $maxImages }} images total)</span>
-                        </label>
-                        <input name="images[]" type="file" id="imageUpload" multiple class="hidden" accept="image/*">
-                        <input type="hidden" name="existing_image_order" id="existing_image_order">
-                    </div>
-
-                    <!-- Existing & New Preview Grid -->
-                    <div id="preview" class="grid grid-cols-3 sm:grid-cols-4 md:grid-cols-5 gap-4">
-                        @foreach($advert->getMedia('images') as $media)
-                        <div class="relative group cursor-move image-container rounded-lg overflow-hidden shadow-sm border border-gray-200" draggable="true" data-id="{{ $media->id }}">
-                            <img src="{{ $media->getUrl('thumbnail') }}" class="w-full h-32 object-cover">
-                            <button type="button" class="absolute top-1 right-1 w-6 h-6 text-white bg-red-500 rounded-full hover:bg-red-600 flex items-center justify-center delete-image shadow-md transition-colors" data-id="{{ $media->id }}">&times;</button>
-                            <input type="hidden" name="existing_images[]" value="{{ $media->id }}">
-                        </div>
-                        @endforeach
-                    </div>
-                     <div class="flex items-center text-xs text-gray-500 mt-3">
-                         <img src="{{ asset('frontend/images/swap.png') }}" class="h-5 w-auto mr-2 opacity-60">
-                         <span>Drag and drop to reorder images.</span>
-                    </div>
+                    @include('user.partials.ad-photos', [
+                        'minImages' => $minImages,
+                        'maxImages' => $maxImages,
+                        'savedPhotos' => $advert->getMedia('images')->map(fn ($m) => ['id' => $m->id, 'url' => $m->getUrl('thumbnail')])->all(),
+                    ])
                 </div>
             </div>
         </div>
@@ -677,7 +639,9 @@
 <script src="{{ asset('dashboard/js/buy-direct-field.js') }}?v=1"></script>
 {{-- Old hardcoded version (kept for rollback): <script src="{{ asset('dashboard/js/edit-ad-Aa.js') }}"></script> --}}
 
-<script src="{{ asset('dashboard/js/edit-sortable.js') }}"></script>
+<script src="{{ asset('dashboard/js/edit-sortable.js') }}?v=2"></script>
+<script src="{{ asset('dashboard/js/image-quality-validator.js') }}"></script>
+<script src="{{ asset('dashboard/js/ad-photos.js') }}?v=2"></script>
 <script src="{{ asset('dashboard/js/word-count.js') }}"></script>
 
 <script>

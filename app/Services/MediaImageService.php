@@ -34,7 +34,9 @@ class MediaImageService
         }
 
         $images = array_values($request->file('images'));
-        $order = explode(',', $request->input('image_order', ''));
+        // array_filter: explode('') gives [''], which "matched" a single
+        // upload and silently skipped it
+        $order = array_values(array_filter(explode(',', (string) $request->input('image_order', '')), 'is_numeric'));
 
         // If no order specified, use array indices
         if (empty($order) || count($order) != count($images)) {

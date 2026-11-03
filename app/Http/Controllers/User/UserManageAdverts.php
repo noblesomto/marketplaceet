@@ -361,12 +361,13 @@ class UserManageAdverts extends Controller
 
                 // First, collect temp images
                 if ($hasTempImages) {
-                    foreach ($tempImagePaths as $tempPath) {
+                    foreach (array_values($tempImagePaths) as $i => $tempPath) {
                         \Log::debug("Checking temp image", ['path' => $tempPath, 'exists' => \Storage::disk('public')->exists($tempPath)]);
                         if (\Storage::disk('public')->exists($tempPath)) {
                             $imagesToProcess[] = [
                                 'type' => 'temp',
                                 'path' => $tempPath,
+                                'token' => "t:{$i}",
                             ];
                         }
                     }
@@ -374,15 +375,18 @@ class UserManageAdverts extends Controller
 
                 // Then, add new uploads
                 if ($hasNewImages) {
-                    foreach ($request->file('images') as $image) {
+                    foreach (array_values($request->file('images')) as $i => $image) {
                         if ($image && $image->isValid()) {
                             $imagesToProcess[] = [
                                 'type' => 'new',
                                 'file' => $image,
+                                'token' => "n:{$i}",
                             ];
                         }
                     }
                 }
+
+                $imagesToProcess = $this->applyPhotoOrder($imagesToProcess, $request->input('photo_order'));
 
                 \Log::debug("Images to process", ['count' => count($imagesToProcess)]);
 
@@ -642,6 +646,25 @@ class UserManageAdverts extends Controller
         $messages = [];
 
 
+        // Check new photos before deleting anything, so a rejected
+        // replacement can't leave the ad short of photos.
+        $incomingCount = $request->hasFile('images') ? count($request->file('images')) : 0;
+        if ($incomingCount) {
+            $imageQualityService = new ImageQualityService();
+            $qualityErrors = [];
+            foreach ($request->file('images') as $image) {
+                $result = $imageQualityService->validateImage($image, $strictness);
+                if (!$result['valid']) {
+                    $qualityErrors = array_merge($qualityErrors, $result['errors']);
+                }
+            }
+            if (!empty($qualityErrors)) {
+                return redirect()->back()->withErrors([
+                    'images' => array_merge(['Image quality validation failed:'], array_slice($qualityErrors, 0, 3)),
+                ])->withInput();
+            }
+        }
+
         // Handle deleted images first
         if ($request->has('deleted_images') && !empty($request->input('deleted_images'))) {
             $deletedImages = $request->input('deleted_images');
@@ -652,7 +675,9 @@ class UserManageAdverts extends Controller
             $deletedImages = array_filter(array_map('intval', $deletedImages));
 
             if (!empty($deletedImages)) {
-                $effectiveMinImages = in_array($category, [3, 18]) ? 0 : $minImages;
+                // Photos being uploaded in the same save count towards the
+                // minimum, so a seller can replace a photo in one step.
+                $effectiveMinImages = in_array($category, [3, 18]) ? 0 : max(0, $minImages - $incomingCount);
 
                 $result = $this->getImageService()->validateAndDeleteImages(
                     $advert,
@@ -676,22 +701,8 @@ class UserManageAdverts extends Controller
 
         // Upload new images BEFORE reordering existing ones
         $newImagesUploaded = 0;
+        $uploadedMedia = [];
         if ($request->hasFile('images')) {
-            // Quality validation for newly added images
-            $imageQualityService = new ImageQualityService();
-            $qualityErrors = [];
-            foreach ($request->file('images') as $image) {
-                $result = $imageQualityService->validateImage($image, $strictness);
-                if (!$result['valid']) {
-                    $qualityErrors = array_merge($qualityErrors, $result['errors']);
-                }
-            }
-            if (!empty($qualityErrors)) {
-                return redirect()->back()->withErrors([
-                    'images' => array_merge(['Image quality validation failed:'], array_slice($qualityErrors, 0, 3)),
-                ])->withInput();
-            }
-
             // Max images guard: current (after deletions) + new must not exceed maxImages
             $currentAfterDeletion = $advert->fresh()->getMedia('images')->count();
             $incomingCount = count($request->file('images'));
@@ -728,8 +739,32 @@ class UserManageAdverts extends Controller
             }
         }
 
+        // The loaded media list predates this request's deletions/uploads
+        $advert->load('media');
+
         // Handle image reordering AFTER uploads
-        if ($request->filled('existing_image_order')) {
+        if ($request->filled('photo_order')) {
+            // Full display order from the photo picker: s:<media id>, n:<images[] index>.
+            // n:<i> maps to the i-th upload only if none were skipped; otherwise
+            // new photos just go after the saved ones.
+            $newByIndex = count($uploadedMedia) === $incomingCount ? array_values($uploadedMedia) : [];
+            $finalOrder = [];
+            foreach (explode(',', $request->input('photo_order')) as $token) {
+                [$kind, $ref] = array_pad(explode(':', trim($token), 2), 2, null);
+                if ($kind === 's') {
+                    $finalOrder[] = (int) $ref;
+                } elseif ($kind === 'n' && isset($newByIndex[(int) $ref])) {
+                    $finalOrder[] = $newByIndex[(int) $ref]->id;
+                }
+            }
+            $allCurrentMediaIds = $advert->getMedia('images')->pluck('id')->toArray();
+            $finalOrder = array_values(array_intersect($finalOrder, $allCurrentMediaIds));
+            $finalOrder = array_merge($finalOrder, array_values(array_diff($allCurrentMediaIds, $finalOrder)));
+
+            if ($this->getImageService()->reorderImages($advert, $finalOrder, 'images')) {
+                $messages[] = "Images reordered";
+            }
+        } elseif ($request->filled('existing_image_order')) {
             $orderedIds = explode(',', $request->input('existing_image_order'));
             $orderedIds = array_filter(array_map('intval', $orderedIds));
 
@@ -947,6 +982,31 @@ class UserManageAdverts extends Controller
      * @param Advert $advert The advert model
      * @return void
      */
+    /**
+     * The photo picker sends every photo in display order as photo_order
+     * ("t:0,n:1,n:0" — t = temp_image_paths[], n = images[], s = saved media
+     * id), so a new photo can be the cover. Items carry a matching 'token';
+     * anything the order doesn't mention keeps its place at the end.
+     */
+    private function applyPhotoOrder(array $items, ?string $photoOrder): array
+    {
+        $tokens = array_values(array_filter(array_map('trim', explode(',', (string) $photoOrder))));
+        if (!$tokens) {
+            return $items;
+        }
+
+        $rank = array_flip($tokens);
+        $positionOf = fn ($item, $fallback) => $rank[$item['token'] ?? ''] ?? count($tokens) + $fallback;
+
+        $keyed = [];
+        foreach (array_values($items) as $i => $item) {
+            $keyed[] = [$positionOf($item, $i), $i, $item];
+        }
+        usort($keyed, fn ($a, $b) => [$a[0], $a[1]] <=> [$b[0], $b[1]]);
+
+        return array_column($keyed, 2);
+    }
+
     private function processAdvertImages($images, $advert)
     {
         \Log::debug("processAdvertImages called", [
