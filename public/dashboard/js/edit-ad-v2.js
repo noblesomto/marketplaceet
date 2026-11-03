@@ -109,6 +109,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         fetch(`/fetch-brand/${subcategoryId}`)
             .then(response => response.json())
             .then(data => {
+                if (subcategorySelect.value != subcategoryId) return; // superseded by a newer pick
                 brandSelect.innerHTML = '<option value="">Select Brand</option>';
                 data.forEach(brand => {
                     const option = document.createElement('option');
@@ -141,6 +142,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         fetch(`/fetch-model/${brandId}`)
             .then(response => response.json())
             .then(data => {
+                if (brandSelect.value != brandId) return; // superseded by a newer pick
                 if (!modelSelect) return;
 
                 modelSelect.innerHTML = '<option value="">Select Model</option>';

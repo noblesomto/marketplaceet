@@ -32,15 +32,59 @@ class DropdownManager {
         });
     }
 
+    // url -> Promise of rows, so revisiting a brand/subcategory is instant
+    static cache = new Map();
+
+    static fetchRows(url) {
+        if (!this.cache.has(url)) {
+            const request = axios.get(url).then(response => response.data);
+            request.catch(() => this.cache.delete(url));
+            this.cache.set(url, request);
+        }
+        return this.cache.get(url);
+    }
+
+    /**
+     * Fill selectElement from url. Only the latest request for a given select
+     * may render: a slow earlier response (e.g. the brand picked before
+     * Toyota) must never land in the list after the current one.
+     */
     static async fetchAndPopulate(url, selectElement, valueKey, textKey) {
+        if (!selectElement) return [];
+
+        const token = Symbol(url);
+        selectElement._pendingRequest = token;
+        const placeholder = selectElement.options[0];
+        const placeholderText = placeholder ? placeholder.text : '';
+
+        const loading = setTimeout(() => {
+            if (selectElement._pendingRequest !== token) return;
+            if (placeholder) placeholder.text = 'Loading...';
+            selectElement.disabled = true;
+        }, 150);
+
+        let rows = [];
         try {
-            const response = await axios.get(url);
-            this.populateDropdown(selectElement, response.data, valueKey, textKey);
-            return response.data;
+            rows = await this.fetchRows(url);
         } catch (error) {
             console.error(`Error fetching data from ${url}:`, error);
-            return [];
         }
+
+        if (selectElement._pendingRequest !== token) return null;
+        clearTimeout(loading);
+        selectElement._pendingRequest = null;
+        selectElement.disabled = false;
+        if (placeholder) placeholder.text = placeholderText;
+
+        this.populateDropdown(selectElement, rows, valueKey, textKey);
+        return rows;
+    }
+
+    // Abandon any in-flight fill (used when the parent selection is cleared)
+    static cancel(selectElement) {
+        if (!selectElement) return;
+        selectElement._pendingRequest = null;
+        selectElement.disabled = false;
     }
 }
 
@@ -101,9 +145,10 @@ class ShippingManager {
     setupBuyDirectListeners() {
         this.buyDirectRadios.forEach(radio => {
             radio.addEventListener("change", () => {
-                const shipRadio = document.querySelector(
-                    `input[name="shipment"][value="${radio.value === "Yes" ? "Ship" : "Pickup"}"]`
-                );
+                // Buy Direct needs shipping. Turning it off leaves the delivery
+                // choice alone — Pickup would hide the section (buy-direct-field.js).
+                if (radio.value !== "Yes") return;
+                const shipRadio = document.querySelector('input[name="shipment"][value="Ship"]');
                 if (shipRadio) {
                     shipRadio.checked = true;
                     this.toggleShippingVisibility();
@@ -200,9 +245,12 @@ class FormController {
 
             // RESET EVERYTHING - Start fresh
             this.resetForm();
+            [this.subcategorySelect, this.brandSelect, this.modelSelect].forEach(select => DropdownManager.cancel(select));
 
             // Apply database-driven UI rules (no hardcoded IDs!)
             this.uiManager.applyCategoryRules(categoryId);
+
+            if (!categoryId) return;
 
             // Fetch and populate subcategories
             await DropdownManager.fetchAndPopulate(
@@ -263,6 +311,12 @@ class FormController {
                 ? "Select Model"
                 : "Select Option";
             DropdownManager.resetDropdown(this.modelSelect, modelPlaceholder);
+            DropdownManager.cancel(this.modelSelect);
+
+            if (!subcategoryId) {
+                DropdownManager.cancel(this.brandSelect);
+                return;
+            }
 
             // Fetch and populate brands
             await DropdownManager.fetchAndPopulate(
@@ -289,6 +343,12 @@ class FormController {
             // Reset model dropdown
             DropdownManager.resetDropdown(this.modelSelect, placeholder);
 
+            if (!brandId) {
+                DropdownManager.cancel(this.modelSelect);
+                window.DeviceModelField?.apply(currentSubcategory, [], { select: this.modelSelect });
+                return;
+            }
+
             // Fetch and populate models
             const models = await DropdownManager.fetchAndPopulate(
                 `/fetch-model/${brandId}`,
@@ -296,6 +356,7 @@ class FormController {
                 'id',
                 'model'
             );
+            if (models === null) return; // superseded by a newer brand choice
 
             // Phones/laptops: show + require Model only when this brand has models
             window.DeviceModelField?.apply(currentSubcategory, models, { select: this.modelSelect });

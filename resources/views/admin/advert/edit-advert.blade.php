@@ -1119,7 +1119,7 @@
 <script src="{{ asset('frontend/js/lga.js') }}"></script>
 <script src="{{ asset('dashboard/js/category-ui-manager.js') }}"></script>
 <script src="{{ asset('dashboard/js/device-model-field.js') }}?v=2"></script>
-<script src="{{ asset('backend/js/edit-advert.js') }}?v=4"></script>
+<script src="{{ asset('backend/js/edit-advert.js') }}?v=5"></script>
 <script src="{{ asset('backend/js/edit-sortable.js') }}"></script>
 
 

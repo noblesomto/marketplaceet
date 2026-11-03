@@ -301,23 +301,30 @@ class ManageCategories extends Controller
         return redirect("admin/brand/".$cat)->with('status', ['text'=>'Brand was deleted','type'=>'success']);
     }
 
+    // Dropdown feeds for the post/edit ad forms. Only the columns the pickers
+    // read are sent (the full rows carry SEO text and were ~50 KB per brand
+    // list), and browsers may reuse a response for a few minutes.
     public function fetch_subcat($cat_id)
     {
-        $subcat = SubCategory::where('cat_id', $cat_id)->get();
-        return response()->json($subcat);
+        $subcat = SubCategory::where('cat_id', $cat_id)->get(['id', 'cat_id', 'sub_category']);
+        return self::pickerResponse($subcat);
     }
 
     public function fetch_brand($cat_id)
     {
-        $brand = Brands::where('subcat_id', $cat_id)->orderedForPicker()->get();
-        return response()->json($brand);
+        $brand = Brands::where('subcat_id', $cat_id)->orderedForPicker()->get(['id', 'subcat_id', 'brand']);
+        return self::pickerResponse($brand);
     }
 
     public function fetch_model($cat_id)
     {
-        $model = VehicleModel::where('brand_id', $cat_id)->get();
-        //dd($model);
-        return response()->json($model);
+        $model = VehicleModel::where('brand_id', $cat_id)->get(['id', 'brand_id', 'model']);
+        return self::pickerResponse($model);
+    }
+
+    private static function pickerResponse($rows)
+    {
+        return response()->json($rows)->header('Cache-Control', 'public, max-age=600');
     }
 
     /**
@@ -328,7 +335,7 @@ class ManageCategories extends Controller
      * path of public_html/ on the server. Locally, falls back to public_path().
      *
      * Server .env example:
-     *   PUBLIC_ASSETS_PATH=/home/admin/domains/marketplace.et/public_html
+     *   PUBLIC_ASSETS_PATH=/home/admin/domains/marketplace.com.et/public_html
      */
     private static function iconUploadPath(string $filename = ''): string
     {
