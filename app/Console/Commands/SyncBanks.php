@@ -23,6 +23,11 @@ class SyncBanks extends Command
 
         $banks = $response->json('data');
 
+        if (empty($banks)) {
+            $this->error('Flutterwave returned no banks — check FLUTTERWAVE_SECRET_KEY.');
+            return 1;
+        }
+
         foreach ($banks as $bank) {
             Bank::updateOrCreate(
                 ['bank_code' => $bank['code']],
@@ -30,7 +35,7 @@ class SyncBanks extends Command
             );
         }
 
-        $this->info('Bank list synced successfully.');
+        $this->info('Bank list synced successfully (' . count($banks) . ' banks).');
         return 0;
     }
 }

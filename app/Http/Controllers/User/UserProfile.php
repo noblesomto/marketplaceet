@@ -332,6 +332,11 @@ class UserProfile extends Controller
                 'account_number_last4' => substr((string) $request->input('account_number'), -4),
             ]);
 
+            // The post/edit ad bank details popup saves over AJAX
+            if ($request->expectsJson()) {
+                return response()->json(['message' => 'Payment Information updated successfully!']);
+            }
+
              return redirect()->back()->with('success', 'Payment Information updated successfully!');
         }
     }

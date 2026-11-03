@@ -496,15 +496,15 @@
                 </div>
 
                 <!-- Buy Direct -->
-                <div id="buyDirect" class="bg-blue-50 border border-blue-100 rounded-xl p-5 {{ in_array($advert->sub_category, [2, 21, 23]) ? 'hidden' : '' }}">
+                @php $sellerHasBank = !empty($user->account_number) && !empty($user->bank_code); @endphp
+                <div id="buyDirect" data-has-bank="{{ $sellerHasBank ? '1' : '0' }}" class="bg-blue-50 border border-blue-100 rounded-xl p-5 {{ in_array($advert->sub_category, [2, 21, 23]) ? 'hidden' : '' }}">
                     <label class="block text-md font-semibold text-blue-900 mb-4">Payment Method</label>
-                    @php $sellerHasBank = !empty($user->account_number) && !empty($user->bank_code); @endphp
                     @error('buy_direct')
                         <p class="text-red-600 text-sm mb-3">{{ $message }}</p>
                     @enderror
                     @unless($sellerHasBank)
-                        <p class="text-xs text-amber-800 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 mb-3">
-                            To enable Buy Direct, first <a href="/user/payments" class="font-semibold underline">add your bank details</a> so we can pay you when the item sells.
+                        <p data-bank-notice class="text-xs text-amber-800 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 mb-3">
+                            To enable Buy Direct, first <a href="{{ route('user.payment.info') }}" data-open-bank-modal class="font-semibold underline">add your bank details</a> so we can pay you when the item sells.
                         </p>
                     @endunless
                     <div class="space-y-4">
@@ -656,6 +656,8 @@
         </div>
 
     </form>
+
+    @include('user.partials.bank-details-modal')
 </section>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/trix@2.0.8/dist/trix.css">
 <!-- Scripts maintained -->
@@ -671,7 +673,8 @@
 {{-- Database-Driven Category UI Configuration (2026-01-31) --}}
 <script src="{{ asset('dashboard/js/category-ui-manager.js') }}"></script>
 <script src="{{ asset('dashboard/js/device-model-field.js') }}?v=2"></script>
-<script src="{{ asset('dashboard/js/edit-ad-v2.js') }}?v=4"></script>
+<script src="{{ asset('dashboard/js/edit-ad-v2.js') }}?v=5"></script>
+<script src="{{ asset('dashboard/js/buy-direct-field.js') }}?v=1"></script>
 {{-- Old hardcoded version (kept for rollback): <script src="{{ asset('dashboard/js/edit-ad-Aa.js') }}"></script> --}}
 
 <script src="{{ asset('dashboard/js/edit-sortable.js') }}"></script>

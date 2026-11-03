@@ -190,7 +190,7 @@ class BuyDirectEndToEndTest extends TestCase
             'ad_title' => 'Men cotton shirt ' . Str::random(5), 'category' => 5, 'subcategory' => 234, 'brand' => $brand->id,
             'state' => $lga->state->name, 'lga' => $lga->name, 'price' => $price, 'price_type' => 'Fixed',
             'item_condition' => 'New', 'description' => 'Brand new cotton shirt, size L, never worn. Original packaging.',
-            'shipment' => 'Pickup', 'buy_direct' => 'Yes',
+            'shipment' => 'Ship', 'buy_direct' => 'Yes', // Pickup Only listings can't use Buy Direct
         ];
         $this->post('/user/post-ad', $base + ['images' => [$this->photo(1), $this->photo(2), $this->photo(3)]])
             ->assertSessionHasErrors('buy_direct');

@@ -319,7 +319,8 @@ class UserManageAdverts extends Controller
                 'expected_salary'  => $request->input('expected_salary'),
                 'item_condition'   => $request->input('item_condition'),
                 'price_type'       => $request->input('price_type'),
-                'buy_direct'       => strtolower($request->input('buy_direct', 'No')) === 'yes' ? 'Yes' : 'No',
+                // Pickup-only listings can't use Buy Direct (the form hides it)
+                'buy_direct'       => strtolower($request->input('buy_direct', 'No')) === 'yes' && $request->input('shipment', 'Pickup') !== 'Pickup' ? 'Yes' : 'No',
                 'state'            => $request->input('state'),
                 'lga'              => $request->input('lga'),
                 'state_slug'       => Str::slug($request->input('lga')),
@@ -623,7 +624,7 @@ class UserManageAdverts extends Controller
             'salary'           => $request->input('salary'),
             'expected_salary'  => $request->input('expected_salary'),
             'item_condition'  => $request->input('item_condition'),
-            'buy_direct'      => $request->has('buy_direct') ? (strtolower($request->input('buy_direct')) === 'yes' ? 'Yes' : 'No') : $advert->buy_direct,
+            'buy_direct'      => $request->input('shipment') === 'Pickup' ? 'No' : ($request->has('buy_direct') ? (strtolower($request->input('buy_direct')) === 'yes' ? 'Yes' : 'No') : $advert->buy_direct),
             'state'           => $request->input('state'),
             'lga'             => $request->input('lga'),
             'state_slug'      => Str::slug($request->input('lga')),

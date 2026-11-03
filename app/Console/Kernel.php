@@ -25,6 +25,8 @@ class Kernel extends ConsoleKernel
         $schedule->command('temp:cleanup-images --hours=24')->daily()->at('02:00');
         $schedule->command('activitylog:clean')->weekly();
         $schedule->command('buydirect:process')->everyFifteenMinutes()->withoutOverlapping();
+        // Payout bank list (Buy Direct / bank details form) from Flutterwave
+        $schedule->command('banks:sync')->weekly();
     }
 
     protected function commands(): void
