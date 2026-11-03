@@ -20,8 +20,8 @@ return [
     'allowed_methods' => ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
 
     'allowed_origins' => [
-        'https://marketplace.et',
-        'https://www.marketplace.et',
+        'https://marketplace.com.et',
+        'https://www.marketplace.com.et',
         'http://localhost',
         'http://localhost:3000',
         'http://localhost:8000',

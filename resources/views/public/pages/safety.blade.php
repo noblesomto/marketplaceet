@@ -13,7 +13,7 @@
           We are committed to providing a secure and trustworthy platform for buyers and sellers across Ethiopia. While we implement safety measures and offer secure options like Buy Direct, it's also important that you take precautions when interacting with others on the platform.
         </p>
         <p class="text-gray-600 mb-8">
-          Here are some essential tips to protect yourself when using www.marketplace.et:
+          Here are some essential tips to protect yourself when using www.marketplace.com.et:
         </p>
       </div>
     </section>
@@ -177,7 +177,7 @@
             <svg class="h-5 w-5 text-gray-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
             </svg>
-            <a href="mailto:fraud@marketplace.et" class="text-blue-600 hover:text-blue-800">fraud@marketplace.et</a>
+            <a href="mailto:fraud@marketplace.com.et" class="text-blue-600 hover:text-blue-800">fraud@marketplace.com.et</a>
           </p>
           <p class="text-gray-600 flex items-center">
             <svg class="h-5 w-5 text-gray-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">

@@ -9,7 +9,7 @@
         <h1 class="text-3xl font-bold text-gray-900 mb-2">Billing Policy</h1>
 
         <p class="text-gray-600 mb-8">
-          This Billing Policy outlines how paid services on Marketplace Ethiopia operate, particularly for users who choose to promote, boost, or sponsor their ad listings on our platform. By purchasing any promotional service on www.marketplace.et, you agree to the terms described herein.
+          This Billing Policy outlines how paid services on Marketplace Ethiopia operate, particularly for users who choose to promote, boost, or sponsor their ad listings on our platform. By purchasing any promotional service on www.marketplace.com.et, you agree to the terms described herein.
         </p>
       </div>
     </section>
@@ -126,7 +126,7 @@
           <li><span class="font-medium">Ineligible Content:</span> Your ad was rejected for violating our policies, and promotion had not yet started.</li>
         </ul>
         <p class="text-gray-600 mb-6">
-          Refund requests must be submitted within 72 hours of the payment via <a href="mailto:billing@marketplace.et" class="text-blue-600 hover:text-blue-800">billing@marketplace.et</a>.
+          Refund requests must be submitted within 72 hours of the payment via <a href="mailto:billing@marketplace.com.et" class="text-blue-600 hover:text-blue-800">billing@marketplace.com.et</a>.
         </p>
         <p class="text-gray-600">
           Refunds are issued to the original payment method or as wallet credit, depending on the situation.
@@ -172,7 +172,7 @@
           <li>Description of the issue</li>
         </ul>
         <div class="mt-4 space-y-2">
-          <p class="text-gray-600"><span class="font-medium">Email:</span> <a href="mailto:billing@marketplace.et" class="text-blue-600 hover:text-blue-800">billing@marketplace.et</a></p>
+          <p class="text-gray-600"><span class="font-medium">Email:</span> <a href="mailto:billing@marketplace.com.et" class="text-blue-600 hover:text-blue-800">billing@marketplace.com.et</a></p>
           <p class="text-gray-600"><span class="font-medium">Phone Support:</span> {{ config('global.site_phone') }}</p>
           <p class="text-gray-600"><span class="font-medium">Response Time:</span> Within 24–48 business hours</p>
         </div>
@@ -223,7 +223,7 @@
               <svg class="h-5 w-5 text-gray-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
               </svg>
-              <a href="mailto:billing@marketplace.et" class="text-blue-600 hover:text-blue-800">billing@marketplace.et</a>
+              <a href="mailto:billing@marketplace.com.et" class="text-blue-600 hover:text-blue-800">billing@marketplace.com.et</a>
             </p>
             <p class="text-gray-600 flex items-center">
               <svg class="h-5 w-5 text-gray-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">

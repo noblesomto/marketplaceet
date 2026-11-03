@@ -9,7 +9,7 @@
         <h1 class="text-3xl font-bold text-gray-900 mb-6">Privacy Policy</h1>
 
         <p class="text-gray-600 mb-8">
-          Welcome to Marketplace Ethiopia ("Marketplace Ethiopia", "we", "our", or "us"). This Privacy Policy explains how we collect, use, disclose, and protect personal information when you access or use our website and services at www.marketplace.et.
+          Welcome to Marketplace Ethiopia ("Marketplace Ethiopia", "we", "our", or "us"). This Privacy Policy explains how we collect, use, disclose, and protect personal information when you access or use our website and services at www.marketplace.com.et.
         </p>
         <p class="text-gray-600 mb-8">
           By using our platform, you agree to the collection and use of information in accordance with this Privacy Policy.
@@ -244,7 +244,7 @@
           <li>File a complaint with the Ethiopian Personal Data Protection Commission</li>
         </ul>
         <p class="text-gray-600">
-          Requests may be sent to <a href="mailto:privacy@marketplace.et" class="text-blue-600 hover:text-blue-800">privacy@marketplace.et</a>.
+          Requests may be sent to <a href="mailto:privacy@marketplace.com.et" class="text-blue-600 hover:text-blue-800">privacy@marketplace.com.et</a>.
         </p>
       </div>
     </section>
@@ -279,8 +279,8 @@
         </p>
         <div class="mt-4 space-y-2">
           <p class="text-gray-600"><span class="font-medium">Marketplace Ethiopia</span></p>
-          <p class="text-gray-600"><span class="font-medium">Email:</span> <a href="mailto:privacy@marketplace.et" class="text-blue-600 hover:text-blue-800">privacy@marketplace.et</a></p>
-          <p class="text-gray-600"><span class="font-medium">Customer Support:</span> <a href="mailto:support@marketplace.et" class="text-blue-600 hover:text-blue-800">support@marketplace.et</a></p>
+          <p class="text-gray-600"><span class="font-medium">Email:</span> <a href="mailto:privacy@marketplace.com.et" class="text-blue-600 hover:text-blue-800">privacy@marketplace.com.et</a></p>
+          <p class="text-gray-600"><span class="font-medium">Customer Support:</span> <a href="mailto:support@marketplace.com.et" class="text-blue-600 hover:text-blue-800">support@marketplace.com.et</a></p>
           <p class="text-gray-600"><span class="font-medium">Phone:</span> {{ config('global.site_phone') }}</p>
 
         </div>

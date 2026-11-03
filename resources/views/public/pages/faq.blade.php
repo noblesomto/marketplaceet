@@ -8,7 +8,7 @@
           <div class="max-w-4xl mx-auto">
             <h1 class="text-3xl font-bold text-gray-900 mb-6">Frequently Asked Questions (FAQ)</h1>
             <p class="text-gray-600 mb-8">
-              Welcome to the Marketplace Ethiopia FAQ Page. Whether you're buying, selling, or just browsing, we've answered the most common questions to help you make the most of your experience on www.marketplace.et.
+              Welcome to the Marketplace Ethiopia FAQ Page. Whether you're buying, selling, or just browsing, we've answered the most common questions to help you make the most of your experience on www.marketplace.com.et.
             </p>
           </div>
         </section>
@@ -269,7 +269,7 @@
                   Please contact support via:
                 </p>
                 <ul class="list-disc pl-6 text-gray-600 space-y-2 mt-2 ml-9">
-                  <li>Email: <a href="mailto:support@marketplace.et" class="text-blue-600 hover:text-blue-800">support@marketplace.et</a></li>
+                  <li>Email: <a href="mailto:support@marketplace.com.et" class="text-blue-600 hover:text-blue-800">support@marketplace.com.et</a></li>
                   <li>Chat: Use the in-app support tool</li>
                   <li>Phone: {{ config('global.site_phone') }}</li>
                 </ul>
@@ -297,7 +297,7 @@
                   <li>Use our subscription plans</li>
                 </ul>
                 <p class="text-gray-600 mt-2 ml-9">
-                  Contact us at <a href="mailto:business@marketplace.et" class="text-blue-600 hover:text-blue-800">business@marketplace.et</a> to learn more.
+                  Contact us at <a href="mailto:business@marketplace.com.et" class="text-blue-600 hover:text-blue-800">business@marketplace.com.et</a> to learn more.
                 </p>
               </div>
             </div>
@@ -315,7 +315,7 @@
                 <svg class="h-5 w-5 text-gray-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                 </svg>
-                <a href="mailto:support@marketplace.et" class="text-blue-600 hover:text-blue-800">support@marketplace.et</a>
+                <a href="mailto:support@marketplace.com.et" class="text-blue-600 hover:text-blue-800">support@marketplace.com.et</a>
               </p>
               <p class="text-gray-600 flex items-center">
                 <svg class="h-5 w-5 text-gray-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">

@@ -9,7 +9,7 @@
         <h1 class="text-3xl font-bold text-gray-900 mb-2">Terms of Use</h1>
 
         <p class="text-gray-600 mb-8">
-          Welcome to Marketplace Ethiopia ("we", "our", or "the Platform"). These Terms of Use govern your access to and use of our website, services, features, and tools located at www.marketplace.et. By accessing or using our platform, you agree to be bound by these terms. If you do not agree, please do not use our services.
+          Welcome to Marketplace Ethiopia ("we", "our", or "the Platform"). These Terms of Use govern your access to and use of our website, services, features, and tools located at www.marketplace.com.et. By accessing or using our platform, you agree to be bound by these terms. If you do not agree, please do not use our services.
         </p>
       </div>
     </section>
@@ -292,7 +292,7 @@
               <svg class="h-5 w-5 text-gray-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
               </svg>
-              <a href="mailto:legal@marketplace.et" class="text-blue-600 hover:text-blue-800">legal@marketplace.et</a>
+              <a href="mailto:legal@marketplace.com.et" class="text-blue-600 hover:text-blue-800">legal@marketplace.com.et</a>
             </p>
 
             <p class="text-gray-600 flex items-center">

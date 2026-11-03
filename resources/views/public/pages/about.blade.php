@@ -59,7 +59,7 @@
           Join thousands of users already buying and selling on <strong>Marketplace Ethiopia</strong>. We're not just a marketplace; we're a solution — connecting people, enabling entrepreneurship, and supporting local commerce across Ethiopia.
         </p>
         <p class="text-gray-600">
-          For questions or support, you can contact us directly at <a href="mailto:support@marketplace.et" class="text-blue-600 hover:underline">support@marketplace.et</a> or via our <a href="/contact-us" class="text-blue-600 hover:underline">Contact Us</a> page.
+          For questions or support, you can contact us directly at <a href="mailto:support@marketplace.com.et" class="text-blue-600 hover:underline">support@marketplace.com.et</a> or via our <a href="/contact-us" class="text-blue-600 hover:underline">Contact Us</a> page.
         </p>
       </div>
     </section>

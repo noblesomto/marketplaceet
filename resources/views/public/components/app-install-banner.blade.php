@@ -3,6 +3,7 @@
     Safari iOS is handled by the <meta name="apple-itunes-app"> tag in <head>.
     Re-appears after 30 days if previously dismissed.
 --}}
+@if (config('global.ios_app_url') || config('global.android_app_url'))
 <div id="app-install-banner" style="display:none" aria-label="Install our app" role="banner">
     <div class="flex items-center gap-3 px-3 py-2.5">
         <button
@@ -48,8 +49,8 @@
 
 <script>
 (function () {
-    var IOS_URL     = 'https://apps.apple.com/us/app/marketplace-naija-buy-sell/id6753354778';
-    var ANDROID_URL = 'https://play.google.com/store/apps/details?id=com.app.marketplacenaija';
+    var IOS_URL     = @json(config('global.ios_app_url'));
+    var ANDROID_URL = @json(config('global.android_app_url'));
     var DISMISS_KEY = 'appBannerDismissedAt';
     var THIRTY_DAYS = 30 * 24 * 60 * 60 * 1000;
 
@@ -62,6 +63,9 @@
 
     // Desktop or non-mobile browser: do nothing
     if (!isAndroid && !isIOS) return;
+
+    // No store listing for this platform yet
+    if (!(isAndroid ? ANDROID_URL : IOS_URL)) return;
 
     // iOS Safari: the <meta name="apple-itunes-app"> native banner handles it
     if (isSafariIOS) return;
@@ -83,3 +87,4 @@ function dismissAppBanner() {
     localStorage.setItem('appBannerDismissedAt', Date.now().toString());
 }
 </script>
+@endif

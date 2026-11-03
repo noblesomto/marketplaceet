@@ -116,7 +116,7 @@
       <div class="max-w-4xl mx-auto">
         <h2 class="text-2xl font-semibold text-gray-900 mb-6">Current Openings</h2>
         <p class="text-gray-600 mb-8">
-          Browse our current job listings below or send your CV to <a href="mailto:careers@marketplace.et" class="text-blue-600 hover:text-blue-800">careers@marketplace.et</a> if you think you'd be a great fit, even if you don't see a specific opening.
+          Browse our current job listings below or send your CV to <a href="mailto:careers@marketplace.com.et" class="text-blue-600 hover:text-blue-800">careers@marketplace.com.et</a> if you think you'd be a great fit, even if you don't see a specific opening.
         </p>
         <ul class="space-y-4">
           <li class="flex items-start">

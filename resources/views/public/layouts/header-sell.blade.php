@@ -45,12 +45,11 @@ $organizationSchema = [
     "alternateName" => "Marketplace Ethiopia",
     "url" => config('app.url'),
     "logo" => asset('frontend/images/og-default.png'),
-    "sameAs" => [
-        "https://www.facebook.com/marketplacenaija",
-        "https://twitter.com/marketplacenaija",
-        "https://www.instagram.com/marketplacenaija"
-    ]
-];
+    ];
+
+if (config('global.social_links')) {
+    $organizationSchema["sameAs"] = array_values(config('global.social_links'));
+}
 
 if (config('global.site_phone')) {
     $organizationSchema["contactPoint"] = [

@@ -9,7 +9,7 @@
             <h1 class="text-3xl font-bold text-gray-900 mb-2">Cookies Policy</h1>
 
             <p class="text-gray-600 mb-8">
-              This Cookies Policy explains how Marketplace Ethiopia ("we", "our", "us") uses cookies and similar tracking technologies when you visit or interact with our website www.marketplace.et (the "platform").
+              This Cookies Policy explains how Marketplace Ethiopia ("we", "our", "us") uses cookies and similar tracking technologies when you visit or interact with our website www.marketplace.com.et (the "platform").
             </p>
             <p class="text-gray-600">
               By using our website, you consent to our use of cookies in accordance with this policy.
@@ -189,7 +189,7 @@
             </p>
             <div class="mt-4 space-y-2">
               <p class="text-gray-600"><span class="font-medium">Marketplace Ethiopia</span></p>
-              <p class="text-gray-600"><span class="font-medium">Email:</span> <a href="mailto:privacy@marketplace.et" class="text-blue-600 hover:text-blue-800">privacy@marketplace.et</a></p>
+              <p class="text-gray-600"><span class="font-medium">Email:</span> <a href="mailto:privacy@marketplace.com.et" class="text-blue-600 hover:text-blue-800">privacy@marketplace.com.et</a></p>
               <p class="text-gray-600"><span class="font-medium">Phone:</span> {{ config('global.site_phone') }}</p>
 
             </div>

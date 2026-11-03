@@ -33,7 +33,7 @@ class SearchController extends Controller
      *         required=false,
      *         @OA\JsonContent(
      *             @OA\Property(property="product", type="string", description="Product search term", example="iPhone 13"),
-     *             @OA\Property(property="location", type="string", description="State/Location", example="Lagos"),
+     *             @OA\Property(property="location", type="string", description="State/Location", example="Addis Ababa"),
      *             @OA\Property(property="category", type="integer", description="Category ID", example=1),
      *             @OA\Property(property="sub_category", type="integer", description="Sub-category ID", example=6),
      *             @OA\Property(property="brand", type="integer", description="Brand ID", example=5),
@@ -145,7 +145,7 @@ class SearchController extends Controller
      *             @OA\Property(property="category",       type="integer", description="Category ID", example=1),
      *             @OA\Property(property="sub_category",   type="integer", description="Sub-category ID", example=6),
      *             @OA\Property(property="brand",          type="integer", description="Brand ID", example=5),
-     *             @OA\Property(property="location",       type="string",  description="State name", example="Lagos"),
+     *             @OA\Property(property="location",       type="string",  description="State name", example="Addis Ababa"),
      *             @OA\Property(property="min",            type="integer", description="Minimum price", example=10000),
      *             @OA\Property(property="max",            type="integer", description="Maximum price", example=500000),
      *             @OA\Property(property="range",          type="string",  description="Price range shortcut", enum={"under_20k","20k_120k","120k_1m","1m_10m","above_10m"}),

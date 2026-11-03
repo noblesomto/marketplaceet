@@ -99,7 +99,7 @@ The collection uses **automatic token management**:
 
 **When to use:** Testing against live server
 
-**Base URL:** `https://www.marketplace.et`
+**Base URL:** `https://www.marketplace.com.et`
 
 **Setup:**
 1. Select "Marketplace Ethiopia - Production" environment

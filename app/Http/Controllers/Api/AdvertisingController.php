@@ -28,7 +28,7 @@ class AdvertisingController extends Controller
      *         "id": 1,
      *         "advert_id": 12345,
      *         "company": "Acme Ltd",
-     *         "image_url": "https://marketplace.et/uploads/advertising/ad.jpg",
+     *         "image_url": "https://marketplace.com.et/uploads/advertising/ad.jpg",
      *         "url": "https://acme.com",
      *         "type": "banner",
      *         "start_date": "2026-01-01T00:00:00.000000Z",

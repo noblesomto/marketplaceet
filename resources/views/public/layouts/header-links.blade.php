@@ -51,8 +51,10 @@
             </script>
         @endauth
 
+    @if (config('global.ios_app_id'))
     <!-- Apple Smart App Banner — shown automatically by Safari on iOS -->
-    <meta name="apple-itunes-app" content="app-id=6753354778">
+    <meta name="apple-itunes-app" content="app-id={{ config('global.ios_app_id') }}">
+    @endif
 </head>
 <body class="bg-body text-gray-700 text-sm">
     <!-- Google Tag Manager (noscript) -->

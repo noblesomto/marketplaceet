@@ -89,7 +89,6 @@
   <link rel="icon" type="image/png" sizes="32x32" href="{{ asset('frontend/images/favicon.png') }}">
 
   <script src='https://www.google.com/recaptcha/api.js' async defer></script>
-  <link rel="canonical" href="https://marketplace.et/" />
   <meta name="csrf-token" content="{{ csrf_token() }}">
 <script type="text/javascript">
    (function(c,l,a,r,i,t,y){
@@ -119,8 +118,10 @@
 <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4998736645213032"
      crossorigin="anonymous"></script>
 
+    @if (config('global.ios_app_id'))
     <!-- Apple Smart App Banner — shown automatically by Safari on iOS -->
-    <meta name="apple-itunes-app" content="app-id=6753354778">
+    <meta name="apple-itunes-app" content="app-id={{ config('global.ios_app_id') }}">
+    @endif
 </head>
 <body class="bg-body text-gray-700 text-sm">
     @include('public.components.app-install-banner')

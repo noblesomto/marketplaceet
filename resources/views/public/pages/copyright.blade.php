@@ -12,7 +12,7 @@
               Marketplace Ethiopia ("we", "our", or "the Platform") respects the intellectual property rights of others and expects all users to do the same. This Copyright Policy outlines how we handle copyrighted materials, user-generated content, and copyright infringement claims.
             </p>
             <p class="text-gray-600">
-              By using our services at www.marketplace.et, you agree to comply with this policy.
+              By using our services at www.marketplace.com.et, you agree to comply with this policy.
             </p>
           </div>
         </section>
@@ -76,7 +76,7 @@
           <div class="max-w-4xl mx-auto">
             <h2 class="text-2xl font-semibold text-gray-900 mb-6">4. Reporting Copyright Infringement</h2>
             <p class="text-gray-600 mb-6">
-              If you believe that content on Marketplace Ethiopia infringes on your copyright or intellectual property rights, you may submit a Copyright Infringement Notification by emailing: <a href="mailto:copyright@marketplace.et" class="text-blue-600 hover:text-blue-800">copyright@marketplace.et</a>
+              If you believe that content on Marketplace Ethiopia infringes on your copyright or intellectual property rights, you may submit a Copyright Infringement Notification by emailing: <a href="mailto:copyright@marketplace.com.et" class="text-blue-600 hover:text-blue-800">copyright@marketplace.com.et</a>
             </p>
             <p class="text-gray-600 mb-4">
               Your notification should include:
@@ -104,7 +104,7 @@
           <div class="max-w-4xl mx-auto">
             <h2 class="text-2xl font-semibold text-gray-900 mb-6">5. Counter-Notification Process</h2>
             <p class="text-gray-600 mb-6">
-              If your content was removed and you believe it was a mistake or misidentification, you may submit a counter-notification to: <a href="mailto:copyright@marketplace.et" class="text-blue-600 hover:text-blue-800">copyright@marketplace.et</a>
+              If your content was removed and you believe it was a mistake or misidentification, you may submit a counter-notification to: <a href="mailto:copyright@marketplace.com.et" class="text-blue-600 hover:text-blue-800">copyright@marketplace.com.et</a>
             </p>
             <p class="text-gray-600 mb-4">
               Your counter-notification must include:
@@ -163,7 +163,7 @@
               <li>Reproduce our logos, interface, or any part of the website without written permission</li>
             </ul>
             <p class="text-gray-600">
-              For partnerships, API use, or brand licensing, contact: <a href="mailto:legal@marketplace.et" class="text-blue-600 hover:text-blue-800">legal@marketplace.et</a>
+              For partnerships, API use, or brand licensing, contact: <a href="mailto:legal@marketplace.com.et" class="text-blue-600 hover:text-blue-800">legal@marketplace.com.et</a>
             </p>
           </div>
         </section>
@@ -193,7 +193,7 @@
                   <svg class="h-5 w-5 text-gray-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
                   </svg>
-                  <a href="mailto:copyright@marketplace.et" class="text-blue-600 hover:text-blue-800">copyright@marketplace.et</a>
+                  <a href="mailto:copyright@marketplace.com.et" class="text-blue-600 hover:text-blue-800">copyright@marketplace.com.et</a>
                 </p>
 
                 <p class="text-gray-600 flex items-center">

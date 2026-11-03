@@ -64,7 +64,7 @@
         </div>
         <div class="mt-8 pt-6 border-t border-slate-200">
           <p class="text-slate-900 font-bold mb-2">Submit notices to:</p>
-          <p class="text-green-700 font-medium">Email: info@marketplace.et</p>
+          <p class="text-green-700 font-medium">Email: info@marketplace.com.et</p>
           <p class="text-slate-500 text-sm">Subject: Intellectual Property Complaint</p>
         </div>
       </section>
@@ -108,7 +108,7 @@
           <p class="text-green-800 text-sm">Our legal team is here to assist with intellectual property concerns.</p>
         </div>
         <div class="flex flex-col sm:flex-row gap-4 w-full md:w-auto">
-          <a href="mailto:info@marketplace.et" class="bg-green-700 text-white px-6 py-3 rounded-xl font-bold text-center hover:bg-green-800 transition-colors">
+          <a href="mailto:info@marketplace.com.et" class="bg-green-700 text-white px-6 py-3 rounded-xl font-bold text-center hover:bg-green-800 transition-colors">
             Email Us
           </a>
           <a href="tel:{{ config('global.site_phone') }}" class="bg-white text-green-700 border border-green-200 px-6 py-3 rounded-xl font-bold text-center hover:bg-green-50 transition-colors text-sm">

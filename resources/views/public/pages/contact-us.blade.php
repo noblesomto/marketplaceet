@@ -100,7 +100,7 @@
         </form>
 
         <div class="mt-2 text-sm">
-            For direct support, email <a class="font-semibold" href="mailto:support@marketplace.et">support@marketplace.et</a> or <a href="https://wa.me/{{ preg_replace('/\D/', '', config('global.site_phone')) }}" target="_blank" class="text-gray-700 hover:text-black rounded-md font-semibold">contact us on WhatsApp</a>
+            For direct support, email <a class="font-semibold" href="mailto:support@marketplace.com.et">support@marketplace.com.et</a> or <a href="https://wa.me/{{ preg_replace('/\D/', '', config('global.site_phone')) }}" target="_blank" class="text-gray-700 hover:text-black rounded-md font-semibold">contact us on WhatsApp</a>
         </div>
     </div>
 </section>

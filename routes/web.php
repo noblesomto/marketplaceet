@@ -36,7 +36,7 @@ if (config('global.shipping_carriers_enabled')) {
 if (app()->environment('local')) {
     Route::get('/uploads/{path}', function (string $path) {
         $response = \Illuminate\Support\Facades\Http::timeout(15)
-            ->get('https://marketplace.et/uploads/' . $path);
+            ->get('https://marketplace.com.et/uploads/' . $path);
         if ($response->successful()) {
             return response($response->body())
                 ->header('Content-Type', $response->header('Content-Type') ?? 'image/webp')

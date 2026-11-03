@@ -24,7 +24,7 @@ class AdvertStatsController extends Controller
      * @queryParam sub_category integer The sub-category ID. Example: 5
      * @queryParam brand integer The brand ID. Example: 10
      * @queryParam buy_direct string Filter by buy direct option. Use "Yes" or "No". Example: Yes
-     * @queryParam state string The state name. Example: Lagos
+     * @queryParam state string The state name. Example: Addis Ababa
      * @queryParam from_date date Filter adverts from this date (YYYY-MM-DD). Example: 2025-01-01
      * @queryParam to_date date Filter adverts to this date (YYYY-MM-DD). Example: 2025-01-31
      *
@@ -34,7 +34,7 @@ class AdvertStatsController extends Controller
      *     "total_count": 1500,
      *     "filters_applied": {
      *       "category": "1",
-     *       "state": "Lagos"
+     *       "state": "Addis Ababa"
      *     }
      *   }
      * }
@@ -94,11 +94,11 @@ class AdvertStatsController extends Controller
      *   "data": {
      *     "states": [
      *       {
-     *         "state": "Lagos",
+     *         "state": "Addis Ababa",
      *         "total": 500
      *       },
      *       {
-     *         "state": "Abuja",
+     *         "state": "Oromia",
      *         "total": 300
      *       },
      *       {
