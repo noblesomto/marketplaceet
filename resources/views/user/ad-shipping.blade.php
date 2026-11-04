@@ -86,7 +86,7 @@
             </div>
             <div class="text-right">
                 <div class="text-xs text-gray-400 mb-0.5">You receive</div>
-                <div class="font-black text-dark_green">Br {{ number_format((float) $ad->amount, 2) }}</div>
+                <div class="font-black text-dark_green">ETB {{ number_format((float) $ad->amount, 2) }}</div>
             </div>
         </div>
     </div>
@@ -150,7 +150,7 @@
         <div class="px-4 py-3 space-y-2">
             <div class="flex justify-between">
                 <span class="text-gray-400">Amount</span>
-                <span class="font-semibold text-gray-800">Br {{ number_format((float) ($ad->payout_amount ?? $ad->amount), 2) }}</span>
+                <span class="font-semibold text-gray-800">ETB {{ number_format((float) ($ad->payout_amount ?? $ad->amount), 2) }}</span>
             </div>
             <div class="border-t border-gray-50"></div>
             <div class="flex justify-between">

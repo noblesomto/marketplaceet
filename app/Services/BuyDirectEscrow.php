@@ -58,7 +58,7 @@ class BuyDirectEscrow
             ]);
             BuyDirectNotifier::admin(
                 "Buy Direct payment amount mismatch – order {$payment->order_code}",
-                ['Flutterwave transaction ' . ($tx['id'] ?? '?') . " charged {$currency} {$charged}, but the order total is Br {$expected}.", 'The order was NOT marked paid. Please investigate and refund or complete it manually.']
+                ['Flutterwave transaction ' . ($tx['id'] ?? '?') . " charged {$currency} {$charged}, but the order total is ETB {$expected}.", 'The order was NOT marked paid. Please investigate and refund or complete it manually.']
             );
 
             return false;

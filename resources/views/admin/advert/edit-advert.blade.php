@@ -849,7 +849,7 @@
                   @endif
                   <select id="salary" name="salary" class="form-select w-50">
                     <option value="">--Select Salary--</option>
-                    @foreach(['Commission','Below Br 2,000','Br 2,000 - Br 4,000','Br 4,000 - Br 6,000','Br 6,000 - Br 8,000','Br 8,000 - Br 10,000','Br 10,000 - Br 12,000','Br 12,000 - Br 14,000','Br 14,000 - Br 16,000','Br 16,000 - Br 18,000','Br 18,000 - Br 20,000','Br 20,000 - Br 22,000','Br 22,000 - Br 25,000','Br 25,000 - Br 30,000','Br 30,000 - Br 35,000','Br 35,000 - Br 40,000','Br 40,000 - Br 45,000','Br 45,000 - Br 50,000','Above Br 50,000'] as $sal)
+                    @foreach(['Commission','Below ETB 2,000','ETB 2,000 - ETB 4,000','ETB 4,000 - ETB 6,000','ETB 6,000 - ETB 8,000','ETB 8,000 - ETB 10,000','ETB 10,000 - ETB 12,000','ETB 12,000 - ETB 14,000','ETB 14,000 - ETB 16,000','ETB 16,000 - ETB 18,000','ETB 18,000 - ETB 20,000','ETB 20,000 - ETB 22,000','ETB 22,000 - ETB 25,000','ETB 25,000 - ETB 30,000','ETB 30,000 - ETB 35,000','ETB 35,000 - ETB 40,000','ETB 40,000 - ETB 45,000','ETB 45,000 - ETB 50,000','Above ETB 50,000'] as $sal)
                       <option value="{{ $sal }}" {{ $advert->salary == $sal ? 'selected' : '' }}>{{ $sal }}</option>
                     @endforeach
                   </select>
@@ -867,7 +867,7 @@
                   @endif
                   <select id="expected_salary" name="expected_salary" class="form-select w-50">
                     <option value="">--Select Expected Salary--</option>
-                    @foreach(['Below Br 5,000','Br 5,000 - Br 7,500','Br 7,500 - Br 10,000','Br 10,000 - Br 12,000','Br 12,000 - Br 14,000','Br 14,000 - Br 16,000','Br 16,000 - Br 18,000','Br 18,000 - Br 20,000','Br 20,000 - Br 22,000','Br 22,000 - Br 25,000','Br 25,000 - Br 30,000','Br 30,000 - Br 35,000','Br 35,000 - Br 40,000','Br 40,000 - Br 45,000','Br 45,000 - Br 50,000','Above Br 50,000'] as $expSal)
+                    @foreach(['Below ETB 5,000','ETB 5,000 - ETB 7,500','ETB 7,500 - ETB 10,000','ETB 10,000 - ETB 12,000','ETB 12,000 - ETB 14,000','ETB 14,000 - ETB 16,000','ETB 16,000 - ETB 18,000','ETB 18,000 - ETB 20,000','ETB 20,000 - ETB 22,000','ETB 22,000 - ETB 25,000','ETB 25,000 - ETB 30,000','ETB 30,000 - ETB 35,000','ETB 35,000 - ETB 40,000','ETB 40,000 - ETB 45,000','ETB 45,000 - ETB 50,000','Above ETB 50,000'] as $expSal)
                       <option value="{{ $expSal }}" {{ $advert->expected_salary == $expSal ? 'selected' : '' }}>{{ $expSal }}</option>
                     @endforeach
                   </select>

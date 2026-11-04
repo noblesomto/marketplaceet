@@ -46,7 +46,7 @@
         <div class="details">
             <p><strong>Reference:</strong> {{ $details['reference'] }}</p>
             <p><strong>Flutterwave Transaction ID:</strong> {{ $details['transaction_id'] }}</p>
-            <p><strong>Amount:</strong> Br {{ number_format($details['amount'], 2) }}</p>
+            <p><strong>Amount:</strong> ETB {{ number_format($details['amount'], 2) }}</p>
             <p><strong>Customer Email:</strong> {{ $details['customer_email'] }}</p>
             <p><strong>Paid At:</strong> {{ $details['paid_at'] }}</p>
         </div>

@@ -23,7 +23,7 @@
           <!-- Additional thumbnails can go here -->
           <h1 class="text-2xl md:text-3xl font-bold text-gray-900 mb-2">{{ $ad->ad_title }}</h1>
           <div class="flex items-center space-x-4 mb-1">
-              <span class="text-2xl font-bold text-primary">Br {{ number_format($ad->price, 0, '.', ',') }}</span>
+              <span class="text-2xl font-bold text-primary">ETB {{ number_format($ad->price, 0, '.', ',') }}</span>
               <span class="text-gray-600">{{ $ad->price_type }}</span>
             </div>
         </div>
@@ -51,15 +51,15 @@
             <div class="bg-gray-50 p-3 rounded-lg mt-6 space-y-3">
                 <div class="flex justify-between mb-1">
                     <span class="text-gray-600">Item Price:</span>
-                    <span class="font-medium">Br {{ number_format($checkout['item_price'], 2, '.', ',') }}</span>
+                    <span class="font-medium">ETB {{ number_format($checkout['item_price'], 2, '.', ',') }}</span>
                 </div>
                 <div class="flex justify-between mb-1">
                     <span class="text-gray-600">Buyer protection:</span>
-                    <span class="font-medium">Br {{ number_format($checkout['commission'], 2, '.', ',') }}</span>
+                    <span class="font-medium">ETB {{ number_format($checkout['commission'], 2, '.', ',') }}</span>
                 </div>
                 <div class="flex justify-between items-center">
                     <span class="text-gray-800 font-semibold">Total Price:</span>
-                    <span class="text-xl font-bold">Br {{ number_format($checkout['grand_total'], 2, '.', ',') }}</span>
+                    <span class="text-xl font-bold">ETB {{ number_format($checkout['grand_total'], 2, '.', ',') }}</span>
                 </div>
             </div>
 
@@ -77,7 +77,7 @@
               <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
               </svg>
-              Pay Br {{ number_format($checkout['grand_total'], 2) }} Securely
+              Pay ETB {{ number_format($checkout['grand_total'], 2) }} Securely
             </button>
           </form>
 

@@ -91,9 +91,9 @@
                           <span class="text-muted">&mdash;</span>
                         @endif
                       </td>
-                      <td>Br {{ number_format($row->advert->price, 2) }}</td>
-                      <td>Br {{ number_format($row->commission, 2) }}</td>
-                      <td>Br {{ number_format($row->amount_paid, 2) }}</td>
+                      <td>ETB {{ number_format($row->advert->price, 2) }}</td>
+                      <td>ETB {{ number_format($row->commission, 2) }}</td>
+                      <td>ETB {{ number_format($row->amount_paid, 2) }}</td>
                       <td>{{ date('M j, Y', strtotime($row->created_at)) }}</td>
                       <td>
                         <span class="badge rounded-pill bg-{{ $row->payment_status == 'paid' ? 'success' : 'danger' }}">

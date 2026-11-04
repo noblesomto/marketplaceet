@@ -149,7 +149,7 @@ class SendFollowerPushNotification implements ShouldQueue
             return 'Contact for price';
         }
 
-        return 'Br ' . number_format($price, 0);
+        return 'ETB ' . number_format($price, 0);
     }
 
     /**

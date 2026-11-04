@@ -328,11 +328,11 @@ class SearchFilter extends Controller
      * buckets — see FilterService::applyPriceRange().
      */
     private const PRICE_RANGE_SLUGS = [
-        'under-20k' => ['key' => 'under_20k', 'label' => 'Under Br 2,000'],
-        '20k-120k'  => ['key' => '20k_120k',  'label' => 'Br 2,000 - Br 10,000'],
-        '120k-1m'   => ['key' => '120k_1m',   'label' => 'Br 10,000 - Br 100,000'],
-        '1m-10m'    => ['key' => '1m_10m',    'label' => 'Br 100,000 - Br 1 Million'],
-        'above-10m' => ['key' => 'above_10m', 'label' => 'Above Br 1 Million'],
+        'under-20k' => ['key' => 'under_20k', 'label' => 'Under ETB 2,000'],
+        '20k-120k'  => ['key' => '20k_120k',  'label' => 'ETB 2,000 - ETB 10,000'],
+        '120k-1m'   => ['key' => '120k_1m',   'label' => 'ETB 10,000 - ETB 100,000'],
+        '1m-10m'    => ['key' => '1m_10m',    'label' => 'ETB 100,000 - ETB 1 Million'],
+        'above-10m' => ['key' => 'above_10m', 'label' => 'Above ETB 1 Million'],
     ];
 
     /**

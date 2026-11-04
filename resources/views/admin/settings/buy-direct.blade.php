@@ -69,7 +69,7 @@
                                 <div class="col-sm-4">
                                     <label class="form-label fw-semibold" for="threshold">High-value from</label>
                                     <div class="input-group">
-                                        <span class="input-group-text">Br</span>
+                                        <span class="input-group-text">ETB</span>
                                         <input type="number" step="1" id="threshold" name="buy_direct_commission_threshold" class="form-control" min="0"
                                                value="{{ old('buy_direct_commission_threshold', $settings['buy_direct_commission_threshold']) }}" required>
                                     </div>

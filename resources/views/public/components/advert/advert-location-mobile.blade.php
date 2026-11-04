@@ -120,7 +120,7 @@
                 <div class="mt-auto">
                     <div class="flex justify-between items-center gap-4 mb-1">
                         <span class="text-sm font-bold text-green-800">
-                            Br {{ number_format($row->price, 0, '.', ',') }}
+                            ETB {{ number_format($row->price, 0, '.', ',') }}
                         </span>
                         <span class="text-xs text-gray-500 truncate">
                             {{ $row->price_type }}

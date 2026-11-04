@@ -73,7 +73,7 @@
                     @else
                 <div class="flex items-center justify-between text-xs mt-1">
                     <div class="flex justify-start text-dark_green font-bold text-sm my-1">
-                      <div class="mr-2">Br  {{ number_format($row->price, 0, '.', ',') }} </div>
+                      <div class="mr-2">ETB  {{ number_format($row->price, 0, '.', ',') }} </div>
                       <div>{{ $row->price_type }}</div>
                     </div>
                 </div>

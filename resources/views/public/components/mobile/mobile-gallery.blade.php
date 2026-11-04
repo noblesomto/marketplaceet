@@ -109,7 +109,7 @@
                 @elseif($row->contact_price=="yes")
                     <span class="text-sm font-bold text-green-600">Contact For Price</span>
                 @else
-                <span class="text-xs font-semibold text-dark_green">Br  {{ number_format($row->price, 0, '.', ',') }} {{ Str::limit($row->price_type, 10) }}</span>
+                <span class="text-xs font-semibold text-dark_green">ETB  {{ number_format($row->price, 0, '.', ',') }} {{ Str::limit($row->price_type, 10) }}</span>
                 @endif
             </div>
             @if($row->buy_direct=="Yes")
@@ -230,7 +230,7 @@
                 @elseif($row->contact_price=="yes")
                     <span class="text-sm font-bold text-green-600">Contact For Price</span>
                 @else
-                <span class="text-xs font-semibold text-dark_green">Br  {{ number_format($row->price, 0, '.', ',') }} {{ Str::limit($row->price_type, 10) }}</span>
+                <span class="text-xs font-semibold text-dark_green">ETB  {{ number_format($row->price, 0, '.', ',') }} {{ Str::limit($row->price_type, 10) }}</span>
                 @endif
             </div>
             @if($row->buy_direct=="Yes")
@@ -351,7 +351,7 @@
                 @elseif($row->contact_price=="yes")
                     <span class="text-sm font-bold text-green-600">Contact For Price</span>
                 @else
-                <span class="text-xs font-semibold text-dark_green">Br  {{ number_format($row->price, 0, '.', ',') }} {{ Str::limit($row->price_type, 10) }}</span>
+                <span class="text-xs font-semibold text-dark_green">ETB  {{ number_format($row->price, 0, '.', ',') }} {{ Str::limit($row->price_type, 10) }}</span>
                 @endif
             </div>
             @if($row->buy_direct=="Yes")
@@ -472,7 +472,7 @@
                 @elseif($row->contact_price=="yes")
                     <span class="text-sm font-bold text-green-600">Contact For Price</span>
                 @else
-                <span class="text-xs font-semibold text-dark_green">Br  {{ number_format($row->price, 0, '.', ',') }} {{ Str::limit($row->price_type, 10) }}</span>
+                <span class="text-xs font-semibold text-dark_green">ETB  {{ number_format($row->price, 0, '.', ',') }} {{ Str::limit($row->price_type, 10) }}</span>
                 @endif
             </div>
             @if($row->buy_direct=="Yes")

@@ -55,7 +55,7 @@
         <div class="details">
             <p><strong>Order:</strong> {{ $details['order_code'] }}</p>
             <p><strong>Item:</strong> {{ $details['advert'] }}</p>
-            <p><strong>Amount Paid:</strong> Br {{ number_format($details['amount_paid'], 2) }}</p>
+            <p><strong>Amount Paid:</strong> ETB {{ number_format($details['amount_paid'], 2) }}</p>
             <p><strong>Payment Reference:</strong> {{ $details['reference'] }}</p>
             <br>
             <p><strong>Seller:</strong> {{ $details['seller_name'] }} ({{ $details['seller_email'] }})</p>

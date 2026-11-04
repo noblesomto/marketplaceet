@@ -29,7 +29,7 @@
                         <div class="flex justify-start gap-2">
                             <span class="text-dark_green font-bold text-base">{{ $type->name }}</span>
                             <div class="font-bold">
-                                Br {{ number_format(round($type->daily_rate * 7), 2) }}/week
+                                ETB {{ number_format(round($type->daily_rate * 7), 2) }}/week
                             </div>
 
                         </div>
@@ -58,7 +58,7 @@
                     <div class="space-y-1">
                         <div class="flex justify-start gap-2">
                             <span class="text-dark_green font-bold text-base">Highlight</span>
-                            <div class="font-bold">Br 1,500</div>
+                            <div class="font-bold">ETB 1,500</div>
                         </div>
                         <div class="flex gap-3">
                             <span class="font-semibold">Up to 2x more visibility! your ad will be highlighted in color. (7 Days)</span>
@@ -82,7 +82,7 @@
                     <div class="space-y-1">
                         <div class="flex justify-start gap-2">
                             <span class="text-dark_green font-bold text-base">Repeated Pushing Up</span>
-                            <div class="font-bold">Br 3,500</div>
+                            <div class="font-bold">ETB 3,500</div>
                         </div>
                         <div class="flex gap-3">
                             <span class="font-semibold">Up to 5x more visibility! your ad will be pushed up every day for a week. (7 Days)</span>
@@ -106,7 +106,7 @@
                     <div class="space-y-1">
                         <div class="flex justify-start gap-2">
                             <span class="text-dark_green font-bold text-base">Top Ad</span>
-                            <div class="font-bold">Br 7,500</div>
+                            <div class="font-bold">ETB 7,500</div>
                         </div>
                         <div class="flex gap-3">
                             <span class="font-semibold">Up to 10x more visibility! your ad is at the top of visibility list. (14 Days)</span>
@@ -130,7 +130,7 @@
                     <div class="space-y-1">
                         <div class="flex justify-start gap-2">
                             <span class="text-dark_green font-bold text-base">Gallery</span>
-                            <div class="font-bold">Br 10,000</div>
+                            <div class="font-bold">ETB 10,000</div>
                         </div>
                         <div class="flex gap-3">
                             <span class="font-semibold">Up to 15x more visibility! your ad will appear on the homepage. (14 Days)</span>

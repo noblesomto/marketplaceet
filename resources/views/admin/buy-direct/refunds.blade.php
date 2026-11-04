@@ -51,7 +51,7 @@
                                     <div>{{ trim($row->first_name . ' ' . $row->last_name) ?: optional($row->user)->name }}</div>
                                     <small class="text-muted">{{ $row->phone }} · {{ optional($row->user)->email }}</small>
                                 </td>
-                                <td class="fw-bold">Br {{ number_format((float) ($row->refund_amount ?? $row->amount_paid), 2) }}</td>
+                                <td class="fw-bold">ETB {{ number_format((float) ($row->refund_amount ?? $row->amount_paid), 2) }}</td>
                                 <td>
                                     <span class="text-capitalize">{{ $row->canceled_by ?? '—' }}</span>
                                     <div class="small text-muted">{{ optional($row->canceled_at)->format('d M Y H:i') }}</div>
@@ -73,7 +73,7 @@
                                 <td class="text-center">
                                     @if(in_array($row->refund_status, ['none', 'failed'], true))
                                         <div class="d-flex flex-column gap-2 align-items-center">
-                                            <form method="POST" action="/admin/buy-direct/refunds/{{ $row->id }}/retry" onsubmit="return confirm('Refund Br {{ number_format((float) $row->amount_paid, 2) }} to the buyer via Flutterwave?');">
+                                            <form method="POST" action="/admin/buy-direct/refunds/{{ $row->id }}/retry" onsubmit="return confirm('Refund ETB {{ number_format((float) $row->amount_paid, 2) }} to the buyer via Flutterwave?');">
                                                 @csrf
                                                 <button class="btn btn-sm btn-outline-primary"><i class="bi bi-arrow-repeat"></i> {{ $row->refund_status === 'failed' ? 'Retry refund' : 'Refund now' }}</button>
                                             </form>

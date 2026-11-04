@@ -88,7 +88,7 @@ class BuyDirectNotifier
         };
 
         if ($seller) {
-            $amount = 'Br ' . number_format((float) $payment->amount, 2);
+            $amount = 'ETB ' . number_format((float) $payment->amount, 2);
             $body = self::hasBankDetails($seller)
                 ? "{$how} \"{$title}\". Your payout of {$amount} is being processed to your bank account."
                 : "{$how} \"{$title}\". Add your bank account details to receive your payout of {$amount}.";
@@ -104,7 +104,7 @@ class BuyDirectNotifier
     public static function canceled(Payment $payment, string $by): void
     {
         [$buyer, $seller, $title] = self::parties($payment);
-        $refundNote = 'A full refund of Br ' . number_format((float) $payment->amount_paid, 2) . ' is being processed to your original payment method.';
+        $refundNote = 'A full refund of ETB ' . number_format((float) $payment->amount_paid, 2) . ' is being processed to your original payment method.';
 
         if ($by === 'buyer' && $seller) {
             self::inApp($seller, $payment, 'Order Canceled', "The buyer canceled their order for \"{$title}\". No shipping is required and your advert is back on sale.");
@@ -137,7 +137,7 @@ class BuyDirectNotifier
         if (!BuyDirectSettings::autoRefund()) {
             self::admin("Refund needed – order {$payment->order_code}", [
                 "Order {$payment->order_code} (\"{$title}\") was canceled by the {$by}. Automatic refunds are switched off.",
-                'Please refund Br ' . number_format((float) $payment->amount_paid, 2) . ' to the buyer from the Buy Direct refunds page.',
+                'Please refund ETB ' . number_format((float) $payment->amount_paid, 2) . ' to the buyer from the Buy Direct refunds page.',
             ], url('/admin/buy-direct/refunds'));
         }
     }
@@ -149,7 +149,7 @@ class BuyDirectNotifier
             return;
         }
 
-        $body = 'Your refund of Br ' . number_format((float) ($payment->refund_amount ?? $payment->amount_paid), 2) . " for \"{$title}\" has been processed. Depending on your bank it can take a few business days to appear.";
+        $body = 'Your refund of ETB ' . number_format((float) ($payment->refund_amount ?? $payment->amount_paid), 2) . " for \"{$title}\" has been processed. Depending on your bank it can take a few business days to appear.";
         self::inApp($buyer, $payment, 'Refund Processed', $body);
         self::push($buyer, $payment, 'refunded', ['Refund processed', $body]);
         self::mail($buyer, [
@@ -181,7 +181,7 @@ class BuyDirectNotifier
             'amount' => $payment->payout_amount ?? $payment->amount,
             'date'   => $payment->paid_out_at,
         ])));
-        self::inApp($seller, $payment, 'Payout Sent', 'Br ' . number_format((float) ($payment->payout_amount ?? $payment->amount), 2) . " for \"{$title}\" has been sent to your bank account.");
+        self::inApp($seller, $payment, 'Payout Sent', 'ETB ' . number_format((float) ($payment->payout_amount ?? $payment->amount), 2) . " for \"{$title}\" has been sent to your bank account.");
     }
 
     /** A released payout is waiting for the seller to add bank details. */
@@ -192,7 +192,7 @@ class BuyDirectNotifier
             return;
         }
 
-        $amount = 'Br ' . number_format((float) $payment->amount, 2);
+        $amount = 'ETB ' . number_format((float) $payment->amount, 2);
         $body = "Your payment of {$amount} for \"{$title}\" is ready, but we don't have your bank account details yet. Add them and we'll send the money straight away.";
 
         self::inApp($seller, $payment, 'Add Bank Details', $body);

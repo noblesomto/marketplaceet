@@ -90,7 +90,7 @@
                                                 </a>
                                             </td>
                                             <td class="fw-bold text-success">
-                                                Br {{ number_format($row->amount, 2) }}
+                                                ETB {{ number_format($row->amount, 2) }}
                                             </td>
                                             <td>
                                                 @if($daysRemaining >= 0)

@@ -42,7 +42,7 @@
                             </div>
                             <div class="flex items-center bg-white p-3 rounded-md border md:col-span-2">
                                 <span class="text-gray-600 font-medium">Amount:</span>
-                                <span class="ml-2 text-xl font-bold text-dark_green">Br {{ number_format($ad->amount, 2) }}</span>
+                                <span class="ml-2 text-xl font-bold text-dark_green">ETB {{ number_format($ad->amount, 2) }}</span>
                             </div>
                         </div>
                     </div>
@@ -155,7 +155,7 @@
                         <div class="bg-gradient-to-br from-dark_green to-green-700 text-white p-6 rounded-lg shadow-md">
                             <label class="block text-sm font-medium mb-2 text-green-100">Total Amount</label>
                             <div class="flex items-baseline">
-                                <span class="text-3xl font-bold">Br </span>
+                                <span class="text-3xl font-bold">ETB </span>
                                 <input type="text" id="amount" name="amount" readonly value="{{ number_format($ad->amount, 0) }}"
                                        class="w-full bg-transparent border-none text-4xl font-bold focus:ring-0 pl-2 text-white">
                             </div>

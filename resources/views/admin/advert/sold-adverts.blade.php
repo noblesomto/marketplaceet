@@ -73,7 +73,7 @@
                         {{ Str::limit($row->user->name, 15) }}
                       </a>
                     </td>
-                    <td class="text-nowrap">Br {{ number_format($row->price, 2) }}</td>
+                    <td class="text-nowrap">ETB {{ number_format($row->price, 2) }}</td>
                     <td>{{ $row->state }}</td>
                     <td>
                       @if($row->ship_code)

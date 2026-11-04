@@ -15,7 +15,7 @@ class BuyDirectSettings
         'buy_direct_auto_release_days'     => 7,
         'buy_direct_commission_rate'       => 3,      // % for items below the threshold
         'buy_direct_commission_rate_high'  => 2,      // % for items at/above the threshold
-        'buy_direct_commission_threshold'  => 300000, // Br
+        'buy_direct_commission_threshold'  => 300000, // ETB
         'buy_direct_auto_payout'           => 1,
         'buy_direct_auto_refund'           => 1,
     ];

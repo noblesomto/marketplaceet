@@ -39,7 +39,7 @@ class BuyDirectStatus
             [$stage, $label, $icon, $color, $text] = ['unpaid', 'Awaiting Payment', 'bi-clock', 'amber', 'Payment for this order has not been completed yet.'];
         } elseif ($canceled) {
             $refund = match ($p->refund_status) {
-                'refunded' => 'A full refund of Br ' . number_format((float) ($p->refund_amount ?? $p->amount_paid), 2) . ' was processed' . ($p->refunded_at ? ' on ' . $fmt($p->refunded_at) : '') . '.',
+                'refunded' => 'A full refund of ETB ' . number_format((float) ($p->refund_amount ?? $p->amount_paid), 2) . ' was processed' . ($p->refunded_at ? ' on ' . $fmt($p->refunded_at) : '') . '.',
                 default    => 'A full refund to the buyer is being processed.',
             };
             $why = match ($p->canceled_by) {
@@ -62,8 +62,8 @@ class BuyDirectStatus
                 default => $isBuyer ? 'You confirmed receipt and the payment was released to the seller.' : 'The buyer confirmed receipt.',
             };
             $sellerNote = $paidOut
-                ? 'Br ' . number_format((float) ($p->payout_amount ?? $p->amount), 2) . ' was sent to your bank account' . ($p->paid_out_at ? ' on ' . $fmt($p->paid_out_at) : '') . '.'
-                : 'Your payout of Br ' . number_format((float) $p->amount, 2) . ' is being processed.';
+                ? 'ETB ' . number_format((float) ($p->payout_amount ?? $p->amount), 2) . ' was sent to your bank account' . ($p->paid_out_at ? ' on ' . $fmt($p->paid_out_at) : '') . '.'
+                : 'Your payout of ETB ' . number_format((float) $p->amount, 2) . ' is being processed.';
             [$stage, $label, $icon, $color, $text] = ['completed', $isBuyer ? 'Completed' : ($paidOut ? 'Paid Out' : 'Payment Released'), 'bi-check-circle-fill', 'green', $isBuyer ? $how . ' Thank you for shopping with us!' : $how . ' ' . $sellerNote];
         } elseif ($shipped) {
             $release = $fmt($p->auto_release_at);

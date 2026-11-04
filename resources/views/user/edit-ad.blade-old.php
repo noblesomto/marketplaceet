@@ -836,24 +836,24 @@
         <select id="salary" name="salary" class="w-48 px-3 py-2 border border-gray-300 rounded shadow-sm bg-white">
             <option value="">--Select Salary--</option>
             <option value="Commission" {{ $advert->salary == 'Commission' ? 'selected' : '' }}>Commission</option>
-            <option value="Below Br 20,000" {{ $advert->salary == 'Below Br 20,000' ? 'selected' : '' }}>Below Br 20,000</option>
-            <option value="Br 20,000 - Br 40,000" {{ $advert->salary == 'Br 20,000 - Br 40,000' ? 'selected' : '' }}>Br 20,000 - Br 40,000</option>
-            <option value="Br 40,000 - Br 60,000" {{ $advert->salary == 'Br 40,000 - Br 60,000' ? 'selected' : '' }}>Br 40,000 - Br 60,000</option>
-            <option value="Br 60,000 - Br 80,000" {{ $advert->salary == 'Br 60,000 - Br 80,000' ? 'selected' : '' }}>Br 60,000 - Br 80,000</option>
-            <option value="Br 80,000 - Br 100,000" {{ $advert->salary == 'Br 80,000 - Br 100,000' ? 'selected' : '' }}>Br 80,000 - Br 100,000</option>
-            <option value="Br 100,000 - Br 120,000" {{ $advert->salary == 'Br 100,000 - Br 120,000' ? 'selected' : '' }}>Br 100,000 - Br 120,000</option>
-            <option value="Br 120,000 - Br 140,000" {{ $advert->salary == 'Br 120,000 - Br 140,000' ? 'selected' : '' }}>Br 120,000 - Br 140,000</option>
-            <option value="Br 140,000 - Br 160,000" {{ $advert->salary == 'Br 140,000 - Br 160,000' ? 'selected' : '' }}>Br 140,000 - Br 160,000</option>
-            <option value="Br 160,000 - Br 180,000" {{ $advert->salary == 'Br 160,000 - Br 180,000' ? 'selected' : '' }}>Br 160,000 - Br 180,000</option>
-            <option value="Br 180,000 - Br 200,000" {{ $advert->salary == 'Br 180,000 - Br 200,000' ? 'selected' : '' }}>Br 180,000 - Br 200,000</option>
-            <option value="Br 200,000 - Br 220,000" {{ $advert->salary == 'Br 200,000 - Br 220,000' ? 'selected' : '' }}>Br 200,000 - Br 220,000</option>
-            <option value="Br 220,000 - Br 250,000" {{ $advert->salary == 'Br 220,000 - Br 250,000' ? 'selected' : '' }}>Br 220,000 - Br 250,000</option>
-            <option value="Br 250,000 - Br 300,000" {{ $advert->salary == 'Br 250,000 - Br 300,000' ? 'selected' : '' }}>Br 250,000 - Br 300,000</option>
-            <option value="Br 300,000 - Br 350,000" {{ $advert->salary == 'Br 300,000 - Br 350,000' ? 'selected' : '' }}>Br 300,000 - Br 350,000</option>
-            <option value="Br 350,000 - Br 400,000" {{ $advert->salary == 'Br 350,000 - Br 400,000' ? 'selected' : '' }}>Br 350,000 - Br 400,000</option>
-            <option value="Br 400,000 - Br 450,000" {{ $advert->salary == 'Br 400,000 - Br 450,000' ? 'selected' : '' }}>Br 400,000 - Br 450,000</option>
-            <option value="Br 450,000 - Br 500,000" {{ $advert->salary == 'Br 450,000 - Br 500,000' ? 'selected' : '' }}>Br 450,000 - Br 500,000</option>
-            <option value="Above Br 500,000" {{ $advert->salary == 'Above Br 500,000' ? 'selected' : '' }}>Above Br 500,000</option>
+            <option value="Below ETB 20,000" {{ $advert->salary == 'Below ETB 20,000' ? 'selected' : '' }}>Below ETB 20,000</option>
+            <option value="ETB 20,000 - ETB 40,000" {{ $advert->salary == 'ETB 20,000 - ETB 40,000' ? 'selected' : '' }}>ETB 20,000 - ETB 40,000</option>
+            <option value="ETB 40,000 - ETB 60,000" {{ $advert->salary == 'ETB 40,000 - ETB 60,000' ? 'selected' : '' }}>ETB 40,000 - ETB 60,000</option>
+            <option value="ETB 60,000 - ETB 80,000" {{ $advert->salary == 'ETB 60,000 - ETB 80,000' ? 'selected' : '' }}>ETB 60,000 - ETB 80,000</option>
+            <option value="ETB 80,000 - ETB 100,000" {{ $advert->salary == 'ETB 80,000 - ETB 100,000' ? 'selected' : '' }}>ETB 80,000 - ETB 100,000</option>
+            <option value="ETB 100,000 - ETB 120,000" {{ $advert->salary == 'ETB 100,000 - ETB 120,000' ? 'selected' : '' }}>ETB 100,000 - ETB 120,000</option>
+            <option value="ETB 120,000 - ETB 140,000" {{ $advert->salary == 'ETB 120,000 - ETB 140,000' ? 'selected' : '' }}>ETB 120,000 - ETB 140,000</option>
+            <option value="ETB 140,000 - ETB 160,000" {{ $advert->salary == 'ETB 140,000 - ETB 160,000' ? 'selected' : '' }}>ETB 140,000 - ETB 160,000</option>
+            <option value="ETB 160,000 - ETB 180,000" {{ $advert->salary == 'ETB 160,000 - ETB 180,000' ? 'selected' : '' }}>ETB 160,000 - ETB 180,000</option>
+            <option value="ETB 180,000 - ETB 200,000" {{ $advert->salary == 'ETB 180,000 - ETB 200,000' ? 'selected' : '' }}>ETB 180,000 - ETB 200,000</option>
+            <option value="ETB 200,000 - ETB 220,000" {{ $advert->salary == 'ETB 200,000 - ETB 220,000' ? 'selected' : '' }}>ETB 200,000 - ETB 220,000</option>
+            <option value="ETB 220,000 - ETB 250,000" {{ $advert->salary == 'ETB 220,000 - ETB 250,000' ? 'selected' : '' }}>ETB 220,000 - ETB 250,000</option>
+            <option value="ETB 250,000 - ETB 300,000" {{ $advert->salary == 'ETB 250,000 - ETB 300,000' ? 'selected' : '' }}>ETB 250,000 - ETB 300,000</option>
+            <option value="ETB 300,000 - ETB 350,000" {{ $advert->salary == 'ETB 300,000 - ETB 350,000' ? 'selected' : '' }}>ETB 300,000 - ETB 350,000</option>
+            <option value="ETB 350,000 - ETB 400,000" {{ $advert->salary == 'ETB 350,000 - ETB 400,000' ? 'selected' : '' }}>ETB 350,000 - ETB 400,000</option>
+            <option value="ETB 400,000 - ETB 450,000" {{ $advert->salary == 'ETB 400,000 - ETB 450,000' ? 'selected' : '' }}>ETB 400,000 - ETB 450,000</option>
+            <option value="ETB 450,000 - ETB 500,000" {{ $advert->salary == 'ETB 450,000 - ETB 500,000' ? 'selected' : '' }}>ETB 450,000 - ETB 500,000</option>
+            <option value="Above ETB 500,000" {{ $advert->salary == 'Above ETB 500,000' ? 'selected' : '' }}>Above ETB 500,000</option>
         </select>
     </div>
     <div class="col-span-10 md:col-span-3">
@@ -870,22 +870,22 @@
         @endif
         <select id="expected_salary" name="expected_salary" class="w-48 px-3 py-2 border border-gray-300 rounded shadow-sm bg-white">
             <option value="">--Select Expected Salary--</option>
-            <option value="Below Br 50,000" {{ $advert->expected_salary == 'Below Br 50,000' ? 'selected' : '' }}>Below Br 50,000</option>
-            <option value="Br 50,000 - Br 75,000" {{ $advert->expected_salary == 'Br 50,000 - Br 75,000' ? 'selected' : '' }}>Br 50,000 - Br 75,000</option>
-            <option value="Br 75,000 - Br 100,000" {{ $advert->expected_salary == 'Br 75,000 - Br 100,000' ? 'selected' : '' }}>Br 75,000 - Br 100,000</option>
-            <option value="Br 100,000 - Br 120,000" {{ $advert->expected_salary == 'Br 100,000 - Br 120,000' ? 'selected' : '' }}>Br 100,000 - Br 120,000</option>
-            <option value="Br 120,000 - Br 140,000" {{ $advert->expected_salary == 'Br 120,000 - Br 140,000' ? 'selected' : '' }}>Br 120,000 - Br 140,000</option>
-            <option value="Br 140,000 - Br 160,000" {{ $advert->expected_salary == 'Br 140,000 - Br 160,000' ? 'selected' : '' }}>Br 140,000 - Br 160,000</option>
-            <option value="Br 160,000 - Br 180,000" {{ $advert->expected_salary == 'Br 160,000 - Br 180,000' ? 'selected' : '' }}>Br 160,000 - Br 180,000</option>
-            <option value="Br 180,000 - Br 200,000" {{ $advert->expected_salary == 'Br 180,000 - Br 200,000' ? 'selected' : '' }}>Br 180,000 - Br 200,000</option>
-            <option value="Br 200,000 - Br 220,000" {{ $advert->expected_salary == 'Br 200,000 - Br 220,000' ? 'selected' : '' }}>Br 200,000 - Br 220,000</option>
-            <option value="Br 220,000 - Br 250,000" {{ $advert->expected_salary == 'Br 220,000 - Br 250,000' ? 'selected' : '' }}>Br 220,000 - Br 250,000</option>
-            <option value="Br 250,000 - Br 300,000" {{ $advert->expected_salary == 'Br 250,000 - Br 300,000' ? 'selected' : '' }}>Br 250,000 - Br 300,000</option>
-            <option value="Br 300,000 - Br 350,000" {{ $advert->expected_salary == 'Br 300,000 - Br 350,000' ? 'selected' : '' }}>Br 300,000 - Br 350,000</option>
-            <option value="Br 350,000 - Br 400,000" {{ $advert->expected_salary == 'Br 350,000 - Br 400,000' ? 'selected' : '' }}>Br 350,000 - Br 400,000</option>
-            <option value="Br 400,000 - Br 450,000" {{ $advert->expected_salary == 'Br 400,000 - Br 450,000' ? 'selected' : '' }}>Br 400,000 - Br 450,000</option>
-            <option value="Br 450,000 - Br 500,000" {{ $advert->expected_salary == 'Br 450,000 - Br 500,000' ? 'selected' : '' }}>Br 450,000 - Br 500,000</option>
-            <option value="Above Br 500,000" {{ $advert->expected_salary == 'Above Br 500,000' ? 'selected' : '' }}>Above Br 500,000</option>
+            <option value="Below ETB 50,000" {{ $advert->expected_salary == 'Below ETB 50,000' ? 'selected' : '' }}>Below ETB 50,000</option>
+            <option value="ETB 50,000 - ETB 75,000" {{ $advert->expected_salary == 'ETB 50,000 - ETB 75,000' ? 'selected' : '' }}>ETB 50,000 - ETB 75,000</option>
+            <option value="ETB 75,000 - ETB 100,000" {{ $advert->expected_salary == 'ETB 75,000 - ETB 100,000' ? 'selected' : '' }}>ETB 75,000 - ETB 100,000</option>
+            <option value="ETB 100,000 - ETB 120,000" {{ $advert->expected_salary == 'ETB 100,000 - ETB 120,000' ? 'selected' : '' }}>ETB 100,000 - ETB 120,000</option>
+            <option value="ETB 120,000 - ETB 140,000" {{ $advert->expected_salary == 'ETB 120,000 - ETB 140,000' ? 'selected' : '' }}>ETB 120,000 - ETB 140,000</option>
+            <option value="ETB 140,000 - ETB 160,000" {{ $advert->expected_salary == 'ETB 140,000 - ETB 160,000' ? 'selected' : '' }}>ETB 140,000 - ETB 160,000</option>
+            <option value="ETB 160,000 - ETB 180,000" {{ $advert->expected_salary == 'ETB 160,000 - ETB 180,000' ? 'selected' : '' }}>ETB 160,000 - ETB 180,000</option>
+            <option value="ETB 180,000 - ETB 200,000" {{ $advert->expected_salary == 'ETB 180,000 - ETB 200,000' ? 'selected' : '' }}>ETB 180,000 - ETB 200,000</option>
+            <option value="ETB 200,000 - ETB 220,000" {{ $advert->expected_salary == 'ETB 200,000 - ETB 220,000' ? 'selected' : '' }}>ETB 200,000 - ETB 220,000</option>
+            <option value="ETB 220,000 - ETB 250,000" {{ $advert->expected_salary == 'ETB 220,000 - ETB 250,000' ? 'selected' : '' }}>ETB 220,000 - ETB 250,000</option>
+            <option value="ETB 250,000 - ETB 300,000" {{ $advert->expected_salary == 'ETB 250,000 - ETB 300,000' ? 'selected' : '' }}>ETB 250,000 - ETB 300,000</option>
+            <option value="ETB 300,000 - ETB 350,000" {{ $advert->expected_salary == 'ETB 300,000 - ETB 350,000' ? 'selected' : '' }}>ETB 300,000 - ETB 350,000</option>
+            <option value="ETB 350,000 - ETB 400,000" {{ $advert->expected_salary == 'ETB 350,000 - ETB 400,000' ? 'selected' : '' }}>ETB 350,000 - ETB 400,000</option>
+            <option value="ETB 400,000 - ETB 450,000" {{ $advert->expected_salary == 'ETB 400,000 - ETB 450,000' ? 'selected' : '' }}>ETB 400,000 - ETB 450,000</option>
+            <option value="ETB 450,000 - ETB 500,000" {{ $advert->expected_salary == 'ETB 450,000 - ETB 500,000' ? 'selected' : '' }}>ETB 450,000 - ETB 500,000</option>
+            <option value="Above ETB 500,000" {{ $advert->expected_salary == 'Above ETB 500,000' ? 'selected' : '' }}>Above ETB 500,000</option>
         </select>
     </div>
     <div class="col-span-10 md:col-span-3">

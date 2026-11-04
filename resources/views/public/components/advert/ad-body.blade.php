@@ -32,7 +32,7 @@
                         @else
                             <div class="flex justify-between md:items-end">
                                 <p class="text-lg font-bold text-dark_green tracking-tight">
-                                    Br {{ number_format($ad->price ?? 0, 0, '.', ',') }}
+                                    ETB {{ number_format($ad->price ?? 0, 0, '.', ',') }}
                                 </p>
                                 @if($ad->price_type)
                                     <span class="text-sm text-gray-500 font-medium bg-gray-50 px-2 py-0.5 rounded">{{ $ad->price_type }}</span>
@@ -72,7 +72,7 @@
                 @else
                     <div class="flex flex-col md:items-end">
                         <p class="text-xl font-bold text-dark_green tracking-tight">
-                            Br {{ number_format($ad->price ?? 0, 0, '.', ',') }}
+                            ETB {{ number_format($ad->price ?? 0, 0, '.', ',') }}
                         </p>
                         @if($ad->price_type)
                             <span class="text-sm text-gray-500 font-medium bg-gray-50 px-2 py-0.5 rounded">{{ $ad->price_type }}</span>

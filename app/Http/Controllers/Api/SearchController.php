@@ -680,11 +680,11 @@ class SearchController extends Controller
                 'categories' => Category::with('subCategories')->get(),
                 'states' => State::all(),
                 'price_ranges' => [
-                    ['value' => 'under_20k', 'label' => 'Under Br 2,000'],
-                    ['value' => '20k_120k', 'label' => 'Br 2,000 - Br 10,000'],
-                    ['value' => '120k_1m', 'label' => 'Br 10,000 - Br 100,000'],
-                    ['value' => '1m_10m', 'label' => 'Br 100,000 - Br 1,000,000'],
-                    ['value' => 'above_10m', 'label' => 'Above Br 1,000,000'],
+                    ['value' => 'under_20k', 'label' => 'Under ETB 2,000'],
+                    ['value' => '20k_120k', 'label' => 'ETB 2,000 - ETB 10,000'],
+                    ['value' => '120k_1m', 'label' => 'ETB 10,000 - ETB 100,000'],
+                    ['value' => '1m_10m', 'label' => 'ETB 100,000 - ETB 1,000,000'],
+                    ['value' => 'above_10m', 'label' => 'Above ETB 1,000,000'],
                 ],
                 'seller_types' => [
                     ['value' => 'all', 'label' => 'All Sellers'],

@@ -67,7 +67,7 @@
         @elseif($row->contact_price=="yes")
           Contact For Price
         @else
-          Br  {{ number_format($row->price, 0, '.', ',') }} {{ Str::limit($row->price_type, 1) }}
+          ETB  {{ number_format($row->price, 0, '.', ',') }} {{ Str::limit($row->price_type, 1) }}
         @endif
       </div>
     </div>

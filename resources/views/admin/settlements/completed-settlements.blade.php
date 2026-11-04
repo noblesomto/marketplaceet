@@ -75,7 +75,7 @@
                                                 @endif
                                             </td>
                                             <td class="fw-bold text-success">
-                                                Br {{ number_format(optional($row->advert)->price ?? 0, 2) }}
+                                                ETB {{ number_format(optional($row->advert)->price ?? 0, 2) }}
                                             </td>
                                             <td>
                                                 @if(optional($row->advert)->owner)

@@ -41,7 +41,7 @@
                                     <thead class="table-light">
                                         <tr>
                                             <th>Name</th>
-                                            <th>Daily Rate (Br)</th>
+                                            <th>Daily Rate (ETB)</th>
                                             <th>Display Order</th>
                                             <th>Status</th>
                                             <th>Description</th>
@@ -52,7 +52,7 @@
                                         @foreach($boostTypes as $type)
                                         <tr data-id="{{ $type->id }}">
                                             <td class="fw-bold">{{ $type->name }}</td>
-                                            <td>Br {{ number_format($type->daily_rate, 2) }}</td>
+                                            <td>ETB {{ number_format($type->daily_rate, 2) }}</td>
                                             <td>{{ $type->display_order }}</td>
                                             <td>
                                                 <span class="badge {{ $type->is_active ? 'bg-success' : 'bg-secondary' }}">
@@ -108,7 +108,7 @@
                                 <input type="text" class="form-control" name="name" required>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">Daily Rate (Br) <span class="text-danger">*</span></label>
+                                <label class="form-label">Daily Rate (ETB) <span class="text-danger">*</span></label>
                                 <input type="number" step="0.01" class="form-control" name="daily_rate" required>
                             </div>
                             <div class="mb-3">
@@ -151,7 +151,7 @@
                                 <input type="text" class="form-control" name="name" id="edit_name" required>
                             </div>
                             <div class="mb-3">
-                                <label class="form-label">Daily Rate (Br) <span class="text-danger">*</span></label>
+                                <label class="form-label">Daily Rate (ETB) <span class="text-danger">*</span></label>
                                 <input type="number" step="0.01" class="form-control" name="daily_rate" id="edit_daily_rate" required>
                             </div>
                             <div class="mb-3">

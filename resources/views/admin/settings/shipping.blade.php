@@ -67,7 +67,7 @@
                                             </td>
                                             <td>
                                                 <div class="small">
-                                                    <div class="fw-bold text-success">Br {{ number_format($row->price, 2) }}</div>
+                                                    <div class="fw-bold text-success">ETB {{ number_format($row->price, 2) }}</div>
                                                     <div class="text-muted">{{ $row->description }}</div>
                                                 </div>
                                             </td>
@@ -149,7 +149,7 @@
                             </div>
 
                             <div class="row mb-3">
-                                <label class="col-sm-3 col-form-label">Price (Br)</label>
+                                <label class="col-sm-3 col-form-label">Price (ETB)</label>
                                 <div class="col-sm-9">
                                     <input type="number" name="price" class="form-control"
                                            value="{{ old('price') }}" required>
@@ -246,7 +246,7 @@
                     </div>
 
                     <div class="row mb-3">
-                        <label class="col-sm-3 col-form-label">Price (Br)</label>
+                        <label class="col-sm-3 col-form-label">Price (ETB)</label>
                         <div class="col-sm-9">
                             <input type="number" name="price" class="form-control" required>
                         </div>

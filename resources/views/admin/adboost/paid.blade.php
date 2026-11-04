@@ -84,7 +84,7 @@
                                                 </a>
                                             </td>
                                             <td class="fw-bold text-success">
-                                                Br {{ number_format($row->amount, 2) }}
+                                                ETB {{ number_format($row->amount, 2) }}
                                             </td>
                                             <td>
                                                 <span class="badge bg-info text-white text-capitalize">

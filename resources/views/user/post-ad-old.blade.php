@@ -661,24 +661,24 @@
             <select id="salary" name="salary" class="w-48 px-3 py-2 border border-gray-300 rounded shadow-sm bg-white">
                 <option value="">--Select Salary--</option>
                 <option value="Commission">Commission</option>
-                <option value="Below Br 2,000">Below Br 2,000</option>
-                <option value="Br 2,000 - Br 4,000">Br 2,000 - Br 4,000</option>
-                <option value="Br 4,000 - Br 6,000">Br 4,000 - Br 6,000</option>
-                <option value="Br 6,000 - Br 8,000">Br 6,000 - Br 8,000</option>
-                <option value="Br 8,000 - Br 10,000">Br 8,000 - Br 10,000</option>
-                <option value="Br 10,000 - Br 12,000">Br 10,000 - Br 12,000</option>
-                <option value="Br 12,000 - Br 14,000">Br 12,000 - Br 14,000</option>
-                <option value="Br 14,000 - Br 16,000">Br 14,000 - Br 16,000</option>
-                <option value="Br 16,000 - Br 18,000">Br 16,000 - Br 18,000</option>
-                <option value="Br 18,000 - Br 20,000">Br 18,000 - Br 20,000</option>
-                <option value="Br 20,000 - Br 22,000">Br 20,000 - Br 22,000</option>
-                <option value="Br 22,000 - Br 25,000">Br 22,000 - Br 25,000</option>
-                <option value="Br 25,000 - Br 30,000">Br 25,000 - Br 30,000</option>
-                <option value="Br 30,000 - Br 35,000">Br 30,000 - Br 35,000</option>
-                <option value="Br 35,000 - Br 40,000">Br 35,000 - Br 40,000</option>
-                <option value="Br 40,000 - Br 45,000">Br 40,000 - Br 45,000</option>
-                <option value="Br 45,000 - Br 50,000">Br 45,000 - Br 50,000</option>
-                <option value="Above Br 50,000">Above Br 50,000</option>
+                <option value="Below ETB 2,000">Below ETB 2,000</option>
+                <option value="ETB 2,000 - ETB 4,000">ETB 2,000 - ETB 4,000</option>
+                <option value="ETB 4,000 - ETB 6,000">ETB 4,000 - ETB 6,000</option>
+                <option value="ETB 6,000 - ETB 8,000">ETB 6,000 - ETB 8,000</option>
+                <option value="ETB 8,000 - ETB 10,000">ETB 8,000 - ETB 10,000</option>
+                <option value="ETB 10,000 - ETB 12,000">ETB 10,000 - ETB 12,000</option>
+                <option value="ETB 12,000 - ETB 14,000">ETB 12,000 - ETB 14,000</option>
+                <option value="ETB 14,000 - ETB 16,000">ETB 14,000 - ETB 16,000</option>
+                <option value="ETB 16,000 - ETB 18,000">ETB 16,000 - ETB 18,000</option>
+                <option value="ETB 18,000 - ETB 20,000">ETB 18,000 - ETB 20,000</option>
+                <option value="ETB 20,000 - ETB 22,000">ETB 20,000 - ETB 22,000</option>
+                <option value="ETB 22,000 - ETB 25,000">ETB 22,000 - ETB 25,000</option>
+                <option value="ETB 25,000 - ETB 30,000">ETB 25,000 - ETB 30,000</option>
+                <option value="ETB 30,000 - ETB 35,000">ETB 30,000 - ETB 35,000</option>
+                <option value="ETB 35,000 - ETB 40,000">ETB 35,000 - ETB 40,000</option>
+                <option value="ETB 40,000 - ETB 45,000">ETB 40,000 - ETB 45,000</option>
+                <option value="ETB 45,000 - ETB 50,000">ETB 45,000 - ETB 50,000</option>
+                <option value="Above ETB 50,000">Above ETB 50,000</option>
             </select>
             </div>
             <div class="col-span-10 md:col-span-3">
@@ -696,22 +696,22 @@
                 @endif
             <select id="expected_salary" name="expected_salary" class="w-48 px-3 py-2 border border-gray-300 rounded shadow-sm bg-white">
                 <option value="">--Select Expected Salary--</option>
-                <option value="Below Br 5,000">Below Br 5,000</option>
-                <option value="Br 5,000 - Br 7,500">Br 5,000 - Br 7,500</option>
-                <option value="Br 7,500 - Br 10,000">Br 7,500 - Br 10,000</option>
-                <option value="Br 10,000 - Br 12,000">Br 10,000 - Br 12,000</option>
-                <option value="Br 12,000 - Br 14,000">Br 12,000 - Br 14,000</option>
-                <option value="Br 14,000 - Br 16,000">Br 14,000 - Br 16,000</option>
-                <option value="Br 16,000 - Br 18,000">Br 16,000 - Br 18,000</option>
-                <option value="Br 18,000 - Br 20,000">Br 18,000 - Br 20,000</option>
-                <option value="Br 20,000 - Br 22,000">Br 20,000 - Br 22,000</option>
-                <option value="Br 22,000 - Br 25,000">Br 22,000 - Br 25,000</option>
-                <option value="Br 25,000 - Br 30,000">Br 25,000 - Br 30,000</option>
-                <option value="Br 30,000 - Br 35,000">Br 30,000 - Br 35,000</option>
-                <option value="Br 35,000 - Br 40,000">Br 35,000 - Br 40,000</option>
-                <option value="Br 40,000 - Br 45,000">Br 40,000 - Br 45,000</option>
-                <option value="Br 45,000 - Br 50,000">Br 45,000 - Br 50,000</option>
-                <option value="Above Br 50,000">Above Br 50,000</option>
+                <option value="Below ETB 5,000">Below ETB 5,000</option>
+                <option value="ETB 5,000 - ETB 7,500">ETB 5,000 - ETB 7,500</option>
+                <option value="ETB 7,500 - ETB 10,000">ETB 7,500 - ETB 10,000</option>
+                <option value="ETB 10,000 - ETB 12,000">ETB 10,000 - ETB 12,000</option>
+                <option value="ETB 12,000 - ETB 14,000">ETB 12,000 - ETB 14,000</option>
+                <option value="ETB 14,000 - ETB 16,000">ETB 14,000 - ETB 16,000</option>
+                <option value="ETB 16,000 - ETB 18,000">ETB 16,000 - ETB 18,000</option>
+                <option value="ETB 18,000 - ETB 20,000">ETB 18,000 - ETB 20,000</option>
+                <option value="ETB 20,000 - ETB 22,000">ETB 20,000 - ETB 22,000</option>
+                <option value="ETB 22,000 - ETB 25,000">ETB 22,000 - ETB 25,000</option>
+                <option value="ETB 25,000 - ETB 30,000">ETB 25,000 - ETB 30,000</option>
+                <option value="ETB 30,000 - ETB 35,000">ETB 30,000 - ETB 35,000</option>
+                <option value="ETB 35,000 - ETB 40,000">ETB 35,000 - ETB 40,000</option>
+                <option value="ETB 40,000 - ETB 45,000">ETB 40,000 - ETB 45,000</option>
+                <option value="ETB 45,000 - ETB 50,000">ETB 45,000 - ETB 50,000</option>
+                <option value="Above ETB 50,000">Above ETB 50,000</option>
             </select>
             </div>
             <div class="col-span-10 md:col-span-3">

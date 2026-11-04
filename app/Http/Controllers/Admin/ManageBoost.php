@@ -340,7 +340,7 @@ class ManageBoost extends Controller
 
         if ($amountMismatch) {
             return redirect()->back()->with('status', [
-                'text' => 'Boost activated on "' . $advert->ad_title . '", but the computed price (Br ' . number_format($amount, 2) . ') differs from the amount paid (Br ' . number_format($amountPaid, 2) . ') — please double-check this was intentional.',
+                'text' => 'Boost activated on "' . $advert->ad_title . '", but the computed price (ETB ' . number_format($amount, 2) . ') differs from the amount paid (ETB ' . number_format($amountPaid, 2) . ') — please double-check this was intentional.',
                 'type' => 'warning',
             ]);
         }

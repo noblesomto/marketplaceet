@@ -208,7 +208,7 @@
       <div class="max-w-4xl mx-auto">
         <h2 class="text-2xl font-semibold text-gray-900 mb-6">8. Currency & Tax</h2>
         <ul class="list-disc pl-6 text-gray-600 space-y-2">
-          <li>All charges are in Ethiopian Birr (Br)</li>
+          <li>All charges are in Ethiopian Birr (ETB)</li>
           <li>Users outside Ethiopia may incur exchange or processing fees based on their bank or card provider.</li>
         </ul>
       </div>

@@ -36,7 +36,7 @@
                                 <span class="fw-semibold">Order {{ $row->order_code ?? $row->id }}</span>
                                 <span class="text-muted">· {{ optional($row->advert)->ad_title ?? 'Advert removed' }}</span>
                             </div>
-                            <div class="fw-bold">Br {{ number_format((float) $row->amount_paid, 2) }}</div>
+                            <div class="fw-bold">ETB {{ number_format((float) $row->amount_paid, 2) }}</div>
                         </div>
                         <div class="row g-3 small">
                             <div class="col-md-4">

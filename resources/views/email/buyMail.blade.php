@@ -148,9 +148,9 @@
             <div class="section">
                 <h4>Order {{ $details['order_code'] }}</h4>
                 <p><span class="label">Product Name:</span> {{ $details['advert'] }}</p>
-                <p><span class="label">Item price:</span> Br {{ number_format($details['item_price'], 2) }}</p>
-                <p><span class="label">Service fee:</span> Br {{ number_format($details['commission'], 2) }}</p>
-                <p><span class="label">Total paid:</span> Br {{ number_format($details['amount_paid'], 2) }}</p>
+                <p><span class="label">Item price:</span> ETB {{ number_format($details['item_price'], 2) }}</p>
+                <p><span class="label">Service fee:</span> ETB {{ number_format($details['commission'], 2) }}</p>
+                <p><span class="label">Total paid:</span> ETB {{ number_format($details['amount_paid'], 2) }}</p>
             </div>
 
             <div class="section">

@@ -64,7 +64,7 @@
                             <div class="font-medium leading-5 md:font-bold text-base md:text-xl md:mt-2"> {{ Str::limit($row->ad_title, 50) }}</div>
                             <div class="text-sm mt-2 hidden lg:block">{!! Str::limit($row->description, 80) !!}</div>
                             <div class="flex justify-start text-dark_green font-bold text-base my-2">
-                              <div class="mr-4">Br  {{ number_format($row->price, 0, '.', ',') }} </div>
+                              <div class="mr-4">ETB  {{ number_format($row->price, 0, '.', ',') }} </div>
                               <div>{{ $row->price_type }}</div>
                             </div>
                             <div class="flex justify-start text-sm mt-2 absolute bottom-1">

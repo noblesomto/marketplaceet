@@ -204,7 +204,7 @@ class UserManageAdverts extends Controller
                 'images.*.max'                => 'Each image must not exceed ' . round($imageRequirements['max_file_size_bytes'] / (1024 * 1024)) . 'MB.',
                 // Price messages
                 'price.required_unless'       => 'Please enter a price, or select "Contact for Price".',
-                'price.gt'                    => 'Please enter a price greater than Br 0, or select "Contact for Price".',
+                'price.gt'                    => 'Please enter a price greater than ETB 0, or select "Contact for Price".',
                 'price_type.required_unless'  => 'Please select a price type.',
                 // Car-specific messages
                 'condition.required'          => 'Please select the vehicle condition.',
@@ -581,7 +581,7 @@ class UserManageAdverts extends Controller
             'model.required'             => DeviceModels::isDeviceSubcategory($subcat) ? 'Please select the model, or "Other / not listed".' : 'Please select the vehicle model.',
             'model.in'                   => 'The selected model is invalid. Please select a valid model.',
             'price.required_unless'      => 'Please enter a price, or select "Contact for Price".',
-            'price.gt'                   => 'Please enter a price greater than Br 0, or select "Contact for Price".',
+            'price.gt'                   => 'Please enter a price greater than ETB 0, or select "Contact for Price".',
             'price_type.required_unless' => 'Please select a price type.',
         ]);
         if ($request->has('buy_direct') && ($buyDirectError = $validationService->validateShipping($request, $user))) {

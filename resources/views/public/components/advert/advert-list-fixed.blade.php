@@ -73,7 +73,7 @@
             @else
             <div class="relative -mt-6 mb-2 mr-2 w-full">
                 <div class="bg-secondary_dark text-white h-8 px-2 text-sm font-semibold inline-flex items-center float-right">
-                    Br  {{ number_format($row->price, 0, '.', ',') }} {{ Str::limit($row->price_type, 1) }}
+                    ETB  {{ number_format($row->price, 0, '.', ',') }} {{ Str::limit($row->price_type, 1) }}
                 </div>
             </div>
             @endif

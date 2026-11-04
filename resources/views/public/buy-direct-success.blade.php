@@ -23,7 +23,7 @@
         @endif
 
         @if(session('amount'))
-            <p class="text-gray-500 text-sm mb-1">Amount paid: <strong>Br {{ session('amount') }}</strong></p>
+            <p class="text-gray-500 text-sm mb-1">Amount paid: <strong>ETB {{ session('amount') }}</strong></p>
         @endif
 
         @if(session('order_code'))

@@ -61,9 +61,9 @@
                           <span class="text-muted">User not found</span>
                         @endif
                       </td>
-                      <td>Br {{ number_format($row->advert->price ?? 0, 2) }}</td>
-                      <td>Br {{ number_format($row->commission ?? 0, 2) }}</td>
-                      <td>Br {{ number_format($row->amount_paid ?? 0, 2) }}</td>
+                      <td>ETB {{ number_format($row->advert->price ?? 0, 2) }}</td>
+                      <td>ETB {{ number_format($row->commission ?? 0, 2) }}</td>
+                      <td>ETB {{ number_format($row->amount_paid ?? 0, 2) }}</td>
                       <td>{{ $row->created_at->format('j F Y') }}</td>
                       <td>{{ $row->ship_code ?? 'N/A' }}</td>
 

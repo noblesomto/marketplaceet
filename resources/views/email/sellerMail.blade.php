@@ -163,7 +163,7 @@
             @if(!empty($details['needs_bank']))
             <div class="section" style="background:#fff8e1;border:1px solid #f0c36d;border-radius:6px;padding:15px;">
                 <h4 style="color:#8a5a00;">Add your bank account details to get paid</h4>
-                <p>We don't have your bank account details yet. Your money is safe with us, but we can only send you the Br {{ number_format($details['item_price'], 2) }} once you add them.</p>
+                <p>We don't have your bank account details yet. Your money is safe with us, but we can only send you the ETB {{ number_format($details['item_price'], 2) }} once you add them.</p>
                 <p style="text-align:center;margin-top:12px;"><a href="{{ $details['bank_url'] }}" style="display:inline-block;background:#b7791f;color:#fff;padding:10px 20px;border-radius:6px;text-decoration:none;font-weight:bold;">Add bank details</a></p>
             </div>
             @endif
@@ -179,7 +179,7 @@
                 <h4>Item Sold</h4>
                 <p><span class="label">Product Name:</span> {{ $details['advert'] }}</p>
                 <p><span class="label">Order:</span> {{ $details['order_code'] }}</p>
-                <p><span class="label">You will receive:</span> Br {{ number_format($details['item_price'], 2) }}</p>
+                <p><span class="label">You will receive:</span> ETB {{ number_format($details['item_price'], 2) }}</p>
             </div>
 
             <div class="section">

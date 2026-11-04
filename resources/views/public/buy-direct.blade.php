@@ -32,7 +32,7 @@
           <!-- Price Information -->
           <div class="mb-4">
             <div class="flex items-center space-x-4 mb-1">
-              <span class="text-2xl font-bold text-primary">Br {{ number_format($ad->price, 0, '.', ',') }}</span>
+              <span class="text-2xl font-bold text-primary">ETB {{ number_format($ad->price, 0, '.', ',') }}</span>
               <span class="text-gray-600">{{ $ad->price_type }}</span>
             </div>
 
@@ -89,9 +89,9 @@
             </div>
 
             <div class="bg-gray-50 p-3 rounded-lg mt-4 space-y-2 text-sm">
-                <div class="flex justify-between"><span class="text-gray-600">Item price</span><span class="font-medium">Br {{ number_format($quote['item_price'], 2) }}</span></div>
-                <div class="flex justify-between"><span class="text-gray-600">Buyer protection ({{ rtrim(rtrim(number_format($quote['commission_rate'], 2), '0'), '.') }}%)</span><span class="font-medium">Br {{ number_format($quote['commission'], 2) }}</span></div>
-                <div class="flex justify-between border-t border-gray-200 pt-2"><span class="font-semibold text-gray-800">Total</span><span class="text-lg font-bold">Br {{ number_format($quote['grand_total'], 2) }}</span></div>
+                <div class="flex justify-between"><span class="text-gray-600">Item price</span><span class="font-medium">ETB {{ number_format($quote['item_price'], 2) }}</span></div>
+                <div class="flex justify-between"><span class="text-gray-600">Buyer protection ({{ rtrim(rtrim(number_format($quote['commission_rate'], 2), '0'), '.') }}%)</span><span class="font-medium">ETB {{ number_format($quote['commission'], 2) }}</span></div>
+                <div class="flex justify-between border-t border-gray-200 pt-2"><span class="font-semibold text-gray-800">Total</span><span class="text-lg font-bold">ETB {{ number_format($quote['grand_total'], 2) }}</span></div>
                 <p class="text-xs text-gray-500 pt-1">Delivery is arranged directly with the seller.</p>
             </div>
 

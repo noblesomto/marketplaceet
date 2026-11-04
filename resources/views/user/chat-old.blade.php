@@ -366,7 +366,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 amountInput.removeAttribute('disabled');
                 amountInput.setAttribute('required', 'required');
                 if (amountInput.value) {
-                    chatInput.value = `Would you accept Br ${amountInput.value}`;
+                    chatInput.value = `Would you accept ETB ${amountInput.value}`;
                 }
             } else {
                 wrapper.classList.add('hidden');
@@ -382,7 +382,7 @@ document.addEventListener('DOMContentLoaded', function () {
         // Update chat input on amount change
         amountInput.addEventListener('input', function() {
             if (toggle.checked && amountInput.value) {
-                chatInput.value = `Would you accept Br ${amountInput.value}`;
+                chatInput.value = `Would you accept ETB ${amountInput.value}`;
             }
         });
 
@@ -392,7 +392,7 @@ document.addEventListener('DOMContentLoaded', function () {
             amountInput.removeAttribute('disabled');
             amountInput.setAttribute('required', 'required');
             if (amountInput.value) {
-                chatInput.value = `Would you accept Br ${amountInput.value}`;
+                chatInput.value = `Would you accept ETB ${amountInput.value}`;
             }
         } else {
             wrapper.classList.add('hidden');
@@ -497,7 +497,7 @@ document.addEventListener('DOMContentLoaded', function () {
 
             // Update message for offer
             if (toggle && toggle.checked && amountInput.value && !message.includes(amountInput.value)) {
-                message = `Would you accept Br ${amountInput.value}`;
+                message = `Would you accept ETB ${amountInput.value}`;
                 chatInput.value = message;
             }
 

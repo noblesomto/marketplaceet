@@ -384,7 +384,7 @@
                 </a>
                 <div class="order-desc">{{ strip_tags($pending->advert->description ?? '') }}</div>
                 <div class="order-price">
-                    Br {{ number_format($pending->amount_paid ?? 0, 0, '.', ',') }}
+                    ETB {{ number_format($pending->amount_paid ?? 0, 0, '.', ',') }}
                 </div>
             </div>
         </div>
@@ -450,7 +450,7 @@
                         {{ strip_tags($row->advert->description ?? 'No description available') }}
                     </div>
                     <div class="order-price">
-                        Br {{ isset($row->amount_paid) ? number_format($row->amount_paid, 0, '.', ',') : '0' }}
+                        ETB {{ isset($row->amount_paid) ? number_format($row->amount_paid, 0, '.', ',') : '0' }}
                     </div>
                 </div>
             </div>

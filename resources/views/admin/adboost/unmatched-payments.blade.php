@@ -61,7 +61,7 @@
                                         @php $adverts = $advertsByPayment[$payment->id]; @endphp
                                         <tr>
                                             <td><code>{{ $payment->reference }}</code></td>
-                                            <td class="fw-bold text-success">Br {{ number_format($payment->amount, 2) }}</td>
+                                            <td class="fw-bold text-success">ETB {{ number_format($payment->amount, 2) }}</td>
                                             <td>{{ $payment->customer_email }}</td>
                                             <td>{{ $payment->paid_at ? $payment->paid_at->format('M j, Y g:ia') : '—' }}</td>
                                             <td>

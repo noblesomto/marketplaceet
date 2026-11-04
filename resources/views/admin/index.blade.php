@@ -577,9 +577,9 @@
             <div class="kpi-stats-grid cols-5">
                 {{-- Primary: this month revenue --}}
                 <div class="kpi-stat primary">
-                    <div class="stat-num" style="font-size:2rem;">Br {{ number_format($stats['boosts']['revenue_this_month'], 0) }}</div>
+                    <div class="stat-num" style="font-size:2rem;">ETB {{ number_format($stats['boosts']['revenue_this_month'], 0) }}</div>
                     <div class="stat-label">Revenue This Month</div>
-                    <div class="stat-sub">Br {{ number_format($stats['boosts']['revenue_last_month'], 0) }} last month</div>
+                    <div class="stat-sub">ETB {{ number_format($stats['boosts']['revenue_last_month'], 0) }} last month</div>
                 </div>
                 <div class="kpi-stat">
                     <div class="stat-num success">{{ number_format($stats['boosts']['active']) }}</div>
@@ -608,23 +608,23 @@
                 <div class="kpi-trend-strip-label"><i class="bi bi-cash-stack"></i> Revenue</div>
                 <div class="kpi-trend-periods">
                     <div class="kpi-trend-period">
-                        <div class="kpi-trend-value currency">Br {{ number_format($stats['boosts']['revenue_today'], 0) }}</div>
+                        <div class="kpi-trend-value currency">ETB {{ number_format($stats['boosts']['revenue_today'], 0) }}</div>
                         <div class="kpi-trend-plabel">Today</div>
                     </div>
                     <div class="kpi-trend-period">
-                        <div class="kpi-trend-value currency">Br {{ number_format($stats['boosts']['revenue_this_week'], 0) }}</div>
+                        <div class="kpi-trend-value currency">ETB {{ number_format($stats['boosts']['revenue_this_week'], 0) }}</div>
                         <div class="kpi-trend-plabel">This Week</div>
                     </div>
                     <div class="kpi-trend-period">
-                        <div class="kpi-trend-value currency">Br {{ number_format($stats['boosts']['revenue_last_week'], 0) }}</div>
+                        <div class="kpi-trend-value currency">ETB {{ number_format($stats['boosts']['revenue_last_week'], 0) }}</div>
                         <div class="kpi-trend-plabel">Last Week</div>
                     </div>
                     <div class="kpi-trend-period">
-                        <div class="kpi-trend-value currency">Br {{ number_format($stats['boosts']['revenue_this_month'], 0) }}</div>
+                        <div class="kpi-trend-value currency">ETB {{ number_format($stats['boosts']['revenue_this_month'], 0) }}</div>
                         <div class="kpi-trend-plabel">This Month</div>
                     </div>
                     <div class="kpi-trend-period">
-                        <div class="kpi-trend-value currency">Br {{ number_format($stats['boosts']['revenue_last_month'], 0) }}</div>
+                        <div class="kpi-trend-value currency">ETB {{ number_format($stats['boosts']['revenue_last_month'], 0) }}</div>
                         <div class="kpi-trend-plabel">Last Month</div>
                     </div>
                 </div>
@@ -652,12 +652,12 @@
                 @if(isset($stats['payments']))
                 {{-- Primary: total revenue --}}
                 <div class="kpi-stat primary">
-                    <div class="stat-num" style="font-size:1.9rem;">Br {{ number_format($stats['payments']['total_revenue'], 0) }}</div>
+                    <div class="stat-num" style="font-size:1.9rem;">ETB {{ number_format($stats['payments']['total_revenue'], 0) }}</div>
                     <div class="stat-label">Total Revenue</div>
                     <div class="stat-sub">{{ number_format($stats['payments']['paid']) }} paid transactions</div>
                 </div>
                 <div class="kpi-stat">
-                    <div class="stat-num" style="font-size:1.45rem;">Br {{ number_format($stats['payments']['revenue_this_month'], 0) }}</div>
+                    <div class="stat-num" style="font-size:1.45rem;">ETB {{ number_format($stats['payments']['revenue_this_month'], 0) }}</div>
                     <div class="stat-label">This Month</div>
                     <span class="stat-badge green">Current month</span>
                 </div>
@@ -688,7 +688,7 @@
                     <span class="stat-badge {{ $stats['settlements']['pending'] > 0 ? 'red' : 'green' }}">Seller payouts</span>
                 </div>
                 <div class="kpi-stat">
-                    <div class="stat-num" style="font-size:1.35rem;">Br {{ number_format($stats['settlements']['pending_amount'], 0) }}</div>
+                    <div class="stat-num" style="font-size:1.35rem;">ETB {{ number_format($stats['settlements']['pending_amount'], 0) }}</div>
                     <div class="stat-label">Pending Amount</div>
                     <span class="stat-badge amber">Owed to sellers</span>
                 </div>

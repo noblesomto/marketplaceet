@@ -71,7 +71,7 @@
                 <a href="{{ $adLink }}" class="font-semibold text-gray-800 leading-snug line-clamp-2 block no-underline hover:text-dark_green">
                     {{ $productName }}
                 </a>
-                <div class="text-base font-black text-dark_green mt-1">Br {{ number_format((float) $payment->amount, 0, '.', ',') }}</div>
+                <div class="text-base font-black text-dark_green mt-1">ETB {{ number_format((float) $payment->amount, 0, '.', ',') }}</div>
             </div>
         </div>
     </div>
@@ -125,16 +125,16 @@
             <div class="border-t border-gray-50"></div>
             <div class="flex justify-between">
                 <span class="text-gray-400">Item Price</span>
-                <span class="font-medium text-gray-800">Br {{ number_format((float) $payment->amount, 2) }}</span>
+                <span class="font-medium text-gray-800">ETB {{ number_format((float) $payment->amount, 2) }}</span>
             </div>
             <div class="flex justify-between">
                 <span class="text-gray-400">Buyer Protection</span>
-                <span class="font-medium text-gray-800">Br {{ number_format((float) $payment->commission, 2) }}</span>
+                <span class="font-medium text-gray-800">ETB {{ number_format((float) $payment->commission, 2) }}</span>
             </div>
             <div class="border-t border-gray-50"></div>
             <div class="flex justify-between">
                 <span class="text-gray-400">Amount Paid</span>
-                <span class="font-black text-dark_green text-base">Br {{ number_format((float) $payment->amount_paid, 2) }}</span>
+                <span class="font-black text-dark_green text-base">ETB {{ number_format((float) $payment->amount_paid, 2) }}</span>
             </div>
         </div>
     </div>

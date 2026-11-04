@@ -52,7 +52,7 @@
                                             data-name="{{ $type->name }}"
                                             data-rate="{{ $type->daily_rate }}"
                                             data-description="{{ $type->description }}">
-                                        {{ $type->name }} - Br {{ number_format($type->daily_rate, 2) }}/day
+                                        {{ $type->name }} - ETB {{ number_format($type->daily_rate, 2) }}/day
                                     </option>
                                 @endforeach
                             </select>
@@ -180,11 +180,11 @@
       const finalPrice = parseFloat(data.data.pricing.final_price);
       const discountPercentage = parseFloat(data.data.pricing.discount_percentage);
 
-      let priceText = 'Br ' + Math.round(finalPrice).toLocaleString();
+      let priceText = 'ETB ' + Math.round(finalPrice).toLocaleString();
 
       if (discountPercentage > 0) {
         const basePrice = parseFloat(data.data.pricing.base_price);
-        priceText += ' <span class="text-sm text-gray-600">(Save Br ' +
+        priceText += ' <span class="text-sm text-gray-600">(Save ETB ' +
                      Math.round(basePrice - finalPrice).toLocaleString() + ')</span>';
       }
 

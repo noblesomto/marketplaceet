@@ -117,7 +117,7 @@
                             </div>
                             <div class="flex-grow-1">
                                 <h6 class="text-muted mb-1">Total revenue</h6>
-                                <h4 class="mb-0 fw-bold">Br {{ number_format($totalRevenue ?? 0, 2) }}</h4>
+                                <h4 class="mb-0 fw-bold">ETB {{ number_format($totalRevenue ?? 0, 2) }}</h4>
                             </div>
                         </div>
                     </div>
@@ -184,7 +184,7 @@
                         </div>
                         <div class="detail-row">
                             <span class="detail-label">Pending settlement</span>
-                            <span class="detail-value text-success">Br {{ number_format($pendingRevenue, 2) }}</span>
+                            <span class="detail-value text-success">ETB {{ number_format($pendingRevenue, 2) }}</span>
                         </div>
                     </div>
                 </div>

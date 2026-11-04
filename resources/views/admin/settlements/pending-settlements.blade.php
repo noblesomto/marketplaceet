@@ -75,7 +75,7 @@
                                                 @endif
                                             </td>
                                             <td class="fw-bold text-success">
-                                                Br {{ number_format((float) ($row->payout_amount ?? $row->amount), 2) }}
+                                                ETB {{ number_format((float) ($row->payout_amount ?? $row->amount), 2) }}
                                                 <div class="small text-muted fw-normal">Order {{ $row->order_code ?? $row->id }}</div>
                                             </td>
                                             <td>
@@ -114,7 +114,7 @@
                                             <td class="text-center">
                                                 @if($ready)
                                                     <div class="d-flex flex-column gap-2 align-items-center">
-                                                        <form method="POST" action="/admin/payout/{{ $row->id }}" onsubmit="return confirm('Send Br {{ number_format((float) $row->amount, 2) }} to the seller via Flutterwave?');">
+                                                        <form method="POST" action="/admin/payout/{{ $row->id }}" onsubmit="return confirm('Send ETB {{ number_format((float) $row->amount, 2) }} to the seller via Flutterwave?');">
                                                             @csrf
                                                             <button class="btn btn-sm btn-outline-primary"><i class="bi bi-send"></i> {{ $row->payout_status === 'failed' ? 'Retry payout' : 'Pay via Flutterwave' }}</button>
                                                         </form>

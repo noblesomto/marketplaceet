@@ -69,7 +69,7 @@
                         </div>
                     @else
                     <div class="flex justify-start text-dark_green font-bold text-base my-2">
-                      <div class="mr-4">Br  {{ number_format($row->advert->price, 0, '.', ',') }} </div>
+                      <div class="mr-4">ETB  {{ number_format($row->advert->price, 0, '.', ',') }} </div>
                       <div>{{ $row->advert->price_type }}</div>
                     </div>
                     @endif
@@ -79,7 +79,7 @@
                         <div class="flex justify-between text-sm font-semibold ">
 
                           <span class="bg-gray-100 p-1 mr-2">Boost: {{ $row->boost_type }}</span>
-                          <span class="bg-gray-100 p-1 mr-2">Boost Price: Br  {{ number_format($row->amount, 0, '.', ',') }}</span>
+                          <span class="bg-gray-100 p-1 mr-2">Boost Price: ETB  {{ number_format($row->amount, 0, '.', ',') }}</span>
                         </div>
 
                     </div>

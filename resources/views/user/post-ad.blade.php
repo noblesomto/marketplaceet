@@ -487,7 +487,7 @@
                         <!-- Amount Input -->
                         <div class="relative">
                             <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                                <span class="text-gray-500 sm:text-base">Br </span>
+                                <span class="text-gray-500 sm:text-base">ETB </span>
                             </div>
                             <input type="text" name="price_display" id="price_display" class="block w-full pl-8 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-dark_green focus:border-dark_green text-base" placeholder="0.00" value="{{ old('price') ? number_format(old('price'), 0, '.', ',') : '' }}">
                             <input type="hidden" name="price" id="price_hidden" value="{{ old('price') }}">
@@ -520,7 +520,7 @@
                      <select name="salary" class="custom-select block w-full md:w-1/2 px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-dark_green focus:border-transparent text-base">
                         <option value="">--Select Salary--</option>
                         @php
-                            $salaryRanges = ['Commission', 'Below Br 2,000', 'Br 2,000 - Br 4,000', 'Br 4,000 - Br 6,000', 'Br 6,000 - Br 8,000', 'Br 8,000 - Br 10,000', 'Br 10,000 - Br 12,000', 'Br 12,000 - Br 14,000', 'Br 14,000 - Br 16,000', 'Br 16,000 - Br 18,000', 'Br 18,000 - Br 20,000', 'Br 20,000 - Br 22,000', 'Br 22,000 - Br 25,000', 'Br 25,000 - Br 30,000', 'Br 30,000 - Br 35,000', 'Br 35,000 - Br 40,000', 'Br 40,000 - Br 45,000', 'Br 45,000 - Br 50,000', 'Above Br 50,000'];
+                            $salaryRanges = ['Commission', 'Below ETB 2,000', 'ETB 2,000 - ETB 4,000', 'ETB 4,000 - ETB 6,000', 'ETB 6,000 - ETB 8,000', 'ETB 8,000 - ETB 10,000', 'ETB 10,000 - ETB 12,000', 'ETB 12,000 - ETB 14,000', 'ETB 14,000 - ETB 16,000', 'ETB 16,000 - ETB 18,000', 'ETB 18,000 - ETB 20,000', 'ETB 20,000 - ETB 22,000', 'ETB 22,000 - ETB 25,000', 'ETB 25,000 - ETB 30,000', 'ETB 30,000 - ETB 35,000', 'ETB 35,000 - ETB 40,000', 'ETB 40,000 - ETB 45,000', 'ETB 45,000 - ETB 50,000', 'Above ETB 50,000'];
                         @endphp
                         @foreach($salaryRanges as $range)
                             <option value="{{ $range }}" {{ old('salary') == $range ? 'selected' : '' }}>{{ $range }}</option>
@@ -538,7 +538,7 @@
                      <select name="expected_salary" class="custom-select block w-full md:w-1/2 px-4 py-3 rounded-lg border border-gray-300 shadow-sm focus:ring-dark_green focus:border-transparent text-base">
                         <option value="">--Select Expected Salary--</option>
                         @php
-                            $expectedSalaryRanges = ['Below Br 5,000', 'Br 5,000 - Br 7,500', 'Br 7,500 - Br 10,000', 'Br 10,000 - Br 12,000', 'Br 12,000 - Br 14,000', 'Br 14,000 - Br 16,000', 'Br 16,000 - Br 18,000', 'Br 18,000 - Br 20,000', 'Br 20,000 - Br 22,000', 'Br 22,000 - Br 25,000', 'Br 25,000 - Br 30,000', 'Br 30,000 - Br 35,000', 'Br 35,000 - Br 40,000', 'Br 40,000 - Br 45,000', 'Br 45,000 - Br 50,000', 'Above Br 50,000'];
+                            $expectedSalaryRanges = ['Below ETB 5,000', 'ETB 5,000 - ETB 7,500', 'ETB 7,500 - ETB 10,000', 'ETB 10,000 - ETB 12,000', 'ETB 12,000 - ETB 14,000', 'ETB 14,000 - ETB 16,000', 'ETB 16,000 - ETB 18,000', 'ETB 18,000 - ETB 20,000', 'ETB 20,000 - ETB 22,000', 'ETB 22,000 - ETB 25,000', 'ETB 25,000 - ETB 30,000', 'ETB 30,000 - ETB 35,000', 'ETB 35,000 - ETB 40,000', 'ETB 40,000 - ETB 45,000', 'ETB 45,000 - ETB 50,000', 'Above ETB 50,000'];
                         @endphp
                         @foreach($expectedSalaryRanges as $range)
                             <option value="{{ $range }}" {{ old('expected_salary') == $range ? 'selected' : '' }}>{{ $range }}</option>
