@@ -3,12 +3,10 @@
  *
  * - "Pickup Only" hides the Buy Direct section and turns it off: escrow needs
  *   the item to be handed over/delivered, which pickup-only listings opt out of.
- * - Buy Direct can't be enabled until the seller has bank details on file
- *   (#buyDirect[data-has-bank="0"]); choosing it opens the bank details popup
- *   (user/partials/bank-details-modal.blade.php) instead, and saving there
- *   enables it without leaving the page.
- *
- * The server enforces the same rule (AdvertValidationService::validateShipping).
+ * - Bank details are not required to enable Buy Direct: sellers without them
+ *   (#buyDirect[data-has-bank="0"]) are reminded when the item sells, and can
+ *   optionally add them now from the popup
+ *   (user/partials/bank-details-modal.blade.php) without leaving the page.
  */
 (function () {
     document.addEventListener('DOMContentLoaded', () => {
@@ -21,29 +19,22 @@
         const modal = document.getElementById('bankDetailsModal');
         const form = document.getElementById('bankDetailsForm');
 
-        const hasBank = () => section.dataset.hasBank === '1';
         const isPickup = () => document.querySelector('input[name="shipment"]:checked')?.value === 'Pickup';
 
         // ---- Pickup Only hides Buy Direct ----------------------------------
         // Inline display, not the `hidden` class: CategoryUIManager owns that
         // class for categories where Buy Direct doesn't apply at all.
-        // Also runs after the legacy inline toggleShipping(), which ticks
-        // "Enable Buy Direct" whenever Shipping is chosen — undo that for
-        // sellers without bank details.
         function syncWithShipment() {
             const pickup = isPickup();
             section.style.display = pickup ? 'none' : '';
-            if ((pickup || !hasBank()) && yes?.checked && no) no.checked = true;
+            if (pickup && yes?.checked && no) no.checked = true;
         }
 
         shipmentRadios.forEach(radio => radio.addEventListener('change', syncWithShipment));
         syncWithShipment();
 
-        // ---- Bank details gate ---------------------------------------------
-        if (!yes || !modal || !form) return;
-
-        // A failed submit can bring back "Yes" for a seller without a bank
-        if (!hasBank() && yes.checked && no) no.checked = true;
+        // ---- Optional bank details popup -----------------------------------
+        if (!modal || !form) return;
 
         function openModal() {
             modal.classList.remove('hidden');
@@ -55,12 +46,6 @@
             modal.classList.add('hidden');
             document.body.style.overflow = '';
         }
-
-        yes.addEventListener('click', e => {
-            if (hasBank()) return;
-            e.preventDefault(); // keeps "No" selected
-            openModal();
-        });
 
         section.querySelectorAll('[data-open-bank-modal]').forEach(el =>
             el.addEventListener('click', e => { e.preventDefault(); openModal(); })
@@ -118,13 +103,11 @@
 
                 section.dataset.hasBank = '1';
                 section.querySelector('[data-bank-notice]')?.remove();
-                yes.checked = true;
-                yes.dispatchEvent(new Event('change', { bubbles: true }));
                 closeModal();
 
                 window.Swal?.fire({
                     toast: true, position: 'top-end', icon: 'success', timer: 3000, showConfirmButton: false,
-                    title: 'Account details saved — Buy Direct enabled',
+                    title: 'Account details saved',
                 });
             } catch (error) {
                 showError('Network error. Check your connection and try again.');

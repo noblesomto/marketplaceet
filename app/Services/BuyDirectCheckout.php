@@ -58,8 +58,10 @@ class BuyDirectCheckout
             return 'You cannot buy your own item.';
         }
 
+        // Missing seller bank details never block the buyer: escrow holds the
+        // money and the seller is reminded to add them (BuyDirectNotifier).
         $seller = User::where('user_id', $ad->user_id)->first();
-        if (!$seller || $seller->disable_account === 'yes' || !$seller->account_number || !$seller->bank_code) {
+        if (!$seller || $seller->disable_account === 'yes') {
             return 'Buy Direct is temporarily unavailable for this item. Please contact the seller.';
         }
 

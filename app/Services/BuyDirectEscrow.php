@@ -24,6 +24,9 @@ use Illuminate\Support\Str;
  */
 class BuyDirectEscrow
 {
+    /** payout_error while a released payout waits for the seller's bank details */
+    public const AWAITING_BANK = 'Waiting for the seller to add bank details.';
+
     public function __construct(protected FlutterwaveGateway $gateway)
     {
     }
@@ -389,10 +392,12 @@ class BuyDirectEscrow
 
             $seller = $row->advert?->owner;
             if (!$seller || !$seller->account_number || !$seller->bank_code) {
-                $row->update(['payout_status' => 'failed', 'payout_error' => 'Seller bank details are incomplete.']);
+                // Not a failure: the payout waits (status stays 'none') until the
+                // seller adds bank details, then releaseHeldPayouts() sends it.
+                $row->update(['payout_error' => self::AWAITING_BANK]);
                 $payment->setRawAttributes($row->getAttributes(), true);
 
-                return [false, 'Seller bank details are incomplete.', null, true];
+                return [false, self::AWAITING_BANK, null, true];
             }
 
             $attempt = (int) $row->payout_attempts + 1;
@@ -410,7 +415,7 @@ class BuyDirectEscrow
 
         if (!$claimed[0]) {
             if ($claimed[3]) {
-                BuyDirectNotifier::payoutFailed($payment);
+                BuyDirectNotifier::payoutNeedsBankDetails($payment);
             }
 
             return [false, $claimed[1]];
@@ -451,6 +456,29 @@ class BuyDirectEscrow
         $this->log('Buy Direct payout submitted', $payment, ['transfer_id' => $res['id'], 'status' => $res['status']]);
 
         return [true, 'Payout submitted to Flutterwave. It will be marked paid once the transfer completes.'];
+    }
+
+    /**
+     * Send the payouts that were waiting on this seller's bank details.
+     * Called whenever the seller saves bank details (web and API).
+     */
+    public function releaseHeldPayouts(User $seller): int
+    {
+        if (!$seller->account_number || !$seller->bank_code) {
+            return 0;
+        }
+
+        $sent = 0;
+        Payment::where('payout_error', self::AWAITING_BANK)
+            ->whereHas('advert', fn ($q) => $q->where('user_id', $seller->user_id))
+            ->get()
+            ->each(function (Payment $p) use (&$sent) {
+                if ($this->canPayout($p) && $this->payout($p)[0]) {
+                    $sent++;
+                }
+            });
+
+        return $sent;
     }
 
     /** Admin fallback: seller was paid outside the Flutterwave transfer API. */

@@ -7,8 +7,9 @@ use Illuminate\Foundation\Testing\DatabaseTransactions;
 use Tests\TestCase;
 
 /**
- * Buy Direct can't be enabled without bank details: the post-ad form flags
- * the seller and offers the bank details popup, which saves over AJAX.
+ * Bank details are optional when enabling Buy Direct: the post-ad form flags
+ * the seller and offers the bank details popup (saves over AJAX), but the ad
+ * and the buyer are never blocked on them.
  */
 class BuyDirectBankGateTest extends TestCase
 {
@@ -35,7 +36,15 @@ class BuyDirectBankGateTest extends TestCase
         $response->assertOk()
             ->assertSee('data-has-bank="0"', false)
             ->assertSee('id="bankDetailsModal"', false)
-            ->assertSee('data-open-bank-modal', false);
+            ->assertSee('data-open-bank-modal', false)
+            ->assertSee('add them now');
+    }
+
+    public function test_buy_direct_validation_does_not_require_bank_details(): void
+    {
+        $request = new \Illuminate\Http\Request(['buy_direct' => 'Yes', 'shipment' => 'Ship']);
+
+        $this->assertNull(app(\App\Services\AdvertValidationService::class)->validateShipping($request, $this->seller()));
     }
 
     public function test_post_ad_lets_seller_with_bank_enable_buy_direct(): void

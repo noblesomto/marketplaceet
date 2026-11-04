@@ -178,26 +178,25 @@ class BuyDirectEndToEndTest extends TestCase
         return $user->fresh();
     }
 
-    /** Seller adds bank details and posts a Buy Direct ad through the web form. */
-    protected function sellerPostsBuyDirectAd(User $seller, float $price = 25000): Advert
+    /** Seller (optionally) adds bank details and posts a Buy Direct ad through the web form. */
+    protected function sellerPostsBuyDirectAd(User $seller, float $price = 25000, bool $withBank = true): Advert
     {
         $lga = Lga::with('state')->firstOrFail();
         $brand = Brands::where('subcat_id', 234)->firstOrFail();
 
-        // Without bank details, Buy Direct is refused.
-        $this->asUser($seller)->get('/user/post-ad')->assertOk()->assertSee('add your bank details');
+        // Bank details are optional when posting; the form only offers them.
+        $this->asUser($seller)->get('/user/post-ad')->assertOk()->assertSee('add them now');
         $base = [
             'ad_title' => 'Men cotton shirt ' . Str::random(5), 'category' => 5, 'subcategory' => 234, 'brand' => $brand->id,
             'state' => $lga->state->name, 'lga' => $lga->name, 'price' => $price, 'price_type' => 'Fixed',
             'item_condition' => 'New', 'description' => 'Brand new cotton shirt, size L, never worn. Original packaging.',
             'shipment' => 'Ship', 'buy_direct' => 'Yes', // Pickup Only listings can't use Buy Direct
         ];
-        $this->post('/user/post-ad', $base + ['images' => [$this->photo(1), $this->photo(2), $this->photo(3)]])
-            ->assertSessionHasErrors('buy_direct');
-
-        $this->get('/user/payments')->assertOk();
-        $this->post('/user/payments', ['bank_name' => 'Commercial Bank of Ethiopia', 'bank_code' => 'CBE', 'account_name' => $seller->name, 'account_number' => '1000123456789'])
-            ->assertSessionHasNoErrors();
+        if ($withBank) {
+            $this->get('/user/payments')->assertOk();
+            $this->post('/user/payments', ['bank_name' => 'Commercial Bank of Ethiopia', 'bank_code' => 'CBE', 'account_name' => $seller->name, 'account_number' => '1000123456789'])
+                ->assertSessionHasNoErrors();
+        }
 
         $this->post('/user/post-ad', $base + ['images' => [$this->photo(1), $this->photo(2), $this->photo(3)]])
             ->assertSessionHasNoErrors()->assertRedirect('/user/my-ads');
@@ -301,6 +300,48 @@ class BuyDirectEndToEndTest extends TestCase
             $this->assertTrue($sent->contains(fn ($l) => stripos($l, $needle) !== false) || true);
         }
         $this->assertGreaterThanOrEqual(5, $sent->count());
+    }
+
+    /** @test */
+    public function seller_without_bank_details_is_reminded_and_paid_once_they_add_them()
+    {
+        $seller = $this->registerAndLogin('Seller NoBank');
+        $ad = $this->sellerPostsBuyDirectAd($seller, 25000, false);
+        $this->assertSame('Yes', $ad->buy_direct);
+
+        // The buyer is never blocked by the seller's missing bank details.
+        $buyer = $this->registerAndLogin('Buyer NoBank');
+        $payment = $this->buyerBuys($buyer, $ad);
+
+        // The "item sold" email asks the seller for their bank details.
+        $soldMail = collect(app('mailer')->getSymfonyTransport()->messages())
+            ->map(fn ($m) => $m->getOriginalMessage())
+            ->first(fn ($m) => $m->getTo()[0]->getAddress() === $seller->email && str_contains($m->getSubject(), 'Sold'));
+        $this->assertNotNull($soldMail, 'Seller should get the item sold email');
+        $this->assertStringContainsString('Add your bank account details to get paid', $soldMail->getHtmlBody());
+        $this->assertStringContainsString(route('user.payment.info'), $soldMail->getHtmlBody());
+        $this->assertTrue(Notification::where('user_id', $seller->id)->where('type', 'Item Sold')
+            ->where('message', 'like', '%bank account details%')->exists());
+
+        $this->asUser($seller)->get("/user/ad-shipping/{$ad->id}")->assertOk()->assertSee('Add your bank details so we can pay you');
+        $this->post("/user/update-shipping/{$payment->id}", ['seller_status' => 'shipped'])->assertSessionHas('success');
+        $this->asUser($buyer)->postJson("/user/confirm-delivery/{$payment->id}")->assertOk()->assertJsonPath('success', true);
+
+        // Payout waits (not failed) and the seller is reminded again.
+        $payment->refresh();
+        $this->assertSame('delivered', $payment->buyer_status);
+        $this->assertSame('none', $payment->payout_status);
+        $this->assertSame(\App\Services\BuyDirectEscrow::AWAITING_BANK, $payment->payout_error);
+        $this->assertTrue(Notification::where('user_id', $seller->id)->where('type', 'Add Bank Details')->exists());
+
+        // Adding bank details sends the held payout straight away.
+        $this->asUser($seller)->post('/user/payments', ['bank_name' => 'Commercial Bank of Ethiopia', 'bank_code' => 'CBE', 'account_name' => $seller->name, 'account_number' => '1000123456789'])
+            ->assertSessionHasNoErrors();
+
+        $payment->refresh();
+        $this->assertSame('processing', $payment->payout_status);
+        $this->assertNull($payment->payout_error);
+        $this->assertEquals((float) $ad->price, (float) $payment->payout_amount);
     }
 
     /** @test */

@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Validation\Rule;
 use App\Models\User;
+use App\Services\BuyDirectEscrow;
 use App\Models\Advert;
 use App\Models\Bank;
 use App\Models\UserVerification;
@@ -522,6 +523,9 @@ class UserProfile extends Controller
             'account_name' => $request->account_name,
             'account_number' => $request->account_number,
         ]);
+
+        // Pay out any sold Buy Direct items that were waiting on these details
+        BuyDirectEscrow::make()->releaseHeldPayouts($user->fresh());
 
         return response()->json([
             'success' => true,

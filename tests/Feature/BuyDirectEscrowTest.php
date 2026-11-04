@@ -357,7 +357,7 @@ class BuyDirectEscrowTest extends TestCase
     }
 
     /** @test */
-    public function buy_direct_requires_seller_bank_details()
+    public function buyer_is_not_blocked_when_the_seller_has_no_bank_details()
     {
         $seller = $this->makeUser(['account_number' => null, 'bank_code' => null]);
         $buyer  = $this->makeUser();
@@ -365,7 +365,7 @@ class BuyDirectEscrowTest extends TestCase
 
         $this->actingAs($buyer, 'sanctum')
             ->getJson("/api/adverts/{$advert->id}/buy-direct")
-            ->assertStatus(422);
+            ->assertOk();
     }
 
     /** @test */

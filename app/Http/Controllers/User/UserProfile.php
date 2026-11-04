@@ -21,6 +21,7 @@ use Hash;
 use Mail;
 use App\Mail\VerificationRequestMail;
 use App\Rules\EthiopianPhoneNumber;
+use App\Services\BuyDirectEscrow;
 use App\Services\ImageProcessingService;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rule;
@@ -331,6 +332,9 @@ class UserProfile extends Controller
                 'bank_name' => $request->input('bank_name'),
                 'account_number_last4' => substr((string) $request->input('account_number'), -4),
             ]);
+
+            // Pay out any sold Buy Direct items that were waiting on these details
+            BuyDirectEscrow::make()->releaseHeldPayouts($userModel);
 
             // The post/edit ad bank details popup saves over AJAX
             if ($request->expectsJson()) {

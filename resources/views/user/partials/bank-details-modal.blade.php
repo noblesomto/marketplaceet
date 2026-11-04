@@ -1,7 +1,7 @@
 {{--
-    Bank details popup for the post/edit ad forms. Buy Direct pays the seller
-    out from escrow, so it can't be enabled until bank details are on file —
-    this lets the seller add them without leaving (and losing) their ad draft.
+    Optional bank details popup for the post/edit ad forms. Buy Direct pays the
+    seller out from escrow; sellers can add the details here without leaving
+    (and losing) their ad draft, or later when the item sells.
     Driven by dashboard/js/buy-direct-field.js. Include outside the ad <form>.
 --}}
 @php $banks = \App\Models\Bank::orderBy('name')->get(['name', 'bank_code']); @endphp
@@ -48,7 +48,7 @@
 
             <div class="flex gap-3 pt-1">
                 <button type="button" data-bank-modal-close class="flex-1 px-4 py-2.5 rounded-lg border border-gray-300 text-gray-700 font-medium hover:bg-gray-50">Not now</button>
-                <button type="submit" class="flex-1 px-4 py-2.5 rounded-lg bg-dark_green text-white font-semibold hover:opacity-90 disabled:opacity-60" @disabled($banks->isEmpty())>Save &amp; enable</button>
+                <button type="submit" class="flex-1 px-4 py-2.5 rounded-lg bg-dark_green text-white font-semibold hover:opacity-90 disabled:opacity-60" @disabled($banks->isEmpty())>Save details</button>
             </div>
         </form>
     </div>

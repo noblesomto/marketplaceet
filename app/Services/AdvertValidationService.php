@@ -336,8 +336,9 @@ class AdvertValidationService
      * Validate shipping / Buy Direct requirements.
      *
      * Courier selection is only required while shipping carriers are enabled
-     * (config global.shipping_carriers_enabled). Buy Direct requires the seller
-     * to have bank details on file, otherwise escrowed funds can't be paid out.
+     * (config global.shipping_carriers_enabled). Buy Direct doesn't need bank
+     * details up front: the seller is asked for them once the item sells, and
+     * the payout waits for them (BuyDirectEscrow::payout).
      *
      * @param \Illuminate\Http\Request $request
      * @param \App\Models\User|null $seller
@@ -353,10 +354,6 @@ class AdvertValidationService
             if ($needsShipping && empty($request->input('shipping'))) {
                 return ['shipping' => ['Please select at least one shipping method.']];
             }
-        }
-
-        if ($wantsBuyDirect && $seller && (empty($seller->account_number) || empty($seller->bank_code))) {
-            return ['buy_direct' => ['Add your bank details in your profile before enabling Buy Direct, so we can pay you when the item sells.']];
         }
 
         return null;

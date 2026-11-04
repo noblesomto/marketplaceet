@@ -503,8 +503,8 @@
                         <p class="text-red-600 text-sm mb-3">{{ $message }}</p>
                     @enderror
                     @unless($sellerHasBank)
-                        <p data-bank-notice class="text-xs text-amber-800 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2 mb-3">
-                            To enable Buy Direct, first <a href="{{ route('user.payment.info') }}" data-open-bank-modal class="font-semibold underline">add your bank details</a> so we can pay you when the item sells.
+                        <p data-bank-notice class="text-xs text-blue-900 bg-white/70 border border-blue-100 rounded-lg px-3 py-2 mb-3">
+                            No bank details needed yet — we'll ask for them when your item sells. You can also <a href="{{ route('user.payment.info') }}" data-open-bank-modal class="font-semibold underline">add them now</a>.
                         </p>
                     @endunless
                     <div class="space-y-4">
@@ -636,7 +636,7 @@
 <script src="{{ asset('dashboard/js/category-ui-manager.js') }}"></script>
 <script src="{{ asset('dashboard/js/device-model-field.js') }}?v=2"></script>
 <script src="{{ asset('dashboard/js/edit-ad-v2.js') }}?v=5"></script>
-<script src="{{ asset('dashboard/js/buy-direct-field.js') }}?v=1"></script>
+<script src="{{ asset('dashboard/js/buy-direct-field.js') }}?v=2"></script>
 {{-- Old hardcoded version (kept for rollback): <script src="{{ asset('dashboard/js/edit-ad-Aa.js') }}"></script> --}}
 
 <script src="{{ asset('dashboard/js/edit-sortable.js') }}?v=2"></script>

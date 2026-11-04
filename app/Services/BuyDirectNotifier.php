@@ -43,12 +43,15 @@ class BuyDirectNotifier
             'release_days'  => BuyDirectSettings::autoReleaseDays(),
             'buyer_url'     => url('/user/order-details/' . $payment->id),
             'seller_url'    => url('/user/ad-shipping/' . $payment->advert_id),
+            'needs_bank'    => !self::hasBankDetails($seller),
+            'bank_url'      => route('user.payment.info'),
         ];
 
         self::safely('paid buyer mail', fn () => Mail::to($buyer->email)->send(new BuyDirectMail($details)));
         self::safely('paid seller mail', fn () => Mail::to($seller->email)->send(new SellerMail($details)));
 
-        self::inApp($seller, $payment, 'Item Sold', "Your advert \"{$title}\" has been purchased by {$buyerName}. Please ship it by {$details['ship_by']}.");
+        self::inApp($seller, $payment, 'Item Sold', "Your advert \"{$title}\" has been purchased by {$buyerName}. Please ship it by {$details['ship_by']}."
+            . ($details['needs_bank'] ? ' ' . self::BANK_REMINDER : ''));
         self::safely('ad sold push', fn () => SendAdSoldPushNotification::dispatch($seller, $payment->advert, $buyerName));
     }
 
@@ -85,7 +88,10 @@ class BuyDirectNotifier
         };
 
         if ($seller) {
-            $body = "{$how} \"{$title}\". Your payout of Br " . number_format((float) $payment->amount, 2) . ' is being processed to your bank account.';
+            $amount = 'Br ' . number_format((float) $payment->amount, 2);
+            $body = self::hasBankDetails($seller)
+                ? "{$how} \"{$title}\". Your payout of {$amount} is being processed to your bank account."
+                : "{$how} \"{$title}\". Add your bank account details to receive your payout of {$amount}.";
             self::inApp($seller, $payment, 'Payment Released', $body);
             self::push($seller, $payment, 'released', ['Payment released', $body]);
         }
@@ -178,6 +184,30 @@ class BuyDirectNotifier
         self::inApp($seller, $payment, 'Payout Sent', 'Br ' . number_format((float) ($payment->payout_amount ?? $payment->amount), 2) . " for \"{$title}\" has been sent to your bank account.");
     }
 
+    /** A released payout is waiting for the seller to add bank details. */
+    public static function payoutNeedsBankDetails(Payment $payment): void
+    {
+        [, $seller, $title] = self::parties($payment);
+        if (!$seller) {
+            return;
+        }
+
+        $amount = 'Br ' . number_format((float) $payment->amount, 2);
+        $body = "Your payment of {$amount} for \"{$title}\" is ready, but we don't have your bank account details yet. Add them and we'll send the money straight away.";
+
+        self::inApp($seller, $payment, 'Add Bank Details', $body);
+        self::push($seller, $payment, 'released', ['Add your bank details to get paid', $body]);
+        self::mail($seller, [
+            'subject'   => "Add your bank details to receive {$amount}",
+            'heading'   => 'Your money is waiting for you',
+            'greeting'  => "Hello {$seller->name},",
+            'lines'     => [$body, 'We hold your payment safely until you add your account details. Nothing else is needed from you.'],
+            'cta_url'   => route('user.payment.info'),
+            'cta_label' => 'Add bank details',
+            'tone'      => 'amber',
+        ]);
+    }
+
     public static function payoutFailed(Payment $payment): void
     {
         self::admin("Payout FAILED – order {$payment->order_code}", [
@@ -221,6 +251,13 @@ class BuyDirectNotifier
     }
 
     /* ------------------------------------------------------------------ */
+
+    public const BANK_REMINDER = 'Add your bank account details so we can pay you when the buyer confirms receipt.';
+
+    public static function hasBankDetails(User $user): bool
+    {
+        return !empty($user->account_number) && !empty($user->bank_code);
+    }
 
     public static function admin(string $subject, array $lines, ?string $url = null, string $tone = 'blue'): void
     {

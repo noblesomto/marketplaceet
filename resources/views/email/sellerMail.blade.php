@@ -160,6 +160,14 @@
                 <p>Great news — a buyer has paid for your item on <b>{{ config('global.site_name') }}</b> using Buy Direct. We are holding the payment securely and will release it to you once the buyer confirms they have received the item.</p>
             </div>
 
+            @if(!empty($details['needs_bank']))
+            <div class="section" style="background:#fff8e1;border:1px solid #f0c36d;border-radius:6px;padding:15px;">
+                <h4 style="color:#8a5a00;">Add your bank account details to get paid</h4>
+                <p>We don't have your bank account details yet. Your money is safe with us, but we can only send you the Br {{ number_format($details['item_price'], 2) }} once you add them.</p>
+                <p style="text-align:center;margin-top:12px;"><a href="{{ $details['bank_url'] }}" style="display:inline-block;background:#b7791f;color:#fff;padding:10px 20px;border-radius:6px;text-decoration:none;font-weight:bold;">Add bank details</a></p>
+            </div>
+            @endif
+
             <div class="section">
                 <h2>Buyer Information</h2>
                 <p><span class="label">Name:</span> {{ $details['buyer'] }}</p>
@@ -188,7 +196,11 @@
             <div class="section">
                 <h4>When do I get paid?</h4>
                 <p>As soon as the buyer confirms receipt. If the buyer doesn’t respond, the payment is released automatically {{ $details['release_days'] }} days after you mark the order as shipped (unless they report a problem).</p>
+                @if(!empty($details['needs_bank']))
+                <p><b>Remember to <a href="{{ $details['bank_url'] }}">add your bank account details</a></b> — we send your payment there.</p>
+                @else
                 <p>Make sure your bank details are up to date in your profile so we can pay you.</p>
+                @endif
                 <br>
                 <p>Best regards,</p>
                 <p><b>The {{ config('global.site_name') }} Team</b></p>
