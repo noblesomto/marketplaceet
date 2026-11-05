@@ -52,7 +52,7 @@ class BuyDirectEscrowTest extends TestCase
     {
         Payment::whereIn('advert_id', $this->advertIds)->delete();
         Advert::whereIn('id', $this->advertIds)->delete();
-        User::whereIn('id', $this->userIds)->delete();
+        User::whereIn('user_id', $this->userIds)->delete();
 
         foreach ($this->settingsBackup as $key => $value) {
             $value === null ? AdSetting::where('key', $key)->delete() : AdSetting::setValue($key, $value);
@@ -65,7 +65,8 @@ class BuyDirectEscrowTest extends TestCase
     protected function makeUser(array $attrs = []): User
     {
         $user = User::factory()->create(array_merge(['phone' => '09' . random_int(10000000, 99999999)], $attrs));
-        $this->userIds[] = $user->id;
+        // Users are keyed by user_id; $user->id isn't populated on create
+        $this->userIds[] = $user->user_id;
 
         return $user;
     }

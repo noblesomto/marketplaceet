@@ -13,12 +13,13 @@ use App\Models\User;
  */
 class ApiLoginErrorMessagesTest extends TestCase
 {
+    // users.user_id, the model key — $user->id isn't populated on create
     protected array $createdUserIds = [];
 
     protected function tearDown(): void
     {
         if (!empty($this->createdUserIds)) {
-            User::whereIn('id', $this->createdUserIds)->delete();
+            User::whereIn('user_id', $this->createdUserIds)->delete();
         }
 
         parent::tearDown();
@@ -40,7 +41,7 @@ class ApiLoginErrorMessagesTest extends TestCase
     public function login_with_the_wrong_password_returns_the_identical_generic_message()
     {
         $user = User::factory()->create(['acc_status' => 1]);
-        $this->createdUserIds[] = $user->id;
+        $this->createdUserIds[] = $user->user_id;
 
         $response = $this->postJson('/api/login', [
             'email' => $user->email,

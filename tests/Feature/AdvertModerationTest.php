@@ -23,6 +23,7 @@ use Illuminate\Support\Str;
 class AdvertModerationTest extends TestCase
 {
     protected Admin $admin;
+    // users.user_id, the model key — $user->id isn't populated on create
     protected array $createdUserIds = [];
     protected array $createdAdvertIds = [];
 
@@ -42,7 +43,7 @@ class AdvertModerationTest extends TestCase
             Advert::whereIn('id', $this->createdAdvertIds)->delete();
         }
         if (!empty($this->createdUserIds)) {
-            User::whereIn('id', $this->createdUserIds)->delete();
+            User::whereIn('user_id', $this->createdUserIds)->delete();
         }
 
         parent::tearDown();
@@ -57,7 +58,7 @@ class AdvertModerationTest extends TestCase
     protected function makeAdvert(array $overrides = []): Advert
     {
         $user = User::factory()->create(['phone' => '09' . random_int(10000000, 99999999)]);
-        $this->createdUserIds[] = $user->id;
+        $this->createdUserIds[] = $user->user_id;
 
         $advert = Advert::create(array_merge([
             'user_id'      => $user->user_id,
@@ -154,7 +155,7 @@ class AdvertModerationTest extends TestCase
     {
         $advert = $this->makeAdvert(['ad_status' => 'banned']);
         $otherUser = User::factory()->create(['phone' => '09' . random_int(10000000, 99999999)]);
-        $this->createdUserIds[] = $otherUser->id;
+        $this->createdUserIds[] = $otherUser->user_id;
 
         $response = $this->withSession(['user_id' => $otherUser->user_id])
             ->get("/user/resubmit-ad/{$advert->id}");
@@ -230,7 +231,7 @@ class AdvertModerationTest extends TestCase
     {
         $advert = $this->makeAdvert(['ad_status' => 'active']);
         $otherUser = User::factory()->create(['phone' => '09' . random_int(10000000, 99999999)]);
-        $this->createdUserIds[] = $otherUser->id;
+        $this->createdUserIds[] = $otherUser->user_id;
 
         $response = $this->withSession(['user_id' => $otherUser->user_id])
             ->get("/user/ad-status/disabled/{$advert->id}");

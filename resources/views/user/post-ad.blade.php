@@ -762,7 +762,7 @@
 {{-- Database-Driven Category UI Configuration (2026-01-31) --}}
 <script src="{{ asset('dashboard/js/category-ui-manager.js') }}"></script>
 <script src="{{ asset('dashboard/js/device-model-field.js') }}?v=2"></script>
-<script src="{{ asset('dashboard/js/post-ad-v2.js') }}?v=5"></script>
+<script src="{{ asset('dashboard/js/post-ad-v2.js') }}?v=6"></script>
 <script src="{{ asset('dashboard/js/buy-direct-field.js') }}?v=2"></script>
 {{-- Old hardcoded version (kept for rollback): <script src="{{ asset('dashboard/js/post-ad.js') }}"></script> --}}
 

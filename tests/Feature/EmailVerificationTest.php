@@ -15,12 +15,13 @@ use Illuminate\Support\Str;
  */
 class EmailVerificationTest extends TestCase
 {
+    // users.user_id, the model key — $user->id isn't populated on create
     protected array $createdUserIds = [];
 
     protected function tearDown(): void
     {
         if (!empty($this->createdUserIds)) {
-            User::whereIn('id', $this->createdUserIds)->delete();
+            User::whereIn('user_id', $this->createdUserIds)->delete();
         }
 
         parent::tearDown();
@@ -33,7 +34,7 @@ class EmailVerificationTest extends TestCase
             'token' => Str::random(40),
         ], $overrides));
 
-        $this->createdUserIds[] = $user->id;
+        $this->createdUserIds[] = $user->user_id;
 
         return $user;
     }

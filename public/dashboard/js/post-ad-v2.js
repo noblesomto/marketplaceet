@@ -191,8 +191,10 @@ class ShippingManager {
     validateShipping() {
         const isShipping = this.getShipmentValue() === "Ship";
         const selectedMethods = document.querySelectorAll('input[name="shipping[]"]:checked');
+        // No carrier list on the page when couriers are off (shipping_carriers_enabled)
+        const hasCarriers = document.querySelector('input[name="shipping[]"]') !== null;
 
-        if (isShipping && selectedMethods.length === 0) {
+        if (isShipping && hasCarriers && selectedMethods.length === 0) {
             if (this.errorMsg) {
                 this.errorMsg.classList.remove("hidden");
             }
