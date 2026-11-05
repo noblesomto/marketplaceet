@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 use App\Models\Advert;
 use App\Models\AdvertBoost;
+use App\Support\PaymentReference;
 use Carbon\Carbon;
 
 /**
@@ -146,7 +147,7 @@ class UserManageBoostController extends Controller
         $boost = AdvertBoost::create([
             'user_id' => $user->user_id,
             'advert_id' => $advertId,
-            'payment_reference' => 'boost-' . round(microtime(true) * 1000),
+            'payment_reference' => PaymentReference::boostRequest(),
             'boost_status' => 'pending',
             'payment_status' => 'pending',
             'duration' => $durationDays,

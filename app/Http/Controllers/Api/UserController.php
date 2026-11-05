@@ -1309,7 +1309,7 @@ class UserController extends Controller
             ], 409);
         }
 
-        $txRef = PaymentReference::make('MKT');
+        $txRef = PaymentReference::charge();
 
         $response = Http::withToken(config('services.flutterwave.secretKey'))
             ->post(config('services.flutterwave.paymentUrl') . '/payments', [

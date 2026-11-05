@@ -31,10 +31,6 @@ class FlutterwaveController extends Controller
 {
     use HasUserSession;
 
-    private function generateTxRef(): string
-    {
-        return PaymentReference::make('MKT');
-    }
 
     public function initialize(Request $request)
     {
@@ -65,7 +61,7 @@ class FlutterwaveController extends Controller
             }
         }
 
-        $txRef = $this->generateTxRef();
+        $txRef = PaymentReference::charge();
 
         $response = Http::withToken(config('services.flutterwave.secretKey'))
             ->post(config('services.flutterwave.paymentUrl') . '/payments', [
@@ -172,7 +168,7 @@ class FlutterwaveController extends Controller
         }
 
         $user = User::where('user_id', $userId)->first();
-        $txRef = $this->generateTxRef();
+        $txRef = PaymentReference::charge();
 
         $response = Http::withToken(config('services.flutterwave.secretKey'))
             ->post(config('services.flutterwave.paymentUrl') . '/payments', [
@@ -216,7 +212,7 @@ class FlutterwaveController extends Controller
             return back()->with('error', 'Your boost payment is already being set up. Please wait a few seconds and try again.');
         }
 
-        $txRef = $this->generateTxRef();
+        $txRef = PaymentReference::charge();
 
         $response = Http::withToken(config('services.flutterwave.secretKey'))
             ->post(config('services.flutterwave.paymentUrl') . '/payments', [
@@ -324,7 +320,7 @@ class FlutterwaveController extends Controller
 
         $promotion = $request->session()->get('promotion');
         $duration = $request->input('duration');
-        $txRef = $this->generateTxRef();
+        $txRef = PaymentReference::charge();
         $response = Http::withToken(config('services.flutterwave.secretKey'))
             ->post(config('services.flutterwave.paymentUrl') . '/payments', [
                 'tx_ref' => $txRef,
@@ -397,7 +393,7 @@ class FlutterwaveController extends Controller
     // Get user email
     $user = User::where('user_id', $user_id)->first();
     $email = $user->email;
-    $txRef = $this->generateTxRef();
+    $txRef = PaymentReference::charge();
 
     // Initialize payment with a NEW reference
     $response = Http::withToken(config('services.flutterwave.secretKey'))

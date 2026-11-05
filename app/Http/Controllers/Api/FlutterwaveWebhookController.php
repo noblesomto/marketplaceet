@@ -10,6 +10,7 @@ use App\Models\Advert;
 use App\Models\AdvertBoost;
 use App\Models\Payment;
 use App\Models\UnmatchedPayment;
+use App\Support\PaymentReference;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -47,6 +48,13 @@ class FlutterwaveWebhookController extends Controller
         if (!$reference) {
             Log::error('Flutterwave webhook: missing tx_ref in payload');
             return response()->json(['message' => 'Bad payload'], 400);
+        }
+
+        // Another country's charge on the shared Flutterwave account — not ours
+        // to verify or report as unmatched.
+        if (PaymentReference::isForAnotherSite($reference)) {
+            Log::info('Flutterwave webhook: charge belongs to another site', ['ref' => $reference]);
+            return response()->json(['message' => 'Event ignored'], 200);
         }
 
         // Always verify directly with Flutterwave — never trust webhook body alone
@@ -110,6 +118,10 @@ class FlutterwaveWebhookController extends Controller
     private function handleTransfer(array $data): void
     {
         $reference = $data['reference'] ?? null;
+        if (PaymentReference::isForAnotherSite($reference)) {
+            return;
+        }
+
         $payment = $reference ? Payment::where('payout_reference', $reference)->first() : null;
 
         if (!$payment || empty($data['id'])) {

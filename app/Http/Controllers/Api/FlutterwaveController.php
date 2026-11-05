@@ -30,10 +30,6 @@ use App\Support\PaymentReference;
  */
 class FlutterwaveController extends Controller
 {
-    private function generateTxRef(): string
-    {
-        return PaymentReference::make('MKT');
-    }
 
     /**
      * @OA\Post(
@@ -96,7 +92,7 @@ class FlutterwaveController extends Controller
 
         // Amounts are always computed server-side; anything the client sent is ignored.
         $checkout = BuyDirectCheckout::build($advert, $valid);
-        $txRef = $this->generateTxRef();
+        $txRef = PaymentReference::charge();
 
         $response = Http::withToken(config('services.flutterwave.secretKey'))
             ->post(config('services.flutterwave.paymentUrl') . '/payments', [
@@ -299,7 +295,7 @@ class FlutterwaveController extends Controller
             ], 429);
         }
 
-        $txRef = $this->generateTxRef();
+        $txRef = PaymentReference::charge();
 
         $response = Http::withToken(config('services.flutterwave.secretKey'))
             ->post(config('services.flutterwave.paymentUrl') . '/payments', [
