@@ -15,13 +15,13 @@ use App\Models\Shipping;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use App\Mail\BuyDirectMail;
 use App\Mail\SellerMail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\Log;
+use App\Support\PaymentReference;
 
 /**
  * @group Payments
@@ -32,7 +32,7 @@ class FlutterwaveController extends Controller
 {
     private function generateTxRef(): string
     {
-        return 'MKT-' . strtoupper(Str::random(20));
+        return PaymentReference::make('MKT');
     }
 
     /**

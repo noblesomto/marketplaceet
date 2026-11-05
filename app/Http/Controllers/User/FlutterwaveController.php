@@ -9,7 +9,6 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
-use Illuminate\Support\Str;
 use App\Models\Payment;
 use App\Models\User;
 use App\Models\Advert;
@@ -26,6 +25,7 @@ use App\Jobs\SendAdSoldPushNotification;
 use App\Traits\HasUserSession;
 use Illuminate\Support\Facades\Log;
 use App\Rules\EthiopianPhoneNumber;
+use App\Support\PaymentReference;
 
 class FlutterwaveController extends Controller
 {
@@ -33,7 +33,7 @@ class FlutterwaveController extends Controller
 
     private function generateTxRef(): string
     {
-        return 'MKT-' . strtoupper(Str::random(20));
+        return PaymentReference::make('MKT');
     }
 
     public function initialize(Request $request)

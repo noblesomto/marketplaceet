@@ -10,6 +10,7 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
+use App\Support\PaymentReference;
 
 /**
  * Buy Direct escrow state machine.
@@ -404,7 +405,7 @@ class BuyDirectEscrow
             $row->update([
                 'payout_status'    => 'processing',
                 'payout_amount'    => (float) $row->amount,
-                'payout_reference' => 'MKT-PAYOUT-' . $row->id . '-' . $attempt . '-' . Str::upper(Str::random(6)),
+                'payout_reference' => PaymentReference::prefix() . 'MKT-PAYOUT-' . $row->id . '-' . $attempt . '-' . Str::upper(Str::random(6)),
                 'payout_attempts'  => $attempt,
                 'payout_error'     => null,
             ]);

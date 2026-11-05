@@ -18,9 +18,9 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Support\Str;
 use Carbon\Carbon;
 use App\Support\ShippingStatusBadge;
+use App\Support\PaymentReference;
 
 /**
  * @group User
@@ -1309,7 +1309,7 @@ class UserController extends Controller
             ], 409);
         }
 
-        $txRef = 'MKT-' . strtoupper(Str::random(20));
+        $txRef = PaymentReference::make('MKT');
 
         $response = Http::withToken(config('services.flutterwave.secretKey'))
             ->post(config('services.flutterwave.paymentUrl') . '/payments', [

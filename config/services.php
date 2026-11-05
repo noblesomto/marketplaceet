@@ -36,6 +36,8 @@ return [
         'encryptionKey' => env('FLUTTERWAVE_ENCRYPTION_KEY'),
         'webhookHash' => env('FLUTTERWAVE_WEBHOOK_HASH'),
         'paymentUrl' => env('FLUTTERWAVE_PAYMENT_URL', 'https://api.flutterwave.com/v3'),
+        // Country code prefixed to every reference, for the shared webhook router.
+        'site' => env('FLUTTERWAVE_SITE', 'ET'),
     ],
 
     'google' => [
